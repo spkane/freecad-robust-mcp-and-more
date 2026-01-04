@@ -15,7 +15,7 @@
 # =============================================================================
 # Stage 1: Builder - Install dependencies and build the package
 # =============================================================================
-FROM python:3.11-slim AS builder
+FROM python:3.14-slim AS builder
 
 # Install build dependencies
 # hadolint ignore=DL3008
@@ -48,7 +48,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # =============================================================================
 # Stage 2: Runtime - Minimal image for running the server
 # =============================================================================
-FROM python:3.11-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # Labels for container metadata (OCI Image Spec)
 # Note: version, revision, and created are set dynamically in CI/CD workflows
