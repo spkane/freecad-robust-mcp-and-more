@@ -104,6 +104,32 @@ reviews:
     hadolint:
       enabled: true
 
+  # Files and paths to ignore in reviews (! prefix = exclude)
+  path_filters:
+    # Lock files - auto-generated
+    - "!uv.lock"
+    - "!poetry.lock"
+    - "!package-lock.json"
+    # Generated/cached files
+    - "!**/.mypy_cache/**"
+    - "!**/.pytest_cache/**"
+    - "!**/.ruff_cache/**"
+    - "!**/__pycache__/**"
+    - "!**/*.pyc"
+    # Virtual environments
+    - "!.venv/**"
+    - "!venv/**"
+    # IDE settings (except shared configs)
+    - "!.idea/**"
+    # Build artifacts
+    - "!dist/**"
+    - "!build/**"
+    - "!*.egg-info/**"
+    # Documentation build output
+    - "!site/**"
+    # Secrets baseline (reviewed separately)
+    - "!.secrets.baseline"
+
 # Chat configuration
 chat:
   auto_reply: true
@@ -119,29 +145,3 @@ knowledge_base:
     project_keys: []
   pull_requests:
     scope: auto
-
-# Files and paths to ignore in reviews
-path_filters:
-  # Lock files - auto-generated
-  - "!uv.lock"
-  - "!poetry.lock"
-  - "!package-lock.json"
-  # Generated/cached files
-  - "!**/.mypy_cache/**"
-  - "!**/.pytest_cache/**"
-  - "!**/.ruff_cache/**"
-  - "!**/__pycache__/**"
-  - "!**/*.pyc"
-  # Virtual environments
-  - "!.venv/**"
-  - "!venv/**"
-  # IDE settings (except shared configs)
-  - "!.idea/**"
-  # Build artifacts
-  - "!dist/**"
-  - "!build/**"
-  - "!*.egg-info/**"
-  # Documentation build output
-  - "!site/**"
-  # Secrets baseline (reviewed separately)
-  - "!.secrets.baseline"
