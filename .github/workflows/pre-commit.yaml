@@ -27,6 +27,8 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: Set up Python
         run: uv python install 3.11
@@ -38,9 +40,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
-          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
           restore-keys: |
-            pre-commit-
+            pre-commit-${{ runner.os }}-
 
       - name: Run pre-commit on all files
+        env:
+          SKIP: no-commit-to-branch
         run: uv run pre-commit run --all-files --show-diff-on-failure
