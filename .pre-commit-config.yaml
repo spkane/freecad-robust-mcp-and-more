@@ -120,6 +120,7 @@ repos:
         name: trufflehog (verified secrets scan)
         args:
           - --no-update
+        exclude: '(^|/)uv\.lock$|\.secrets\.baseline$'
 
   # ==========================================================================
   # Markdown Linting - Comprehensive Configuration
