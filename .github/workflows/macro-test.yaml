@@ -7,6 +7,7 @@ on:
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
       - "tests/integration/test_cut_object_for_magnets.py"
+      - "tests/integration/test_multi_export.py"
       - ".github/workflows/macro-test.yaml"
   pull_request:
     branches: [main, master]
@@ -14,6 +15,7 @@ on:
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
       - "tests/integration/test_cut_object_for_magnets.py"
+      - "tests/integration/test_multi_export.py"
       - ".github/workflows/macro-test.yaml"
 
 # Cancel in-progress runs for the same branch
@@ -163,6 +165,14 @@ jobs:
         continue-on-error: true
         run: |
           uv run pytest tests/integration/test_cut_object_for_magnets.py -v --tb=short
+
+      - name: Run MultiExport macro tests
+        env:
+          FREECAD_MODE: xmlrpc
+        # Export functionality should work in headless mode
+        continue-on-error: true
+        run: |
+          uv run pytest tests/integration/test_multi_export.py -v --tb=short
 
       - name: Stop FreeCAD
         if: always()

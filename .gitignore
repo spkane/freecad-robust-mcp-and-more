@@ -9,6 +9,8 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+# Generated version file (hatch-vcs)
+src/freecad_mcp/_version.py
 develop-eggs/
 dist/
 downloads/
