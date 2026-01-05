@@ -12,6 +12,9 @@ Group changes under: Added, Changed, Deprecated, Removed, Fixed, Security
 
 ## [Unreleased]
 
+<!-- This section captures changes that have been merged but not yet released.
+     When preparing a new release, move these entries to a new version section below. -->
+
 ## [0.5.0-beta] - 2026-01-05
 
 Initial public beta release of the FreeCAD MCP Server and Macros.
