@@ -1,6 +1,8 @@
 # FreeCAD Tools and MCP Server
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches. Also includes standalone FreeCAD macros for common tasks.
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
+
+> Also includes standalone FreeCAD macros for common tasks.
 
 ## Table of Contents
 

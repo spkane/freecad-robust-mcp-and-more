@@ -71,7 +71,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -119,13 +119,142 @@ jobs:
               ${{ env.DOCKERHUB_REPO }}:${{ steps.version.outputs.version }} 2>&1 | \
             grep -q '"result"' && echo "Container test passed" || echo "Container test completed"
 
+      - name: Create Docker Hub README
+        run: |
+          # Create a concise README for Docker Hub (limit is 25000 bytes)
+          cat > ./DOCKERHUB_README.md << 'EOF'
+          # FreeCAD Robust MCP Server
+
+          An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
+
+          ## Features
+
+          - **82+ MCP Tools**: Comprehensive CAD operations including primitives, PartDesign, booleans, export
+          - **Multiple Connection Modes**: XML-RPC (recommended), JSON-RPC socket, or embedded
+          - **GUI & Headless Support**: Full modeling in headless mode, plus screenshots/colors in GUI mode
+          - **Macro Development**: Create, edit, run, and template FreeCAD macros via MCP
+
+          ## Quick Start
+
+          ```bash
+          docker pull spkane/freecad-robust-mcp:latest
+          ```
+
+          ### Running with Claude Desktop (macOS/Windows)
+
+          Add to your Claude Desktop configuration:
+
+          ```json
+          {
+            "mcpServers": {
+              "freecad": {
+                "command": "docker",
+                "args": [
+                  "run", "-i", "--rm",
+                  "-e", "FREECAD_MODE=xmlrpc",
+                  "-e", "FREECAD_SOCKET_HOST=host.docker.internal",
+                  "spkane/freecad-robust-mcp:latest"
+                ]
+              }
+            }
+          }
+          ```
+
+          ### Linux Users
+
+          `host.docker.internal` is only available on Docker Desktop (macOS/Windows).
+          On Linux Docker Engine, use one of these alternatives:
+
+          **Option 1: Host networking (recommended)**
+          ```bash
+          docker run -i --rm --network=host \
+            -e FREECAD_MODE=xmlrpc \
+            -e FREECAD_SOCKET_HOST=localhost \
+            spkane/freecad-robust-mcp:latest
+          ```
+
+          **Option 2: Use host IP address**
+          ```bash
+          docker run -i --rm \
+            -e FREECAD_MODE=xmlrpc \
+            -e FREECAD_SOCKET_HOST=192.168.1.100 \
+            spkane/freecad-robust-mcp:latest
+          ```
+
+          **Option 3: Add host gateway (Docker 20.10+)**
+          ```bash
+          docker run -i --rm --add-host=host.docker.internal:host-gateway \
+            -e FREECAD_MODE=xmlrpc \
+            -e FREECAD_SOCKET_HOST=host.docker.internal \
+            spkane/freecad-robust-mcp:latest
+          ```
+
+          ## Connection Modes
+
+          | Mode | Description | Use Case |
+          |------|-------------|----------|
+          | `xmlrpc` | XML-RPC over HTTP (port 9875) | **Recommended** - Works with FreeCAD GUI or headless |
+          | `socket` | JSON-RPC over TCP (port 9876) | Alternative to XML-RPC |
+          | `embedded` | Direct Python import | Linux only, requires FreeCAD in Python path |
+
+          ## Environment Variables
+
+          | Variable | Default | Description |
+          |----------|---------|-------------|
+          | `FREECAD_MODE` | `xmlrpc` | Connection mode |
+          | `FREECAD_SOCKET_HOST` | `localhost` | Server host (used for both XML-RPC and socket modes) |
+          | `FREECAD_XMLRPC_PORT` | `9875` | XML-RPC server port |
+          | `FREECAD_SOCKET_PORT` | `9876` | Socket server port |
+
+          ## Starting FreeCAD with MCP Bridge
+
+          Before using this Docker image, start FreeCAD with the MCP bridge:
+
+          1. Open FreeCAD
+          2. Go to **Macro → Macros → StartMCPBridge** (or run from Python console)
+          3. The bridge will start listening on ports 9875 (XML-RPC) and 9876 (Socket)
+
+          ## Full Documentation
+
+          📖 **For complete documentation, examples, and source code, visit:**
+
+          **[https://github.com/spkane/freecad-robust-mcp-and-more](https://github.com/spkane/freecad-robust-mcp-and-more)**
+
+          ## License
+
+          MIT License - see [LICENSE](https://github.com/spkane/freecad-robust-mcp-and-more/blob/main/LICENSE) for details.
+          EOF
+
+          # Validate the generated README
+          if [ ! -f ./DOCKERHUB_README.md ]; then
+              echo "ERROR: DOCKERHUB_README.md was not created" >&2
+              exit 1
+          fi
+
+          if [ ! -s ./DOCKERHUB_README.md ]; then
+              echo "ERROR: DOCKERHUB_README.md is empty" >&2
+              exit 1
+          fi
+
+          # Check file size (Docker Hub limit is 25000 bytes)
+          FILE_SIZE=$(wc -c < ./DOCKERHUB_README.md)
+          MAX_SIZE=25000
+          echo "Docker Hub README size: ${FILE_SIZE} bytes (limit: ${MAX_SIZE} bytes)"
+
+          if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
+              echo "ERROR: DOCKERHUB_README.md exceeds Docker Hub limit of ${MAX_SIZE} bytes (actual: ${FILE_SIZE} bytes)" >&2
+              exit 1
+          fi
+
+          echo "Docker Hub README validation passed"
+
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v5
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.DOCKERHUB_REPO }}
-          readme-filepath: ./README.md
+          readme-filepath: ./DOCKERHUB_README.md
           short-description: "MCP (Model Context Protocol) server for FreeCAD integration"
         continue-on-error: true
 
