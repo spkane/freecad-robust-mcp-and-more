@@ -86,7 +86,7 @@ This section covers installation and usage for end users who want to use the MCP
 
 ## MCP Server
 
-> **Note**: For clarity, the Linux container and PyPi projects releases are both simply named `freecad-robust-mcp` which differs somewhat from the name of this git repository.
+> **Note**: Since this repository has more then just the MCP server in it, the Linux container and PyPi projects releases are both simply named `freecad-robust-mcp` which differs from the name of this git repository.
 
 ### Installation
 
