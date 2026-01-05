@@ -59,7 +59,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -74,17 +74,18 @@ jobs:
           # For tagged releases: v1.0.0 -> 1.0.0
           # For dev builds: v1.0.0-5-g1234567 -> 1.0.0.dev5+g1234567
           if git describe --tags --exact-match 2>/dev/null; then
-            VERSION=$(git describe --tags --exact-match | sed 's/^v//')
+            TAG=$(git describe --tags --exact-match)
+            VERSION="${TAG#v}"
           else
             # Get the latest tag or use 0.0.0 if none exists
             LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-            BASE_VERSION=$(echo "$LATEST_TAG" | sed 's/^v//')
+            BASE_VERSION="${LATEST_TAG#v}"
             # Count commits since tag
             COMMITS=$(git rev-list "${LATEST_TAG}..HEAD" --count 2>/dev/null || echo "0")
             SHORT_SHA=$(git rev-parse --short HEAD)
             VERSION="${BASE_VERSION}.dev${COMMITS}+g${SHORT_SHA}"
           fi
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Detected version: $VERSION"
 
       - name: Build and push Docker image
@@ -116,7 +117,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
           format: "sarif"
           output: "trivy-results.sarif"
         continue-on-error: true
