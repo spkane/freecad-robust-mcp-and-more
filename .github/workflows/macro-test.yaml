@@ -140,7 +140,8 @@ jobs:
               fi
               if [ "$i" -eq 60 ]; then
                   echo "ERROR: MCP bridge did not start within 60s"
-                  echo "=== Bridge log ===" && cat /tmp/freecad_bridge.log || true
+                  echo "=== Bridge log ==="
+                  cat /tmp/freecad_bridge.log || true
                   kill "$FREECAD_PID" 2>/dev/null || true
                   exit 1
               fi
