@@ -121,7 +121,7 @@ The FreeCAD MCP bridge server is not running. To fix this:
 2. In FreeCAD's Python console (View → Panels → Python console), run:
 
    import sys
-   sys.path.insert(0, "/path/to/freecad-mcp/src")
+   sys.path.insert(0, "/path/to/freecad-robust-mcp-and-more/src")
    from freecad_mcp.freecad_plugin.server import FreecadMCPPlugin
    plugin = FreecadMCPPlugin()
    plugin.start()

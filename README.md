@@ -59,6 +59,8 @@ An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that 
     - [CutObjectForMagnets Macro](#cutobjectformagnets-macro)
     - [MultiExport Macro](#multiexport-macro)
   - [Architecture](#architecture)
+  - [Acknowledgements](#acknowledgements)
+    - [Related Projects](#related-projects)
   - [License](#license)
 
 <!--TOC-->
@@ -84,6 +86,8 @@ This section covers installation and usage for end users who want to use the MCP
 
 ## MCP Server
 
+> **Note**: Since this repository has more than just the MCP server in it, the Linux container and PyPi projects releases are both simply named `freecad-robust-mcp` which differs from the name of this git repository.
+
 ### Installation
 
 #### Using pip (recommended)
@@ -95,8 +99,12 @@ pip install freecad-robust-mcp
 #### Using mise and just (from source)
 
 ```bash
-git clone https://github.com/spkane/freecad-mcp.git
-cd freecad-mcp
+git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
+cd freecad-robust-mcp-and-more
+
+# Install mise via the Official mise installer script (if not already installed)
+curl https://mise.run | sh
+
 mise trust
 mise install
 just setup
@@ -108,12 +116,12 @@ Run the MCP server in a container. This is useful for isolated environments or w
 
 ```bash
 # Pull from Docker Hub (when published)
-docker pull spkane/freecad-mcp
+docker pull spkane/freecad-robust-mcp
 
 # Or build locally
-git clone https://github.com/spkane/freecad-mcp.git
-cd freecad-mcp
-docker build -t freecad-mcp .
+git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
+cd freecad-robust-mcp-and-more
+docker build -t freecad-robust-mcp .
 
 # Or use just commands (if you have mise/just installed)
 just docker::build        # Build for local architecture
@@ -169,7 +177,7 @@ If installed from source with mise/uv:
   "mcpServers": {
     "freecad": {
       "command": "/path/to/mise/shims/uv",
-      "args": ["run", "--project", "/path/to/freecad-mcp", "freecad-mcp"],
+      "args": ["run", "--project", "/path/to/freecad-robust-mcp-and-more", "freecad-mcp"],
       "env": {
         "FREECAD_MODE": "xmlrpc"
       }
@@ -420,7 +428,7 @@ This project includes standalone FreeCAD macros that can be used independently o
 
 Pre-packaged macro archives are available with each release:
 
-1. Go to the [Releases page](https://github.com/spkane/freecad-mcp/releases)
+1. Go to the [Releases page](https://github.com/spkane/freecad-robust-mcp-and-more/releases)
 1. Download the macro archive for your platform:
    - `freecad-macros-X.Y.Z.tar.gz` (Linux/macOS)
    - `freecad-macros-X.Y.Z.zip` (Windows)
@@ -553,10 +561,10 @@ This section covers development setup, contributing, and working with the codeba
 
 ```bash
 # Clone the repository
-git clone https://github.com/spkane/freecad-mcp.git
-cd freecad-mcp
+git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
+cd freecad-robust-mcp-and-more
 
-# Install mise (if not already installed)
+# Install mise via the Official mise installer script (if not already installed)
 curl https://mise.run | sh
 
 # Install all tools (Python 3.11, uv, just, pre-commit)
@@ -583,7 +591,7 @@ Create a `.mcp.json` file in the project directory:
   "mcpServers": {
     "freecad": {
       "command": "/path/to/mise/shims/uv",
-      "args": ["run", "--project", "/path/to/freecad-mcp", "freecad-mcp"],
+      "args": ["run", "--project", "/path/to/freecad-robust-mcp-and-more", "freecad-mcp"],
       "env": {
         "FREECAD_MODE": "xmlrpc",
         "FREECAD_SOCKET_HOST": "localhost",
@@ -597,18 +605,17 @@ Create a `.mcp.json` file in the project directory:
 
 **Replace the paths with your actual paths:**
 
-| Placeholder              | Description                    | Example (macOS)                |
-| ------------------------ | ------------------------------ | ------------------------------ |
-| `/path/to/mise/shims/uv` | Full path to uv via mise shims | `~/.local/share/mise/shims/uv` |
-| `/path/to/freecad-mcp`   | Project directory              | `~/dev/freecad-mcp`            |
-| `/path/to/mise/shims`    | mise shims directory for PATH  | `~/.local/share/mise/shims`    |
+| Placeholder                            | Description                    | Example                                    |
+| -------------------------------------- | ------------------------------ | ------------------------------------------ |
+| `/path/to/mise/shims/uv`               | Full path to uv via mise shims | `~/.local/share/mise/shims/uv`             |
+| `/path/to/freecad-robust-mcp-and-more` | Project directory              | `/home/me/dev/freecad-robust-mcp-and-more` |
+| `/path/to/mise/shims`                  | mise shims directory for PATH  | `~/.local/share/mise/shims`                |
 
 **Finding your mise shims path:**
 
 ```bash
 mise where uv | sed 's|/installs/.*|/shims|'
-# Or simply:
-echo ~/.local/share/mise/shims
+# Example: /home/user/.local/share/mise/shims (on Linux) or ~/.local/share/mise/shims (on macOS)
 ```
 
 ### Development Workflow
@@ -782,6 +789,26 @@ See [ARCHITECTURE-MCP.md](ARCHITECTURE-MCP.md) for detailed design documentation
 - Bridge communication protocols
 - Tool registration patterns
 - FreeCAD plugin architecture
+
+---
+
+## Acknowledgements
+
+This project was developed after analyzing several existing FreeCAD MCP implementations. We are grateful to these projects for their pioneering work and the ideas they contributed to the FreeCAD + AI ecosystem:
+
+### Related Projects
+
+- **[neka-nat/freecad-mcp](https://github.com/neka-nat/freecad-mcp)** (MIT License) - The queue-based thread safety pattern and XML-RPC protocol design (port 9875) were directly inspired by this project. Our implementation maintains protocol compatibility while being a complete rewrite with additional features.
+
+- **[jango-blockchained/mcp-freecad](https://github.com/jango-blockchained/mcp-freecad)** - Inspired our connection recovery mechanisms and multi-mode architecture approach.
+
+- **[contextform/freecad-mcp](https://github.com/contextform/freecad-mcp)** - Informed our comprehensive PartDesign and Part workbench tool coverage.
+
+- **[ATOI-Ming/FreeCAD-MCP](https://github.com/ATOI-Ming/FreeCAD-MCP)** - Inspired our macro development toolkit including templates, validation, and automatic imports.
+
+- **[bonninr/freecad_mcp](https://github.com/bonninr/freecad_mcp)** - Influenced our simple socket-based communication approach.
+
+See [docs/COMPARISON.md](docs/COMPARISON.md) for a detailed analysis of these implementations and the design decisions they informed.
 
 ---
 

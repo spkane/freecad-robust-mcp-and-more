@@ -5,10 +5,10 @@
 language: en-US
 
 # Tone instructions for reviews
-tone_instructions: >
+tone_instructions: |
   Be concise and direct. Focus on actionable feedback.
-  This is a Python project using modern tooling (uv, ruff, mypy).
-  The codebase integrates with FreeCAD CAD software via MCP protocol.
+  Python project using modern tooling (uv, ruff, mypy).
+  Integrates with FreeCAD CAD software via MCP protocol.
 
 early_access: false
 
@@ -96,6 +96,16 @@ reviews:
 
         CRITICAL: Python 3.11 is required - FreeCAD bundles libpython3.11.
         Using a different Python version causes ABI incompatibility crashes.
+    - path: "README.md"
+      instructions: >
+        INTENTIONAL NAMING: The repo is "freecad-robust-mcp-and-more" but Docker
+        image and PyPI package are "freecad-robust-mcp". This is documented and
+        intentional - do NOT flag as a naming mismatch or inconsistency.
+    - path: "Dockerfile"
+      instructions: >
+        INTENTIONAL NAMING: Image name "freecad-robust-mcp" differs from repo name
+        "freecad-robust-mcp-and-more". This is intentional and documented in README.
+        Do NOT flag as a naming mismatch.
     - path: ".mise.toml"
       instructions: >
         Tool version management via mise. All versions use fuzzy matching:
