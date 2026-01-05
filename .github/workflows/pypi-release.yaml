@@ -60,28 +60,56 @@ jobs:
       - name: Install build dependencies
         run: uv sync --all-extras
 
-      - name: Verify version in pyproject.toml
+      - name: Build package
+        run: uv build
+
+      - name: Verify built package version
+        env:
+          TAG_VERSION: ${{ steps.version.outputs.version }}
         run: |
-          # Extract version from pyproject.toml
-          PYPROJECT_VERSION=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed 's/.*=\s*"\([^"]*\)".*/\1/')
-          TAG_VERSION="${{ steps.version.outputs.version }}"
+          # Extract version from built wheel filename
+          # Wheel format: {distribution}-{version}(-{build tag})?-{python}-{abi}-{platform}.whl
+          shopt -s nullglob
+          WHEEL_FILES=(dist/*.whl)
+          if [ ${#WHEEL_FILES[@]} -eq 0 ]; then
+              echo "ERROR: No wheel files found in dist/"
+              exit 1
+          fi
+          WHEEL_FILE="${WHEEL_FILES[0]}"
+          WHEEL_NAME=$(basename "$WHEEL_FILE")
 
-          echo "pyproject.toml version: $PYPROJECT_VERSION"
-          echo "Git tag version: $TAG_VERSION"
+          # Extract version from wheel filename (second field after splitting by -)
+          # Handle PEP 440 version normalization (e.g., 0.5.0-beta -> 0.5.0b0)
+          WHEEL_VERSION=$(echo "$WHEEL_NAME" | sed -E 's/^[^-]+-([^-]+)-.*/\1/')
 
-          if [ "$PYPROJECT_VERSION" != "$TAG_VERSION" ]; then
-              echo "ERROR: Version mismatch!"
-              echo "  pyproject.toml: $PYPROJECT_VERSION"
-              echo "  Git tag: $TAG_VERSION"
+          echo "Built wheel: $WHEEL_NAME"
+          echo "Wheel version: $WHEEL_VERSION"
+          echo "Expected tag version: $TAG_VERSION"
+
+          # Normalize the tag version for comparison (PEP 440)
+          # Convert common patterns: -alpha -> a0, -beta -> b0, -rc -> rc0
+          # Also handle numbered variants: -alpha.1 -> a1, -beta.2 -> b2, -rc.3 -> rc3
+          NORMALIZED_TAG=$(echo "$TAG_VERSION" | sed -E '
+            s/-alpha\.([0-9]+)/a\1/
+            s/-alpha/a0/
+            s/-beta\.([0-9]+)/b\1/
+            s/-beta/b0/
+            s/-rc\.([0-9]+)/rc\1/
+            s/-rc/rc0/
+          ')
+
+          echo "Normalized tag version: $NORMALIZED_TAG"
+
+          if [ "$WHEEL_VERSION" != "$NORMALIZED_TAG" ]; then
+              echo "ERROR: Built package version does not match git tag!"
+              echo "  Wheel version: $WHEEL_VERSION"
+              echo "  Expected (normalized): $NORMALIZED_TAG"
               echo ""
-              echo "Please update pyproject.toml to match the release tag."
+              echo "This may indicate an issue with dynamic versioning configuration."
               exit 1
           fi
 
-          echo "Version check passed!"
-
-      - name: Build package
-        run: uv build
+          echo "Version verification passed!"
 
       - name: Check package
         run: |
