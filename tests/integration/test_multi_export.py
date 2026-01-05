@@ -309,7 +309,12 @@ _result_ = {{
         assert data["file_size"] > 100
 
     def test_export_with_custom_tolerance(self, xmlrpc_proxy, temp_export_dir):
-        """Test that mesh tolerance affects output file size."""
+        """Test that mesh tolerance affects output file size.
+
+        Note: FreeCAD's tessellate function has internal limits, so we need
+        to use a very fine tolerance (0.01) to actually see more triangles
+        compared to the default tessellation.
+        """
         code = f"""
 {MULTI_EXPORTER_CODE}
 
@@ -319,7 +324,7 @@ sphere = doc.addObject("Part::Sphere", "TestSphere")
 sphere.Radius = 20
 doc.recompute()
 
-# Export with coarse tolerance
+# Export with coarse tolerance (uses default tessellation)
 params_coarse = {{
     "directory": "{temp_export_dir}",
     "base_filename": "sphere_coarse",
@@ -330,12 +335,12 @@ exporter_coarse = MultiExporter([sphere], params_coarse)
 coarse_files, _ = exporter_coarse.export_all()
 coarse_size = os.path.getsize(coarse_files[0]) if coarse_files else 0
 
-# Export with fine tolerance
+# Export with very fine tolerance (0.01 required to see difference)
 params_fine = {{
     "directory": "{temp_export_dir}",
     "base_filename": "sphere_fine",
     "formats": ["stl"],
-    "mesh_tolerance": 0.05,
+    "mesh_tolerance": 0.01,
 }}
 exporter_fine = MultiExporter([sphere], params_fine)
 fine_files, _ = exporter_fine.export_all()
@@ -353,7 +358,7 @@ _result_ = {{
         result = execute_code(xmlrpc_proxy, code)
         data = result.get("result", {})
 
-        # Fine tolerance should produce larger file (more triangles)
+        # Fine tolerance (0.01) should produce larger file (more triangles)
         assert data["fine_is_larger"] is True
         assert data["fine_size"] > data["coarse_size"]
 

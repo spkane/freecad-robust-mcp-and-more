@@ -23,6 +23,7 @@ import pytest
 _bridge_available: bool | None = None
 _bridge_error: str | None = None
 _bridge_instance_id: str | None = None
+_gui_available: bool | None = None
 _warning_emitted: bool = False
 
 
@@ -32,7 +33,7 @@ def _check_bridge_connection() -> tuple[bool, str | None, str | None]:
     Returns:
         Tuple of (is_available, error_message, instance_id)
     """
-    global _bridge_available, _bridge_error, _bridge_instance_id
+    global _bridge_available, _bridge_error, _bridge_instance_id, _gui_available
 
     if _bridge_available is not None:
         return _bridge_available, _bridge_error, _bridge_instance_id
@@ -45,20 +46,58 @@ def _check_bridge_connection() -> tuple[bool, str | None, str | None]:
             _bridge_error = None
             # The ping response includes instance_id
             _bridge_instance_id = result.get("instance_id")
+
+            # Check if GUI is available via get_status
+            try:
+                status: dict[str, Any] = proxy.get_status()  # type: ignore[assignment]
+                _gui_available = status.get("gui_available", False)
+            except Exception:
+                # If get_status fails, assume headless
+                _gui_available = False
         else:
             _bridge_available = False
             _bridge_error = "FreeCAD MCP bridge not responding to ping"
             _bridge_instance_id = None
+            _gui_available = None
     except ConnectionRefusedError:
         _bridge_available = False
         _bridge_error = "Connection refused - FreeCAD MCP bridge not running"
         _bridge_instance_id = None
+        _gui_available = None
     except Exception as e:
         _bridge_available = False
         _bridge_error = f"Cannot connect to FreeCAD MCP bridge: {e}"
         _bridge_instance_id = None
+        _gui_available = None
 
     return _bridge_available, _bridge_error, _bridge_instance_id
+
+
+def is_gui_available() -> bool:
+    """Check if FreeCAD GUI is available.
+
+    Returns:
+        True if running in GUI mode, False if headless.
+    """
+    # Ensure bridge check has been performed
+    _check_bridge_connection()
+    return _gui_available is True
+
+
+def is_headless_mode() -> bool:
+    """Check if FreeCAD is running in headless mode.
+
+    Returns:
+        True if running in headless mode, False if GUI is available.
+    """
+    return not is_gui_available()
+
+
+# Skip marker for GUI-only tests
+requires_gui = pytest.mark.skipif(
+    is_headless_mode(),
+    reason="Test requires FreeCAD GUI mode (running in headless mode)",
+)
 
 
 def pytest_collection_modifyitems(
@@ -143,6 +182,45 @@ def expected_bridge_instance_id() -> str | None:
         The expected instance ID from env, or None if not set.
     """
     return os.environ.get("EXPECTED_BRIDGE_INSTANCE_ID")
+
+
+@pytest.fixture(scope="module")
+def freecad_gui_available() -> bool:
+    """Check if FreeCAD GUI is available.
+
+    This fixture returns True if FreeCAD is running in GUI mode,
+    False if running in headless mode. Use this to conditionally
+    skip tests that require GUI features.
+
+    Returns:
+        True if GUI is available, False if headless.
+
+    Example:
+        def test_screenshot(freecad_gui_available):
+            if not freecad_gui_available:
+                pytest.skip("Test requires GUI mode")
+            # ... test that needs GUI
+    """
+    return is_gui_available()
+
+
+@pytest.fixture(scope="module")
+def freecad_is_headless() -> bool:
+    """Check if FreeCAD is running in headless mode.
+
+    This fixture returns True if FreeCAD is running in headless mode
+    (no GUI), False if GUI is available.
+
+    Returns:
+        True if headless, False if GUI is available.
+
+    Example:
+        def test_some_feature(freecad_is_headless):
+            if freecad_is_headless:
+                pytest.skip("Test requires GUI mode")
+            # ... test that needs GUI
+    """
+    return is_headless_mode()
 
 
 def verify_bridge_instance(

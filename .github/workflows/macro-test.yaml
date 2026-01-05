@@ -160,9 +160,7 @@ jobs:
       - name: Run CutObjectForMagnets macro tests
         env:
           FREECAD_MODE: xmlrpc
-        # Note: PartDesign::Hole can fail in headless mode due to CAD kernel limitations
-        # These tests may be skipped or fail - marked as non-blocking for now
-        continue-on-error: true
+        # Note: PartDesign::Hole works in both GUI and headless mode
         run: |
           uv run pytest tests/integration/test_cut_object_for_magnets.py -v --tb=short
 
