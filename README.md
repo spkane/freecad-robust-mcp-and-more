@@ -177,7 +177,7 @@ If installed from source with mise/uv:
   "mcpServers": {
     "freecad": {
       "command": "/path/to/mise/shims/uv",
-      "args": ["run", "--project", "/path/to/freecad-mcp", "freecad-mcp"],
+      "args": ["run", "--project", "/path/to/freecad-robust-mcp-and-more", "freecad-mcp"],
       "env": {
         "FREECAD_MODE": "xmlrpc"
       }
@@ -591,7 +591,7 @@ Create a `.mcp.json` file in the project directory:
   "mcpServers": {
     "freecad": {
       "command": "/path/to/mise/shims/uv",
-      "args": ["run", "--project", "/path/to/freecad-mcp", "freecad-mcp"],
+      "args": ["run", "--project", "/path/to/freecad-robust-mcp-and-more", "freecad-mcp"],
       "env": {
         "FREECAD_MODE": "xmlrpc",
         "FREECAD_SOCKET_HOST": "localhost",
@@ -605,18 +605,17 @@ Create a `.mcp.json` file in the project directory:
 
 **Replace the paths with your actual paths:**
 
-| Placeholder              | Description                    | Example (macOS)                |
-| ------------------------ | ------------------------------ | ------------------------------ |
-| `/path/to/mise/shims/uv` | Full path to uv via mise shims | `~/.local/share/mise/shims/uv` |
-| `/path/to/freecad-mcp`   | Project directory              | `~/dev/freecad-mcp`            |
-| `/path/to/mise/shims`    | mise shims directory for PATH  | `~/.local/share/mise/shims`    |
+| Placeholder                            | Description                    | Example                                    |
+| -------------------------------------- | ------------------------------ | ------------------------------------------ |
+| `/path/to/mise/shims/uv`               | Full path to uv via mise shims | `~/.local/share/mise/shims/uv`             |
+| `/path/to/freecad-robust-mcp-and-more` | Project directory              | `/home/me/dev/freecad-robust-mcp-and-more` |
+| `/path/to/mise/shims`                  | mise shims directory for PATH  | `~/.local/share/mise/shims`                |
 
 **Finding your mise shims path:**
 
 ```bash
 mise where uv | sed 's|/installs/.*|/shims|'
-# Or simply:
-echo ~/.local/share/mise/shims
+# Example: /home/user/.local/share/mise/shims (on Linux) or ~/.local/share/mise/shims (on macOS)
 ```
 
 ### Development Workflow

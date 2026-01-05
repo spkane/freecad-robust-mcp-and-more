@@ -43,7 +43,7 @@ After starting the bridge, configure your MCP client (e.g., Claude Code) with:
   "mcpServers": {
     "freecad": {
       "command": "uv",
-      "args": ["run", "--project", "/path/to/freecad-mcp", "freecad-mcp"],
+      "args": ["run", "--project", "/path/to/freecad-robust-mcp-and-more", "freecad-mcp"],
       "env": {
         "FREECAD_MODE": "xmlrpc"
       }
