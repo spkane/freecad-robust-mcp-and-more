@@ -225,6 +225,29 @@ jobs:
           MIT License - see [LICENSE](https://github.com/spkane/freecad-robust-mcp-and-more/blob/main/LICENSE) for details.
           EOF
 
+          # Validate the generated README
+          if [ ! -f ./DOCKERHUB_README.md ]; then
+              echo "ERROR: DOCKERHUB_README.md was not created" >&2
+              exit 1
+          fi
+
+          if [ ! -s ./DOCKERHUB_README.md ]; then
+              echo "ERROR: DOCKERHUB_README.md is empty" >&2
+              exit 1
+          fi
+
+          # Check file size (Docker Hub limit is 25000 bytes)
+          FILE_SIZE=$(wc -c < ./DOCKERHUB_README.md)
+          MAX_SIZE=25000
+          echo "Docker Hub README size: ${FILE_SIZE} bytes (limit: ${MAX_SIZE} bytes)"
+
+          if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
+              echo "ERROR: DOCKERHUB_README.md exceeds Docker Hub limit of ${MAX_SIZE} bytes (actual: ${FILE_SIZE} bytes)" >&2
+              exit 1
+          fi
+
+          echo "Docker Hub README validation passed"
+
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v5
         with:
