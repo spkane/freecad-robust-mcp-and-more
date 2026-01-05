@@ -1,5 +1,10 @@
 # FreeCAD Tools and MCP Server
 
+[![CI Tests](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/test.yaml/badge.svg)](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/test.yaml)
+[![Docker Build](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/docker.yaml/badge.svg)](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/docker.yaml)
+[![Pre-commit](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/pre-commit.yaml)
+[![CodeQL](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/codeql.yaml/badge.svg)](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/codeql.yaml)
+
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
 
 > Also includes standalone FreeCAD macros for common tasks.
