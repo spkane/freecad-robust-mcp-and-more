@@ -72,7 +72,10 @@ LABEL org.opencontainers.image.title="FreeCAD MCP Server" \
 RUN addgroup -g 1000 mcpuser && \
     adduser -u 1000 -G mcpuser -s /bin/sh -D mcpuser
 
-# Upgrade pip in the base image to fix CVE-2025-8869
+# Upgrade system pip to fix CVE-2025-8869 (defense-in-depth)
+# Note: Although PATH prefers /opt/venv/bin, we upgrade the system pip at
+# /usr/local/bin/pip intentionally. This ensures no vulnerable pip exists
+# in the image, even if the venv is bypassed or pip is invoked directly.
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --upgrade "pip>=25.3"
 

@@ -165,7 +165,7 @@ jobs:
     needs: [build, test-install]
     runs-on: ubuntu-latest
     # Only publish alpha releases to TestPyPI
-    if: contains(github.ref, '-')
+    if: contains(github.ref, '-alpha')
     environment:
       name: testpypi
       url: https://test.pypi.org/p/freecad-robust-mcp
@@ -188,7 +188,7 @@ jobs:
     name: Publish to PyPI
     needs: [build, test-install]
     runs-on: ubuntu-latest
-    # Only publish non-alpha releases to PyPI
+    # Publish beta, rc, and stable releases to PyPI (not alpha)
     if: ${{ !contains(github.ref, '-alpha') }}
     environment:
       name: pypi

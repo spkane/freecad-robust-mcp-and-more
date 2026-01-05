@@ -117,14 +117,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .trivy-cache
-          # Cache key uses date to refresh daily (Trivy DB updates ~daily)
-          key: trivy-db-${{ runner.os }}-${{ hashFiles('.github/workflows/docker.yaml') }}-${{ github.run_id }}
+          # Cache key based on OS and workflow file hash; refreshes when workflow changes
+          key: trivy-db-${{ runner.os }}-${{ hashFiles('.github/workflows/docker.yaml') }}
           restore-keys: |
-            trivy-db-${{ runner.os }}-${{ hashFiles('.github/workflows/docker.yaml') }}-
             trivy-db-${{ runner.os }}-
 
       - name: Scan for HIGH/CRITICAL vulnerabilities (fail build)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ env.IMAGE_NAME }}:test
           severity: "HIGH,CRITICAL"
@@ -133,7 +132,7 @@ jobs:
           cache-dir: .trivy-cache
 
       - name: Scan for MEDIUM/LOW vulnerabilities (warning only)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ env.IMAGE_NAME }}:test
           severity: "MEDIUM,LOW"
@@ -144,7 +143,7 @@ jobs:
 
       - name: Generate SARIF report for GitHub Security
         if: github.event_name != 'pull_request'
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ env.IMAGE_NAME }}:test
           format: "sarif"

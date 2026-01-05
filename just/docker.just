@@ -53,7 +53,7 @@ shell:
         --add-host=host.docker.internal:host-gateway \
         -e FREECAD_MODE=xmlrpc \
         -e FREECAD_SOCKET_HOST=host.docker.internal \
-        --entrypoint /bin/bash \
+        --entrypoint /bin/sh \
         {{image_name}}
 
 # Show image size and layers
