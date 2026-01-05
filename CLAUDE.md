@@ -54,7 +54,7 @@ FreeCAD's `FreeCAD.so` library links to `@rpath/libpython3.11.dylib` (FreeCAD's 
 This project uses [`mise`](https://mise.jdx.dev/) for local development tool management. All tool versions are pinned in `.mise.toml`.
 
 ```bash
-# Install mise (if not already installed)
+# Install mise via the Official mise installer script (if not already installed)
 curl https://mise.run | sh
 
 # Install all project tools

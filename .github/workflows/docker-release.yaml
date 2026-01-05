@@ -87,7 +87,7 @@ jobs:
             # Latest tag - only for stable releases
             type=raw,value=latest,enable=${{ steps.version.outputs.is_prerelease == 'false' }}
           labels: |
-            org.opencontainers.image.title=FreeCAD MCP Server
+            org.opencontainers.image.title=FreeCAD Robust MCP Server
             org.opencontainers.image.description=Model Context Protocol server for FreeCAD integration
             org.opencontainers.image.vendor=spkane
             org.opencontainers.image.version=${{ steps.version.outputs.version }}

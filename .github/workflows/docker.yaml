@@ -27,7 +27,7 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: freecad-robust-mcp
 
 jobs:
   build:
@@ -103,13 +103,13 @@ jobs:
       - name: Test Docker image
         run: |
           # Build for current platform only for testing
-          docker build --build-arg VERSION=${{ steps.version.outputs.VERSION }} -t freecad-mcp:test .
+          docker build --build-arg VERSION=${{ steps.version.outputs.VERSION }} -t ${{ env.IMAGE_NAME }}:test .
 
           # Test that the container starts and responds to MCP initialize
           echo '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | \
             timeout 30 docker run --rm -i \
               -e FREECAD_MODE=xmlrpc \
-              freecad-mcp:test 2>&1 | \
+              ${{ env.IMAGE_NAME }}:test 2>&1 | \
             grep -q '"result"' && echo "Container test passed" || echo "Container test completed"
 
       - name: Scan for vulnerabilities

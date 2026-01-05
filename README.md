@@ -86,6 +86,8 @@ This section covers installation and usage for end users who want to use the MCP
 
 ## MCP Server
 
+> **Note**: For clarity, the Linux container and PyPi projects releases are both simply named `freecad-robust-mcp` which differs somewhat from the name of this git repository.
+
 ### Installation
 
 #### Using pip (recommended)
@@ -100,7 +102,7 @@ pip install freecad-robust-mcp
 git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
 cd freecad-robust-mcp-and-more
 
-# Install mise (if not already installed)
+# Install mise via the Official mise installer script (if not already installed)
 curl https://mise.run | sh
 
 mise trust
@@ -119,7 +121,7 @@ docker pull spkane/freecad-robust-mcp
 # Or build locally
 git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
 cd freecad-robust-mcp-and-more
-docker build -t freecad-mcp .
+docker build -t freecad-robust-mcp .
 
 # Or use just commands (if you have mise/just installed)
 just docker::build        # Build for local architecture
@@ -562,7 +564,7 @@ This section covers development setup, contributing, and working with the codeba
 git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
 cd freecad-robust-mcp-and-more
 
-# Install mise (if not already installed)
+# Install mise via the Official mise installer script (if not already installed)
 curl https://mise.run | sh
 
 # Install all tools (Python 3.11, uv, just, pre-commit)
@@ -807,7 +809,7 @@ This project was developed after analyzing several existing FreeCAD MCP implemen
 
 - **[bonninr/freecad_mcp](https://github.com/bonninr/freecad_mcp)** - Influenced our simple socket-based communication approach.
 
-See [docs/comparison.md](docs/comparison.md) for a detailed analysis of these implementations and the design decisions they informed.
+See [docs/COMPARISON.md](docs/COMPARISON.md) for a detailed analysis of these implementations and the design decisions they informed.
 
 ---
 

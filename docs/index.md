@@ -22,7 +22,7 @@ This project provides an [MCP (Model Context Protocol)](https://modelcontextprot
 git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
 cd freecad-robust-mcp-and-more
 
-# Install mise (if not already installed)
+# Install mise via the Official mise installer script (if not already installed)
 curl https://mise.run | sh
 
 mise install
