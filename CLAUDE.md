@@ -22,11 +22,13 @@ Current requirement: **Python 3.11** (matching FreeCAD 1.0.x bundled Python)
 
 This MCP server supports three connection modes. **Embedded mode does NOT work on macOS** due to how FreeCAD's libraries are linked.
 
-| Mode       | Description                                 | Platform Support                  |
-| ---------- | ------------------------------------------- | --------------------------------- |
-| `xmlrpc`   | Connects to FreeCAD via XML-RPC (port 9875) | **All platforms** (recommended)   |
-| `socket`   | Connects via JSON-RPC socket (port 9876)    | **All platforms**                 |
-| `embedded` | Imports FreeCAD directly into process       | **Linux only** (crashes on macOS) |
+| Mode       | Description                                 | Platform Support                  | Testing Level    |
+| ---------- | ------------------------------------------- | --------------------------------- | ---------------- |
+| `xmlrpc`   | Connects to FreeCAD via XML-RPC (port 9875) | **All platforms** (recommended)   | Full integration |
+| `socket`   | Connects via JSON-RPC socket (port 9876)    | **All platforms**                 | Full integration |
+| `embedded` | Imports FreeCAD directly into process       | **Linux only** (crashes on macOS) | Unit tests only  |
+
+**Embedded mode testing:** Embedded mode is tested via mocked unit tests in CI. It does not have integration tests with actual FreeCAD because that would require running FreeCAD in-process on Linux CI runners. For production use, prefer `xmlrpc` or `socket` modes which have full integration test coverage.
 
 **Why embedded mode fails on macOS:**
 FreeCAD's `FreeCAD.so` library links to `@rpath/libpython3.11.dylib` (FreeCAD's bundled Python). When you try to import it from a different Python interpreter (even the same version), it causes a crash because the Python runtime state is incompatible.
@@ -87,6 +89,24 @@ uv run freecad-mcp
 - They exist only in the project's virtual environment
 - Running `pytest` directly will fail with "command not found"
 - Always prefix with `uv run` when running Python tools directly
+
+### Safety CLI Account (for Security Scanning)
+
+This project uses [Safety CLI](https://safetycli.com/) for dependency vulnerability scanning. Safety requires a **free account** for the `safety scan` command.
+
+**First-time setup:**
+
+```bash
+# Register for a free account (interactive)
+uv run safety auth
+
+# Or login if you already have an account
+uv run safety auth --login
+```
+
+**Note:** The Safety CLI authentication is stored locally and only needs to be done once per machine. If you skip this step, the `safety` pre-commit hook will fail with an authentication prompt.
+
+**CI/CD:** Safety runs in CI using the `SAFETY_API_KEY` repository secret. The API key is passed via environment variable to the pre-commit hook.
 
 ### Workflow Commands (via `just`)
 

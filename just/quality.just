@@ -1,5 +1,8 @@
 # Code quality commands
 # Usage: just quality::check, just quality::format, etc.
+#
+# Note: Tools installed via mise (gitleaks, markdownlint-cli2, etc.) use `mise exec`.
+# Python tools use `uv run`. This ensures commands work even without mise shell activation.
 
 # Run all pre-commit checks
 check:
@@ -21,7 +24,7 @@ typecheck:
 # Run security scanning (code vulnerabilities)
 security:
     uv run bandit -c pyproject.toml -r src
-    uv pip list --format=freeze | uv run safety check --stdin
+    uv run safety scan --detailed-output
 
 # Run spell checking
 spellcheck:
@@ -35,15 +38,15 @@ spellcheck:
 secrets: secrets-gitleaks secrets-detect secrets-trufflehog  # pragma: allowlist secret
     @echo "All secrets scans complete!"
 
-# Run gitleaks secrets scanner
+# Run gitleaks secrets scanner (installed via mise)
 secrets-gitleaks:
-    uv run gitleaks detect --config .gitleaks.toml --verbose
+    mise exec -- gitleaks detect --config .gitleaks.toml --verbose
 
 # Run gitleaks on git history
 secrets-gitleaks-history:
-    uv run gitleaks detect --config .gitleaks.toml --verbose --log-opts="--all"
+    mise exec -- gitleaks detect --config .gitleaks.toml --verbose --log-opts="--all"
 
-# Run detect-secrets scanner
+# Run detect-secrets scanner (installed via uv)
 secrets-detect:
     uv run detect-secrets scan --baseline .secrets.baseline
 
@@ -55,26 +58,22 @@ secrets-audit:
 secrets-baseline-update:
     uv run detect-secrets scan --baseline .secrets.baseline --update
 
-# Run trufflehog for verified secrets
+# Run trufflehog for verified secrets (via pre-commit - not installed standalone)
 secrets-trufflehog:
-    uv run trufflehog filesystem . --no-update --only-verified
-
-# Run trufflehog on git history
-secrets-trufflehog-history:
-    uv run trufflehog git file://. --no-update --only-verified
+    uv run pre-commit run trufflehog --all-files
 
 # =============================================================================
 # Markdown Linting
 # =============================================================================
 
-# Lint all markdown files
+# Lint all markdown files (markdownlint-cli2 installed via mise)
 markdown-lint:
-    uv run markdownlint-cli2 "**/*.md"
+    mise exec -- markdownlint-cli2 "**/*.md"
 
 # Lint and fix markdown files
 markdown-fix:
-    uv run markdownlint-cli2 --fix "**/*.md"
+    mise exec -- markdownlint-cli2 --fix "**/*.md"
 
-# Format markdown files with mdformat
+# Format markdown files with mdformat (installed via uv)
 markdown-format:
     uv run mdformat docs/*.md README.md ARCHITECTURE-MCP.md CLAUDE.md

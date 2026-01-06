@@ -61,19 +61,34 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    # Testing
     "pytest>=8.3.0",
     "pytest-asyncio>=0.25.0",
     "pytest-cov>=6.0.0",
     "pytest-timeout>=2.3.0",
+    # Linting and formatting
     "mypy>=1.14.0",
     "ruff>=0.8.0",
+    # Security scanning
     "bandit[toml]>=1.8.0",
     "safety>=3.2.0",
+    "detect-secrets>=1.5.0",
+    # Pre-commit
     "pre-commit>=4.0.0",
+    # Documentation
     "mkdocs>=1.6.0",
     "mkdocs-material>=9.5.0",
     "mkdocstrings[python]>=0.27.0",
     "md-toc>=9.0.0",
+    # Markdown tools (also used by pre-commit, but useful standalone)
+    "mdformat>=0.7.0",
+    "mdformat-gfm>=0.3.0",
+    "mdformat-frontmatter>=2.0.0",
+    "mdformat-footnote>=0.1.0",
+    "mdformat-tables>=1.0.0",
+    "mdformat-simple-breaks>=0.0.1",
+    "codespell>=2.3.0",
+    # Publishing
     "twine>=6.0.0",
     "build>=1.2.0",
 ]
@@ -300,3 +315,8 @@ skips = [
 [tool.codespell]
 skip = ".git,*.lock,*.toml"
 ignore-words-list = "crate"
+
+[[tool.uv.index]]
+name = "safety"
+url = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/"
+default = false

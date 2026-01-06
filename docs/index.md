@@ -4,46 +4,35 @@ Welcome to the FreeCAD MCP Server documentation.
 
 This project provides an [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
 
-## Documentation
+---
 
-| Document                                      | Description                                            |
-| --------------------------------------------- | ------------------------------------------------------ |
-| [README](../README.md)                        | Project overview, installation, and configuration      |
-| [User Guide](USER_GUIDE.md)                   | How to use AI assistants with FreeCAD for CAD modeling |
-| [MCP Tools Reference](MCP_TOOLS_REFERENCE.md) | Complete API reference for all 82+ MCP tools           |
-| [Architecture](../ARCHITECTURE-MCP.md)        | Technical design and module structure                  |
-| [Comparison](COMPARISON.md)                   | Analysis of other FreeCAD MCP implementations          |
-| [CLAUDE.md](../CLAUDE.md)                     | AI assistant guidelines for this project               |
+## Features
+
+- **82+ MCP Tools** - Comprehensive CAD operations including primitives, PartDesign, booleans, export
+- **Multiple Connection Modes** - XML-RPC (recommended), JSON-RPC socket, or embedded (Linux only)
+- **GUI & Headless Support** - Full modeling in headless mode, plus screenshots/colors in GUI mode
+- **Macro Development** - Create, edit, run, and template FreeCAD macros via MCP
+- **Standalone Macros** - Useful FreeCAD macros that work independently of the MCP server
+
+---
 
 ## Quick Start
 
 ```bash
-# Clone and setup
-git clone https://github.com/spkane/freecad-robust-mcp-and-more.git
-cd freecad-robust-mcp-and-more
+# Install the MCP server
+pip install freecad-robust-mcp
 
-# Install mise via the Official mise installer script (if not already installed)
-curl https://mise.run | sh
+# Install the workbench via FreeCAD Addon Manager
+# (search for "FreeCAD MCP and More")
 
-mise install
-just setup
+# Start FreeCAD and click "Start Bridge" in the MCP Bridge workbench
 
-# Start FreeCAD with MCP bridge auto-started
-just run-gui
-
-# Run the MCP server (in another terminal or via your MCP client)
-FREECAD_MODE=xmlrpc freecad-mcp
+# Configure your MCP client and start building!
 ```
 
-See the [README](../README.md) for detailed installation and configuration instructions.
+See [Installation](getting-started/installation.md) for detailed setup instructions.
 
-## Features
-
-- **82+ MCP Tools**: Comprehensive CAD operations including primitives, PartDesign, booleans, export
-- **Multiple Connection Modes**: XML-RPC (recommended), JSON-RPC socket, or embedded
-- **GUI & Headless Support**: Full modeling in headless mode, plus screenshots/colors in GUI mode
-- **Macro Development**: Create, edit, run, and template FreeCAD macros
-- **PartDesign Workflow**: Parametric modeling with sketches, pads, pockets, fillets, patterns
+---
 
 ## Connection Modes
 
@@ -53,11 +42,50 @@ See the [README](../README.md) for detailed installation and configuration instr
 | `socket`   | JSON-RPC socket (port 9876)  | All platforms               |
 | `embedded` | In-process FreeCAD           | Linux only                  |
 
+See [Connection Modes](guide/connection-modes.md) for details on choosing the right mode.
+
+---
+
+## GUI vs Headless Mode
+
+The MCP server works with FreeCAD in both GUI and headless mode:
+
+| Feature                  | Headless | GUI |
+| ------------------------ | -------- | --- |
+| Object creation          | Yes      | Yes |
+| Boolean operations       | Yes      | Yes |
+| Export (STEP, STL, etc.) | Yes      | Yes |
+| Screenshots              | No       | Yes |
+| Object colors/visibility | No       | Yes |
+| Camera control           | No       | Yes |
+
+---
+
 ## FreeCAD Macros
 
 This project includes standalone FreeCAD macros:
 
-- **[CutObjectForMagnets](../macros/Cut_Object_for_Magnets/)** - Cuts objects along planes with automatic magnet hole placement
-- **[MultiExport](../macros/Multi_Export/)** - Export objects to multiple formats simultaneously
+- **[CutObjectForMagnets](guide/macros.md#cutobjectformagnets)** - Cuts objects along planes with automatic magnet hole placement
+- **[MultiExport](guide/macros.md#multiexport)** - Export objects to multiple formats simultaneously
 
-The MCP bridge functionality is provided via the **MCP Bridge Workbench** which can be installed through FreeCAD's Addon Manager
+---
+
+## Documentation
+
+| Section                                            | Description                                       |
+| -------------------------------------------------- | ------------------------------------------------- |
+| [Getting Started](getting-started/installation.md) | Installation, configuration, and quick start      |
+| [User Guide](guide/connection-modes.md)            | Connection modes, workbench, macros, and tools    |
+| [Tools Reference](MCP_TOOLS_REFERENCE.md)          | Complete API reference for all 82+ MCP tools      |
+| [API Reference](api/server.md)                     | Python API documentation                          |
+| [Development](development/contributing.md)         | Contributing, architecture, and development setup |
+| [Comparison](COMPARISON.md)                        | Analysis of other FreeCAD MCP implementations     |
+
+---
+
+## Links
+
+- [GitHub Repository](https://github.com/spkane/freecad-robust-mcp-and-more)
+- [PyPI Package](https://pypi.org/project/freecad-robust-mcp/)
+- [Docker Hub](https://hub.docker.com/r/spkane/freecad-robust-mcp)
+- [Issue Tracker](https://github.com/spkane/freecad-robust-mcp-and-more/issues)

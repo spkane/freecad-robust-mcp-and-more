@@ -1,9 +1,13 @@
 # Documentation commands
-# Usage: just docs::build, just docs::serve, etc.
+# Usage: just documentation::build, just documentation::serve, etc.
 
 # Build documentation
 build:
     uv run mkdocs build
+
+# Build documentation with strict mode (fails on warnings)
+build-strict:
+    uv run mkdocs build --strict
 
 # Serve documentation locally
 serve:
@@ -19,3 +23,7 @@ open:
     else \
         echo "Documentation built at: site/index.html"; \
     fi
+
+# Validate documentation (same as build-strict, for CI)
+validate:
+    uv run mkdocs build --strict

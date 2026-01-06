@@ -14,6 +14,7 @@ repos:
       - id: trailing-whitespace
         exclude: \.md$  # Allow trailing spaces in markdown for line breaks
       - id: end-of-file-fixer
+        exclude: \.safety-project\.ini$  # Safety CLI adds trailing newline
       - id: check-xml
       - id: check-yaml
         args: [--unsafe]
@@ -75,6 +76,19 @@ repos:
         additional_dependencies: ["bandit[toml]"]
         types: [text]
         files: \.(py|FCMacro)$
+
+  # Safety - Dependency vulnerability scanning
+  # Checks installed packages against known security vulnerabilities
+  # Local: Requires free safetycli.com account. Run `uv run safety auth` first.
+  # CI: Uses SAFETY_API_KEY secret passed via environment variable.
+  - repo: local
+    hooks:
+      - id: safety
+        name: safety (dependency vulnerabilities)
+        entry: uv run safety scan --detailed-output
+        language: system
+        pass_filenames: false
+        files: ^(pyproject\.toml|uv\.lock)$
 
   # ==========================================================================
   # Secrets Detection - Multi-Layer Approach
@@ -236,6 +250,19 @@ repos:
           - --exit-code
           - "1"
           - .
+
+  # ==========================================================================
+  # Documentation Build Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: mkdocs-build
+        name: mkdocs (documentation build)
+        entry: uv run mkdocs build --strict
+        language: system
+        pass_filenames: false
+        files: ^(docs/|mkdocs\.yaml)
+        types: [file]
 
   # ==========================================================================
   # Commit Message Linting

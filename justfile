@@ -99,6 +99,12 @@ test-all: (testing::all)
 # Build documentation (shortcut for documentation::build)
 docs: (documentation::build)
 
+# Build documentation with strict mode (shortcut for documentation::build-strict)
+docs-strict: (documentation::build-strict)
+
+# Validate documentation (shortcut for documentation::validate)
+docs-validate: (documentation::validate)
+
 # Serve documentation (shortcut for documentation::serve)
 docs-serve: (documentation::serve)
 
