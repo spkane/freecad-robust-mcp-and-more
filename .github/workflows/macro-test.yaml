@@ -1,21 +1,23 @@
-name: Macro Tests
+name: Integration Tests
 
 on:
   push:
     branches: [main, master]
     paths:
+      - "src/freecad_mcp/**/*.py"
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
-      - "tests/integration/test_cut_object_for_magnets.py"
-      - "tests/integration/test_multi_export.py"
+      - "addon/FreecadRobustMCP/**/*.py"
+      - "tests/integration/**/*.py"
       - ".github/workflows/macro-test.yaml"
   pull_request:
     branches: [main, master]
     paths:
+      - "src/freecad_mcp/**/*.py"
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
-      - "tests/integration/test_cut_object_for_magnets.py"
-      - "tests/integration/test_multi_export.py"
+      - "addon/FreecadRobustMCP/**/*.py"
+      - "tests/integration/**/*.py"
       - ".github/workflows/macro-test.yaml"
 
 # Cancel in-progress runs for the same branch
@@ -24,8 +26,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-macros:
-    name: Test FreeCAD Macros
+  test-integration:
+    name: Integration Tests with FreeCAD
     runs-on: ubuntu-latest
 
     steps:
@@ -117,14 +119,11 @@ jobs:
 
       - name: Start FreeCAD headless with MCP bridge
         run: |
-          # Set up environment
-          export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
-
           echo "Using FreeCAD: freecadcmd"
 
           # Start FreeCAD headless with MCP bridge in background
-          # Capture stdout to a file so we can extract the instance ID
-          freecadcmd src/freecad_mcp/freecad_plugin/headless_server.py > /tmp/freecad_bridge.log 2>&1 &
+          # Uses the workbench addon's headless server script
+          freecadcmd addon/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py > /tmp/freecad_bridge.log 2>&1 &
           FREECAD_PID=$!
           echo "FREECAD_PID=$FREECAD_PID" >> "$GITHUB_ENV"
 
@@ -172,6 +171,13 @@ jobs:
         continue-on-error: true
         run: |
           uv run pytest tests/integration/test_multi_export.py -v --tb=short
+
+      - name: Run headless mode integration tests
+        env:
+          FREECAD_MODE: xmlrpc
+        # Tests for headless FreeCAD operations (primitives, booleans, exports, etc.)
+        run: |
+          uv run pytest tests/integration/test_headless_mode.py -v --tb=short
 
       - name: Stop FreeCAD
         if: always()

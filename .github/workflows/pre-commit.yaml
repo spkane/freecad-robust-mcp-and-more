@@ -46,4 +46,6 @@ jobs:
           # - no-commit-to-branch: Always fails in CI (we're on main/master)
           # - trufflehog: Has wasm/go-re2 panic bug in GitHub Actions environment
           SKIP: no-commit-to-branch,trufflehog
+          # Safety CLI API key for dependency vulnerability scanning
+          SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
         run: uv run pre-commit run --all-files --show-diff-on-failure

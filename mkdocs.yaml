@@ -33,7 +33,11 @@ theme:
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - admonition
@@ -62,10 +66,15 @@ nav:
       - Configuration: getting-started/configuration.md
       - Quick Start: getting-started/quickstart.md
   - User Guide:
-      - Embedded Mode: guide/embedded-mode.md
-      - Socket Mode: guide/socket-mode.md
-      - Tools Reference: guide/tools.md
-      - Resources Reference: guide/resources.md
+      - Connection Modes: guide/connection-modes.md
+      - MCP Bridge Workbench: guide/workbench.md
+      - FreeCAD Macros: guide/macros.md
+      - Tools Overview: guide/tools.md
+      - MCP Resources: guide/resources.md
+      - Detailed User Guide: USER_GUIDE.md
+      - Tools Reference: MCP_TOOLS_REFERENCE.md
+  - Comparisons:
+      - Other Implementations: COMPARISON.md
   - API Reference:
       - Server: api/server.md
       - Bridge: api/bridge.md

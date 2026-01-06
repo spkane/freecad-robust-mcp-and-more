@@ -14,6 +14,8 @@ repos:
       - id: trailing-whitespace
         exclude: \.md$  # Allow trailing spaces in markdown for line breaks
       - id: end-of-file-fixer
+        exclude: \.safety-project\.ini$  # Safety CLI manages its own formatting
+      - id: check-xml
       - id: check-yaml
         args: [--unsafe]
       - id: check-toml
@@ -75,6 +77,19 @@ repos:
         types: [text]
         files: \.(py|FCMacro)$
 
+  # Safety - Dependency vulnerability scanning
+  # Checks installed packages against known security vulnerabilities
+  # Local: Requires free safetycli.com account. Run `uv run safety auth` first.
+  # CI: Uses SAFETY_API_KEY secret passed via environment variable.
+  - repo: local
+    hooks:
+      - id: safety
+        name: safety (dependency vulnerabilities)
+        entry: uv run safety scan --detailed-output
+        language: system
+        pass_filenames: false
+        files: ^(pyproject\.toml|uv\.lock)$
+
   # ==========================================================================
   # Secrets Detection - Multi-Layer Approach
   # ==========================================================================
@@ -126,31 +141,17 @@ repos:
         exclude: '(^|/)uv\.lock$|\.secrets\.baseline$'
 
   # ==========================================================================
-  # Markdown Linting - Comprehensive Configuration
+  # Markdown Linting
   # ==========================================================================
 
-  # Primary: markdownlint-cli2 - Comprehensive markdown linter
+  # markdownlint-cli2 - Comprehensive markdown linter with auto-fix
   # Config: .markdownlint.yaml
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.17.1
     hooks:
       - id: markdownlint-cli2
         name: markdownlint (linter)
-        args: []  # Uses .markdownlint.yaml automatically
-
-  # Secondary: mdformat - Opinionated markdown formatter
-  - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21
-    hooks:
-      - id: mdformat
-        name: mdformat (formatter)
-        additional_dependencies:
-          - mdformat-gfm          # GitHub Flavored Markdown
-          - mdformat-frontmatter  # YAML front matter
-          - mdformat-footnote     # Footnotes
-          - mdformat-tables       # Table formatting
-          - mdformat-simple-breaks  # Use --- for horizontal rules
-        exclude: CHANGELOG\.md$  # Don't format auto-generated changelogs
+        args: [--fix]
 
   # Tertiary: md-toc - Table of contents generator
   # Automatically updates TOC between <!--TOC--> markers
@@ -237,6 +238,18 @@ repos:
           - .
 
   # ==========================================================================
+  # Documentation Build Validation
+  # ==========================================================================
+  - repo: local
+    hooks:
+      - id: mkdocs-build
+        name: mkdocs (documentation build)
+        entry: uv run mkdocs build --strict
+        language: system
+        pass_filenames: false
+        files: ^(docs/|mkdocs\.yaml)
+
+  # ==========================================================================
   # Commit Message Linting
   # ==========================================================================
   - repo: https://github.com/commitizen-tools/commitizen
@@ -245,6 +258,33 @@ repos:
       - id: commitizen
         name: commitizen (commit format)
         stages: [commit-msg]
+
+  # ==========================================================================
+  # AI Code Review (Local Only)
+  # ==========================================================================
+  # CodeRabbit CLI - AI-powered code review
+  # https://www.coderabbit.ai/cli
+  #
+  # SETUP REQUIRED:
+  #   1. Install: just coderabbit::install
+  #   2. Authenticate: just coderabbit::login
+  #
+  # USAGE:
+  #   - Run manually: just review (or just coderabbit::review)
+  #   - Run via pre-commit: uv run pre-commit run coderabbit --all-files
+  #
+  # NOTE: This hook uses 'manual' stage so it doesn't run automatically.
+  # The CodeRabbit GitHub App already reviews PRs, so CLI is for local use.
+  # Rate limits: Free=1/hour, Lite=1/hour, Pro=5/hour
+  - repo: local
+    hooks:
+      - id: coderabbit
+        name: coderabbit (AI code review)
+        entry: coderabbit review --plain --type uncommitted
+        language: system
+        pass_filenames: false
+        stages: [manual]
+        verbose: true
 
 # ==========================================================================
 # CI Configuration
@@ -257,3 +297,4 @@ ci:
     - hadolint-docker   # Needs Docker
     - trivyconfig-docker  # Needs Docker
     - trufflehog        # Can be slow in CI
+    - coderabbit        # GitHub App handles PR reviews; CLI is for local use

@@ -2,11 +2,12 @@
 # https://just.systems/
 #
 # Commands are organized into modules:
-#   just docker::build       - Docker commands
-#   just quality::check      - Code quality commands
-#   just testing::unit       - Testing commands
-#   just freecad::run-gui    - FreeCAD commands
+#   just docker::build        - Docker commands
+#   just quality::check       - Code quality commands
+#   just testing::unit        - Testing commands
+#   just freecad::run-gui     - FreeCAD commands
 #   just documentation::build - Documentation commands
+#   just coderabbit::review   - AI code review commands
 #
 # Or use the shortcut commands defined below.
 
@@ -16,6 +17,7 @@ mod quality 'just/quality.just'
 mod testing 'just/testing.just'
 mod freecad 'just/freecad.just'
 mod documentation 'just/documentation.just'
+mod coderabbit 'just/coderabbit.just'
 
 # Default recipe - show available commands
 default:
@@ -75,9 +77,6 @@ markdown-lint: (quality::markdown-lint)
 # Fix markdown files (shortcut for quality::markdown-fix)
 markdown-fix: (quality::markdown-fix)
 
-# Format markdown files (shortcut for quality::markdown-format)
-markdown-format: (quality::markdown-format)
-
 # Run unit tests (shortcut for testing::unit)
 test: (testing::unit)
 
@@ -99,8 +98,14 @@ test-all: (testing::all)
 # Build documentation (shortcut for documentation::build)
 docs: (documentation::build)
 
+# Build documentation with strict mode (shortcut for documentation::build-strict)
+docs-strict: (documentation::build-strict)
+
 # Serve documentation (shortcut for documentation::serve)
 docs-serve: (documentation::serve)
+
+# AI code review of staged changes (shortcut for coderabbit::review)
+review: (coderabbit::review)
 
 # =============================================================================
 # Running the MCP Server
@@ -128,23 +133,11 @@ run-gui: (freecad::run-gui)
 # Run FreeCAD headless with MCP bridge (shortcut for freecad::run-headless)
 run-headless: (freecad::run-headless)
 
-# Install the StartMCPBridge macro (shortcut for freecad::install-bridge-macro)
-install-bridge-macro: (freecad::install-bridge-macro)
-
-# Uninstall the StartMCPBridge macro (shortcut for freecad::uninstall-bridge-macro)
-uninstall-bridge-macro: (freecad::uninstall-bridge-macro)
-
 # Install the CutObjectForMagnets macro (shortcut for freecad::install-cut-macro)
 install-cut-macro: (freecad::install-cut-macro)
 
 # Uninstall the CutObjectForMagnets macro (shortcut for freecad::uninstall-cut-macro)
 uninstall-cut-macro: (freecad::uninstall-cut-macro)
-
-# Install the FreeCAD plugin (shortcut for freecad::install-plugin)
-install-freecad-plugin: (freecad::install-plugin)
-
-# Uninstall the FreeCAD plugin (shortcut for freecad::uninstall-plugin)
-uninstall-freecad-plugin: (freecad::uninstall-plugin)
 
 # =============================================================================
 # Combined Workflows

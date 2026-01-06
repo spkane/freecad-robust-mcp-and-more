@@ -22,11 +22,13 @@ Current requirement: **Python 3.11** (matching FreeCAD 1.0.x bundled Python)
 
 This MCP server supports three connection modes. **Embedded mode does NOT work on macOS** due to how FreeCAD's libraries are linked.
 
-| Mode       | Description                                 | Platform Support                  |
-| ---------- | ------------------------------------------- | --------------------------------- |
-| `xmlrpc`   | Connects to FreeCAD via XML-RPC (port 9875) | **All platforms** (recommended)   |
-| `socket`   | Connects via JSON-RPC socket (port 9876)    | **All platforms**                 |
-| `embedded` | Imports FreeCAD directly into process       | **Linux only** (crashes on macOS) |
+| Mode       | Description                                 | Platform Support                  | Testing Level    |
+| ---------- | ------------------------------------------- | --------------------------------- | ---------------- |
+| `xmlrpc`   | Connects to FreeCAD via XML-RPC (port 9875) | **All platforms** (recommended)   | Full integration |
+| `socket`   | Connects via JSON-RPC socket (port 9876)    | **All platforms**                 | Full integration |
+| `embedded` | Imports FreeCAD directly into process       | **Linux only** (crashes on macOS) | Unit tests only  |
+
+**Embedded mode testing:** Embedded mode is tested via mocked unit tests in CI. It does not have integration tests with actual FreeCAD because that would require running FreeCAD in-process on Linux CI runners. For production use, prefer `xmlrpc` or `socket` modes which have full integration test coverage.
 
 **Why embedded mode fails on macOS:**
 FreeCAD's `FreeCAD.so` library links to `@rpath/libpython3.11.dylib` (FreeCAD's bundled Python). When you try to import it from a different Python interpreter (even the same version), it causes a crash because the Python runtime state is incompatible.
@@ -35,13 +37,10 @@ FreeCAD's `FreeCAD.so` library links to `@rpath/libpython3.11.dylib` (FreeCAD's 
 
 1. Use `xmlrpc` or `socket` mode in your configuration
 
-1. Start FreeCAD and run the MCP plugin inside FreeCAD's Python console:
+1. Start FreeCAD and start the MCP bridge:
 
-   ```python
-   from freecad_mcp.freecad_plugin.server import FreecadMCPPlugin
-   plugin = FreecadMCPPlugin()
-   plugin.start()
-   ```
+   - Install the MCP Bridge workbench via Addon Manager, or
+   - Use `just run-gui` from the source repository
 
 1. The MCP server will then connect to FreeCAD over the network
 
@@ -91,6 +90,58 @@ uv run freecad-mcp
 - Running `pytest` directly will fail with "command not found"
 - Always prefix with `uv run` when running Python tools directly
 
+### Safety CLI Account (for Security Scanning)
+
+This project uses [Safety CLI](https://safetycli.com/) for dependency vulnerability scanning. Safety requires a **free account** for the `safety scan` command.
+
+**First-time setup:**
+
+```bash
+# Register for a free account (interactive)
+uv run safety auth
+
+# Or login if you already have an account
+uv run safety auth --login
+```
+
+**Note:** The Safety CLI authentication is stored locally and only needs to be done once per machine. If you skip this step, `just check` will show a clear error message with instructions. The `safety` pre-commit hook will also fail with an authentication prompt.
+
+**CI/CD:** Safety runs in CI using the `SAFETY_API_KEY` repository secret. The API key is passed via environment variable to the pre-commit hook.
+
+### CodeRabbit CLI (for AI Code Reviews)
+
+This project supports [CodeRabbit CLI](https://www.coderabbit.ai/cli) for AI-powered code reviews in your terminal. The CLI is optional for local development - the CodeRabbit GitHub App automatically reviews all PRs.
+
+**First-time setup:**
+
+```bash
+# Install CodeRabbit CLI
+just coderabbit::install
+
+# Authenticate (opens browser)
+just coderabbit::login
+```
+
+**Usage:**
+
+```bash
+# Review staged changes (most common)
+just review
+
+# Review with auto-fix suggestions
+just coderabbit::review-fix
+
+# Review changes since main branch
+just coderabbit::review-branch
+
+# See all available commands
+just --list coderabbit
+```
+
+**Rate limits:** Free tier allows 1 review per hour. Pro tier allows 5 reviews per hour.
+
+**CI/CD:** The CodeRabbit GitHub App handles PR reviews automatically. The CLI is skipped in CI since it's for local development workflow only.
+
 ### Workflow Commands (via `just`)
 
 This project uses [`just`](https://just.systems/) as a command runner. Always prefer `just` commands over raw commands.
@@ -107,6 +158,7 @@ just --list quality
 just --list testing
 just --list freecad
 just --list documentation
+just --list coderabbit
 
 # Common shortcut commands (aliases to module commands)
 just install      # Install project dependencies
@@ -136,6 +188,7 @@ just documentation::serve # Serve documentation locally
 | `testing`       | Test execution                      | `unit`, `cov`, `integration`, `all`          |
 | `freecad`       | FreeCAD plugin and macro management | `run-gui`, `run-headless`, `install-*-macro` |
 | `documentation` | Documentation building              | `build`, `serve`, `open`                     |
+| `coderabbit`    | AI code reviews (local)             | `install`, `login`, `review`, `review-fix`   |
 
 Module files are located in the `just/` directory.
 
@@ -206,12 +259,11 @@ just secrets-trufflehog       # Verified secrets only
 
 ### Markdown Linting
 
-All markdown files are linted and formatted for consistency:
+All markdown files are linted for consistency:
 
 ```bash
-just markdown-lint    # Check markdown files
-just markdown-fix     # Auto-fix markdown issues
-just markdown-format  # Format with mdformat
+just markdown-lint  # Check markdown files
+just markdown-fix   # Auto-fix markdown issues
 ```
 
 Configuration: `.markdownlint.yaml`
@@ -397,8 +449,12 @@ This catches issues early and ensures code quality standards are met. Never skip
 ### Version Policy
 
 - **Always use the most recent stable releases** of all libraries and tools
-- Pin exact versions in `pyproject.toml` for reproducibility
-- Regularly update dependencies with `just update-deps`
+- **Dependency specification follows Python best practices**:
+  - `pyproject.toml` uses `>=` minimum version constraints (e.g., `pydantic>=2.0`)
+  - `uv.lock` contains exact pinned versions for reproducible builds
+  - This allows the package to work as a library while ensuring reproducibility
+  - **Do not change `>=` to `==` in pyproject.toml** - this would break library usability
+- Regularly update dependencies with `just update-deps` (updates uv.lock)
 - Check for security vulnerabilities with `just security`
 
 ### Core Dependencies
@@ -464,20 +520,31 @@ When creating new files, always use the full extension.
 
 ## Justfile HEREDOC Syntax
 
-**CRITICAL**: When writing heredocs in justfile recipes, the content must be indented to match the recipe body. Just parses non-indented lines as justfile syntax, which causes errors with Python code containing dots (e.g., `sys.path`).
+**CRITICAL**: When writing heredocs in justfile recipes, the content must be indented to match the recipe body (4 spaces). Just parses non-indented lines as justfile syntax, which causes errors with Python code containing dots (e.g., `sys.path`).
+
+**Important**: Just automatically strips leading indentation from heredoc content when executing. So while you write indented code in the justfile, the output will be properly unindented. Use `just --dry-run recipe-name` to verify the output.
 
 ### Correct Pattern
 
 ```just
-# Recipe with heredoc - content MUST be indented
+# Recipe with heredoc - content MUST be indented with 4 spaces
 my-recipe:
     #!/usr/bin/env bash
     cat > "$FILE" << EOF
-    # Python code goes here - indented with spaces
+    # Python code goes here - indented with 4 spaces
     import sys
     if project_path not in sys.path:
         sys.path.insert(0, project_path)
     EOF
+```
+
+When executed, just strips the 4-space indent, producing valid Python:
+
+```python
+# Python code goes here - indented with 4 spaces
+import sys
+if project_path not in sys.path:
+    sys.path.insert(0, project_path)
 ```
 
 ### Incorrect Pattern (Will Fail)
@@ -495,12 +562,13 @@ EOF
 
 ### Key Rules
 
-1. **Indent heredoc content**: All lines inside the heredoc must be indented (4 spaces typically)
-1. **Indent the EOF marker**: The closing `EOF` must also be indented to match
-1. **Use `\\n` for newlines**: In heredoc strings that need literal `\n`, use `\\n`
-1. **Variable expansion**: `${VAR}` works inside heredocs for bash variables
+1. **Indent heredoc content with 4 spaces**: Match the recipe body indentation
+2. **Indent the EOF marker**: The closing `EOF` must also be indented
+3. **Do NOT double-indent**: 4 spaces is correct; 8 spaces would produce indented output
+4. **Variable expansion**: `${VAR}` works inside heredocs for bash variables
+5. **Use `\\n` for newlines**: In heredoc strings that need literal `\n`, use `\\n`
 
-See the recipes in `just/freecad.just` (e.g., `install-bridge-macro`, `run-gui`, `run-headless`) for working examples.
+See the recipes in `just/freecad.just` (e.g., `run-gui`, `run-headless`, `install-cut-macro`) for working examples.
 
 ---
 
@@ -696,13 +764,10 @@ just run-headless
 
 **CRITICAL**: Code running inside FreeCAD's Python environment cannot import packages that aren't available in FreeCAD's bundled Python (like `mcp`, `pydantic`, etc.).
 
-The `headless_server.py` script imports the plugin directly from the module file to avoid triggering the `mcp` import in `freecad_mcp/__init__.py`:
+The `headless_server.py` script in the workbench addon imports the plugin directly from the module file to avoid triggering the `mcp` import:
 
 ```python
-# WRONG - triggers mcp import via freecad_mcp/__init__.py
-from freecad_mcp.freecad_plugin.server import FreecadMCPPlugin
-
-# CORRECT - import directly from the module file
+# CORRECT - import directly from the module file in the same directory
 script_dir = str(Path(__file__).resolve().parent)
 sys.path.insert(0, script_dir)
 from server import FreecadMCPPlugin  # Direct module import
@@ -710,9 +775,9 @@ from server import FreecadMCPPlugin  # Direct module import
 
 This pattern is required because:
 
-1. `freecad_mcp/__init__.py` imports `from freecad_mcp.server import mcp`
 1. The MCP SDK is installed in the project's virtualenv, not in FreeCAD's Python
 1. Python processes parent package `__init__.py` files when importing nested modules
+1. Importing from `freecad_mcp/__init__.py` would trigger MCP SDK imports that don't exist in FreeCAD
 
 ---
 
@@ -773,8 +838,6 @@ This project uses relaxed mypy settings because FastMCP lacks proper type stubs.
 ### Markdownlint (MD035)
 
 - **Horizontal rules**: Must use `---` format (3 dashes)
-- **mdformat-simple-breaks**: This plugin ensures mdformat produces `---` instead of 70 underscores
-- **Conflict resolution**: markdownlint and mdformat must agree on horizontal rule style
 
 ### Bandit Security
 

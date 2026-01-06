@@ -1,9 +1,13 @@
 # Documentation commands
-# Usage: just docs::build, just docs::serve, etc.
+# Usage: just documentation::build, just documentation::serve, etc.
 
 # Build documentation
 build:
     uv run mkdocs build
+
+# Build documentation with strict mode (fails on warnings, for CI)
+build-strict:
+    uv run mkdocs build --strict
 
 # Serve documentation locally
 serve:

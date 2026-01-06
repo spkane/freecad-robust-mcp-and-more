@@ -7,11 +7,20 @@
 python = "3.11"
 # Pin tool versions for reproducible CI builds
 # Update these periodically with: mise upgrade
-uv = "0.9"          # uv package manager
-just = "1.43"       # task runner
-pre-commit = "4.5"  # pre-commit hooks
-github-cli = "2.74" # GitHub CLI for PR/issue management
-trivy = "0.62"      # container vulnerability scanner
+uv = "0.9"              # uv package manager
+just = "1.43"           # task runner
+pre-commit = "4.5"      # pre-commit hooks
+github-cli = "2.74"     # GitHub CLI for PR/issue management
+
+# Security and code quality tools
+trivy = "0.62"          # container vulnerability scanner
+gitleaks = "8.30"       # secrets scanner
+hadolint = "2.14"       # Dockerfile linter
+shellcheck = "0.11"     # shell script linter
+actionlint = "1.7"      # GitHub Actions linter
+
+# Markdown tools
+markdownlint-cli2 = "0.20"  # markdown linter
 
 [env]
 # FreeCAD connection mode:

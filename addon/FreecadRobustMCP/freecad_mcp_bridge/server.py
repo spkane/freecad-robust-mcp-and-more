@@ -127,6 +127,80 @@ class FreecadMCPPlugin:
         self._request_count = 0
         self._last_request_time: float | None = None
 
+    # =========================================================================
+    # Public API (for external access without using private attributes)
+    # =========================================================================
+
+    @property
+    def is_running(self) -> bool:
+        """Check if the MCP bridge server is currently running.
+
+        Returns:
+            True if the server is running, False otherwise.
+        """
+        return self._running
+
+    @property
+    def instance_id(self) -> str:
+        """Get the unique instance ID for this server.
+
+        Returns:
+            UUID string identifying this server instance.
+        """
+        return self._instance_id
+
+    @property
+    def socket_port(self) -> int:
+        """Get the JSON-RPC socket server port.
+
+        Returns:
+            Port number for the socket server.
+        """
+        return self._port
+
+    @property
+    def xmlrpc_port(self) -> int:
+        """Get the XML-RPC server port.
+
+        Returns:
+            Port number for the XML-RPC server.
+        """
+        return self._xmlrpc_port
+
+    @property
+    def request_count(self) -> int:
+        """Get the total number of requests processed.
+
+        Returns:
+            Number of requests processed since server start.
+        """
+        return self._request_count
+
+    def get_status(self) -> dict[str, Any]:
+        """Get the current status of the MCP bridge server.
+
+        Returns:
+            Dictionary containing:
+                - running: Whether the server is running
+                - instance_id: Unique server instance ID
+                - socket_port: JSON-RPC socket port
+                - xmlrpc_port: XML-RPC port
+                - xmlrpc_enabled: Whether XML-RPC is enabled
+                - request_count: Total requests processed
+                - last_request_time: Timestamp of last request (or None)
+                - headless: Whether running in headless mode
+        """
+        return {
+            "running": self._running,
+            "instance_id": self._instance_id,
+            "socket_port": self._port,
+            "xmlrpc_port": self._xmlrpc_port,
+            "xmlrpc_enabled": self._enable_xmlrpc,
+            "request_count": self._request_count,
+            "last_request_time": self._last_request_time,
+            "headless": self._headless,
+        }
+
     def start(self) -> None:
         """Start all servers."""
         if self._running:
