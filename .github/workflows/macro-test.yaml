@@ -1,23 +1,23 @@
-name: Macro Tests
+name: Integration Tests
 
 on:
   push:
     branches: [main, master]
     paths:
+      - "src/freecad_mcp/**/*.py"
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
       - "addon/FreecadRobustMCP/**/*.py"
-      - "tests/integration/test_cut_object_for_magnets.py"
-      - "tests/integration/test_multi_export.py"
+      - "tests/integration/**/*.py"
       - ".github/workflows/macro-test.yaml"
   pull_request:
     branches: [main, master]
     paths:
+      - "src/freecad_mcp/**/*.py"
       - "macros/**/*.FCMacro"
       - "macros/**/*.py"
       - "addon/FreecadRobustMCP/**/*.py"
-      - "tests/integration/test_cut_object_for_magnets.py"
-      - "tests/integration/test_multi_export.py"
+      - "tests/integration/**/*.py"
       - ".github/workflows/macro-test.yaml"
 
 # Cancel in-progress runs for the same branch
@@ -26,8 +26,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-macros:
-    name: Test FreeCAD Macros
+  test-integration:
+    name: Integration Tests with FreeCAD
     runs-on: ubuntu-latest
 
     steps:
@@ -171,6 +171,13 @@ jobs:
         continue-on-error: true
         run: |
           uv run pytest tests/integration/test_multi_export.py -v --tb=short
+
+      - name: Run headless mode integration tests
+        env:
+          FREECAD_MODE: xmlrpc
+        # Tests for headless FreeCAD operations (primitives, booleans, exports, etc.)
+        run: |
+          uv run pytest tests/integration/test_headless_mode.py -v --tb=short
 
       - name: Stop FreeCAD
         if: always()

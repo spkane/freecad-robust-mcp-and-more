@@ -5,7 +5,7 @@ requires-python = ">=3.11"
 [[package]]
 name = "annotated-types"
 version = "0.7.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ee/67/531ea369ba64dcff5ec9c3402f9f51bf748cec26dde048a2f973a4eea7f5/annotated_types-0.7.0.tar.gz", hash = "sha256:aff07c09a53a08bc8cfccb9c85b05f1aa9a2a6f23728d790723543408344ce89", size = 16081, upload-time = "2024-05-20T21:33:25.928Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl", hash = "sha256:1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53", size = 13643, upload-time = "2024-05-20T21:33:24.1Z" },
@@ -14,7 +14,7 @@ wheels = [
 [[package]]
 name = "anyio"
 version = "4.12.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "idna" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
@@ -27,7 +27,7 @@ wheels = [
 [[package]]
 name = "attrs"
 version = "25.4.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/6b/5c/685e6633917e101e5dcb62b9dd76946cbb57c26e133bae9e0cd36033c0a9/attrs-25.4.0.tar.gz", hash = "sha256:16d5969b87f0859ef33a48b35d55ac1be6e42ae49d5e853b597db70c35c57e11", size = 934251, upload-time = "2025-10-06T13:54:44.725Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/3a/2a/7cc015f5b9f5db42b7d48157e23356022889fc354a2813c15934b7cb5c0e/attrs-25.4.0-py3-none-any.whl", hash = "sha256:adcf7e2a1fb3b36ac48d97835bb6d8ade15b8dcce26aba8bf1d14847b57a3373", size = 67615, upload-time = "2025-10-06T13:54:43.17Z" },
@@ -36,7 +36,7 @@ wheels = [
 [[package]]
 name = "authlib"
 version = "1.6.6"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "cryptography" },
 ]
@@ -48,7 +48,7 @@ wheels = [
 [[package]]
 name = "babel"
 version = "2.17.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7d/6b/d52e42361e1aa00709585ecc30b3f9684b3ab62530771402248b1b1d6240/babel-2.17.0.tar.gz", hash = "sha256:0c54cffb19f690cdcc52a3b50bcbf71e07a808d1c80d549f2459b9d2cf0afb9d", size = 9951852, upload-time = "2025-02-01T15:17:41.026Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b7/b8/3fe70c75fe32afc4bb507f75563d39bc5642255d1d94f1f23604725780bf/babel-2.17.0-py3-none-any.whl", hash = "sha256:4d0b53093fdfb4b21c92b5213dba5a1b23885afa8383709427046b21c366e5f2", size = 10182537, upload-time = "2025-02-01T15:17:37.39Z" },
@@ -57,7 +57,7 @@ wheels = [
 [[package]]
 name = "backports-tarfile"
 version = "1.2.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/86/72/cd9b395f25e290e633655a100af28cb253e4393396264a98bd5f5951d50f/backports_tarfile-1.2.0.tar.gz", hash = "sha256:d75e02c268746e1b8144c278978b6e98e85de6ad16f8e4b0844a154557eca991", size = 86406, upload-time = "2024-05-28T17:01:54.731Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b9/fa/123043af240e49752f1c4bd24da5053b6bd00cad78c2be53c0d1e8b975bc/backports.tarfile-1.2.0-py3-none-any.whl", hash = "sha256:77e284d754527b01fb1e6fa8a1afe577858ebe4e9dad8919e34c862cb399bc34", size = 30181, upload-time = "2024-05-28T17:01:53.112Z" },
@@ -66,7 +66,7 @@ wheels = [
 [[package]]
 name = "backrefs"
 version = "6.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/86/e3/bb3a439d5cb255c4774724810ad8073830fac9c9dee123555820c1bcc806/backrefs-6.1.tar.gz", hash = "sha256:3bba1749aafe1db9b915f00e0dd166cba613b6f788ffd63060ac3485dc9be231", size = 7011962, upload-time = "2025-11-15T14:52:08.323Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/3b/ee/c216d52f58ea75b5e1841022bbae24438b19834a29b163cb32aa3a2a7c6e/backrefs-6.1-py310-none-any.whl", hash = "sha256:2a2ccb96302337ce61ee4717ceacfbf26ba4efb1d55af86564b8bbaeda39cac1", size = 381059, upload-time = "2025-11-15T14:51:59.758Z" },
@@ -80,7 +80,7 @@ wheels = [
 [[package]]
 name = "bandit"
 version = "1.9.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "pyyaml" },
@@ -95,7 +95,7 @@ wheels = [
 [[package]]
 name = "build"
 version = "1.3.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama", marker = "os_name == 'nt'" },
     { name = "packaging" },
@@ -109,7 +109,7 @@ wheels = [
 [[package]]
 name = "certifi"
 version = "2025.11.12"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a2/8c/58f469717fa48465e4a50c014a0400602d3c437d7c0c468e17ada824da3a/certifi-2025.11.12.tar.gz", hash = "sha256:d8ab5478f2ecd78af242878415affce761ca6bc54a22a27e026d7c25357c3316", size = 160538, upload-time = "2025-11-12T02:54:51.517Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/70/7d/9bc192684cea499815ff478dfcdc13835ddf401365057044fb721ec6bddb/certifi-2025.11.12-py3-none-any.whl", hash = "sha256:97de8790030bbd5c2d96b7ec782fc2f7820ef8dba6db909ccf95449f2d062d4b", size = 159438, upload-time = "2025-11-12T02:54:49.735Z" },
@@ -118,7 +118,7 @@ wheels = [
 [[package]]
 name = "cffi"
 version = "2.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pycparser", marker = "implementation_name != 'PyPy'" },
 ]
@@ -188,7 +188,7 @@ wheels = [
 [[package]]
 name = "cfgv"
 version = "3.5.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/4e/b5/721b8799b04bf9afe054a3899c6cf4e880fcf8563cc71c15610242490a0c/cfgv-3.5.0.tar.gz", hash = "sha256:d5b1034354820651caa73ede66a6294d6e95c1b00acc5e9b098e917404669132", size = 7334, upload-time = "2025-11-19T20:55:51.612Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/db/3c/33bac158f8ab7f89b2e59426d5fe2e4f63f7ed25df84c036890172b412b5/cfgv-3.5.0-py2.py3-none-any.whl", hash = "sha256:a8dc6b26ad22ff227d2634a65cb388215ce6cc96bbcc5cfde7641ae87e8dacc0", size = 7445, upload-time = "2025-11-19T20:55:50.744Z" },
@@ -197,7 +197,7 @@ wheels = [
 [[package]]
 name = "charset-normalizer"
 version = "3.4.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/13/69/33ddede1939fdd074bce5434295f38fae7136463422fe4fd3e0e89b98062/charset_normalizer-3.4.4.tar.gz", hash = "sha256:94537985111c35f28720e43603b8e7b43a6ecfb2ce1d3058bbe955b73404e21a", size = 129418, upload-time = "2025-10-14T04:42:32.879Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ed/27/c6491ff4954e58a10f69ad90aca8a1b6fe9c5d3c6f380907af3c37435b59/charset_normalizer-3.4.4-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:6e1fcf0720908f200cd21aa4e6750a48ff6ce4afe7ff5a79a90d5ed8a08296f8", size = 206988, upload-time = "2025-10-14T04:40:33.79Z" },
@@ -270,7 +270,7 @@ wheels = [
 [[package]]
 name = "click"
 version = "8.3.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
@@ -282,7 +282,7 @@ wheels = [
 [[package]]
 name = "codespell"
 version = "2.4.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/15/e0/709453393c0ea77d007d907dd436b3ee262e28b30995ea1aa36c6ffbccaf/codespell-2.4.1.tar.gz", hash = "sha256:299fcdcb09d23e81e35a671bbe746d5ad7e8385972e65dbb833a2eaac33c01e5", size = 344740, upload-time = "2025-01-28T18:52:39.411Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/20/01/b394922252051e97aab231d416c86da3d8a6d781eeadcdca1082867de64e/codespell-2.4.1-py3-none-any.whl", hash = "sha256:3dadafa67df7e4a3dbf51e0d7315061b80d265f9552ebd699b3dd6834b47e425", size = 344501, upload-time = "2025-01-28T18:52:37.057Z" },
@@ -291,7 +291,7 @@ wheels = [
 [[package]]
 name = "colorama"
 version = "0.4.6"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
@@ -300,7 +300,7 @@ wheels = [
 [[package]]
 name = "coverage"
 version = "7.13.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/23/f9/e92df5e07f3fc8d4c7f9a0f146ef75446bf870351cd37b788cf5897f8079/coverage-7.13.1.tar.gz", hash = "sha256:b7593fe7eb5feaa3fbb461ac79aac9f9fc0387a5ca8080b0c6fe2ca27b091afd", size = 825862, upload-time = "2025-12-28T15:42:56.969Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b4/9b/77baf488516e9ced25fc215a6f75d803493fc3f6a1a1227ac35697910c2a/coverage-7.13.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:1a55d509a1dc5a5b708b5dad3b5334e07a16ad4c2185e27b40e4dba796ab7f88", size = 218755, upload-time = "2025-12-28T15:40:30.812Z" },
@@ -392,7 +392,7 @@ toml = [
 [[package]]
 name = "cryptography"
 version = "46.0.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "cffi", marker = "platform_python_implementation != 'PyPy'" },
 ]
@@ -454,7 +454,7 @@ wheels = [
 [[package]]
 name = "detect-secrets"
 version = "1.5.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
@@ -467,7 +467,7 @@ wheels = [
 [[package]]
 name = "distlib"
 version = "0.4.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/96/8e/709914eb2b5749865801041647dc7f4e6d00b549cfe88b65ca192995f07c/distlib-0.4.0.tar.gz", hash = "sha256:feec40075be03a04501a973d81f633735b4b69f98b05450592310c0f401a4e0d", size = 614605, upload-time = "2025-07-17T16:52:00.465Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/33/6b/e0547afaf41bf2c42e52430072fa5658766e3d65bd4b03a563d1b6336f57/distlib-0.4.0-py2.py3-none-any.whl", hash = "sha256:9659f7d87e46584a30b5780e43ac7a2143098441670ff0a49d5f9034c54a6c16", size = 469047, upload-time = "2025-07-17T16:51:58.613Z" },
@@ -476,7 +476,7 @@ wheels = [
 [[package]]
 name = "docutils"
 version = "0.22.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ae/b6/03bb70946330e88ffec97aefd3ea75ba575cb2e762061e0e62a213befee8/docutils-0.22.4.tar.gz", hash = "sha256:4db53b1fde9abecbb74d91230d32ab626d94f6badfc575d6db9194a49df29968", size = 2291750, upload-time = "2025-12-18T19:00:26.443Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/02/10/5da547df7a391dcde17f59520a231527b8571e6f46fc8efb02ccb370ab12/docutils-0.22.4-py3-none-any.whl", hash = "sha256:d0013f540772d1420576855455d050a2180186c91c15779301ac2ccb3eeb68de", size = 633196, upload-time = "2025-12-18T19:00:18.077Z" },
@@ -485,7 +485,7 @@ wheels = [
 [[package]]
 name = "dparse"
 version = "0.6.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "packaging" },
 ]
@@ -497,7 +497,7 @@ wheels = [
 [[package]]
 name = "filelock"
 version = "3.20.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a7/23/ce7a1126827cedeb958fc043d61745754464eb56c5937c35bbf2b8e26f34/filelock-3.20.1.tar.gz", hash = "sha256:b8360948b351b80f420878d8516519a2204b07aefcdcfd24912a5d33127f188c", size = 19476, upload-time = "2025-12-15T23:54:28.027Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e3/7f/a1a97644e39e7316d850784c642093c99df1290a460df4ede27659056834/filelock-3.20.1-py3-none-any.whl", hash = "sha256:15d9e9a67306188a44baa72f569d2bfd803076269365fdea0934385da4dc361a", size = 16666, upload-time = "2025-12-15T23:54:26.874Z" },
@@ -506,7 +506,7 @@ wheels = [
 [[package]]
 name = "fpyutils"
 version = "4.0.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/1b/31/9441a8aa548a65d852a12c67036796691b5a90ca49ab09e4437759d9b91f/fpyutils-4.0.1.tar.gz", hash = "sha256:5ee8448b09863d5905ad22cf5f6c8af79d3b314617ac8fbded48eb2a414988e6", size = 21898, upload-time = "2023-11-08T22:06:45.319Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/5f/ba/4a0aa00af38dde32e9b575052217b1e8d34e31106a079a74d83caafc26af/fpyutils-4.0.1-py3-none-any.whl", hash = "sha256:006cfbdbd87915d8a1c5b7062b6c8d2f4f9fd12c3e707d89c27e6abd6c67c6b2", size = 24073, upload-time = "2023-11-08T22:06:43.777Z" },
@@ -570,7 +570,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "ghp-import"
 version = "2.1.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "python-dateutil" },
 ]
@@ -582,7 +582,7 @@ wheels = [
 [[package]]
 name = "griffe"
 version = "1.15.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama" },
 ]
@@ -594,7 +594,7 @@ wheels = [
 [[package]]
 name = "h11"
 version = "0.16.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/01/ee/02a2c011bdab74c6fb3c75474d40b3052059d95df7e73351460c8588d963/h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1", size = 101250, upload-time = "2025-04-24T03:35:25.427Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86", size = 37515, upload-time = "2025-04-24T03:35:24.344Z" },
@@ -603,7 +603,7 @@ wheels = [
 [[package]]
 name = "httpcore"
 version = "1.0.9"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "certifi" },
     { name = "h11" },
@@ -616,7 +616,7 @@ wheels = [
 [[package]]
 name = "httpx"
 version = "0.28.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "anyio" },
     { name = "certifi" },
@@ -631,7 +631,7 @@ wheels = [
 [[package]]
 name = "httpx-sse"
 version = "0.4.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/0f/4c/751061ffa58615a32c31b2d82e8482be8dd4a89154f003147acee90f2be9/httpx_sse-0.4.3.tar.gz", hash = "sha256:9b1ed0127459a66014aec3c56bebd93da3c1bc8bb6618c8082039a44889a755d", size = 15943, upload-time = "2025-10-10T21:48:22.271Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/d2/fd/6668e5aec43ab844de6fc74927e155a3b37bf40d7c3790e49fc0406b6578/httpx_sse-0.4.3-py3-none-any.whl", hash = "sha256:0ac1c9fe3c0afad2e0ebb25a934a59f4c7823b60792691f779fad2c5568830fc", size = 8960, upload-time = "2025-10-10T21:48:21.158Z" },
@@ -640,7 +640,7 @@ wheels = [
 [[package]]
 name = "id"
 version = "1.5.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "requests" },
 ]
@@ -652,7 +652,7 @@ wheels = [
 [[package]]
 name = "identify"
 version = "2.6.15"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ff/e7/685de97986c916a6d93b3876139e00eef26ad5bbbd61925d670ae8013449/identify-2.6.15.tar.gz", hash = "sha256:e4f4864b96c6557ef2a1e1c951771838f4edc9df3a72ec7118b338801b11c7bf", size = 99311, upload-time = "2025-10-02T17:43:40.631Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/0f/1c/e5fd8f973d4f375adb21565739498e2e9a1e54c858a97b9a8ccfdc81da9b/identify-2.6.15-py2.py3-none-any.whl", hash = "sha256:1181ef7608e00704db228516541eb83a88a9f94433a8c80bb9b5bd54b1d81757", size = 99183, upload-time = "2025-10-02T17:43:39.137Z" },
@@ -661,7 +661,7 @@ wheels = [
 [[package]]
 name = "idna"
 version = "3.11"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/6f/6d/0703ccc57f3a7233505399edb88de3cbd678da106337b9fcde432b65ed60/idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902", size = 194582, upload-time = "2025-10-12T14:55:20.501Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea", size = 71008, upload-time = "2025-10-12T14:55:18.883Z" },
@@ -670,7 +670,7 @@ wheels = [
 [[package]]
 name = "importlib-metadata"
 version = "8.7.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "zipp" },
 ]
@@ -682,7 +682,7 @@ wheels = [
 [[package]]
 name = "iniconfig"
 version = "2.3.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/72/34/14ca021ce8e5dfedc35312d08ba8bf51fdd999c576889fc2c24cb97f4f10/iniconfig-2.3.0.tar.gz", hash = "sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730", size = 20503, upload-time = "2025-10-18T21:55:43.219Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cb/b1/3846dd7f199d53cb17f49cba7e651e9ce294d8497c8c150530ed11865bb8/iniconfig-2.3.0-py3-none-any.whl", hash = "sha256:f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12", size = 7484, upload-time = "2025-10-18T21:55:41.639Z" },
@@ -691,7 +691,7 @@ wheels = [
 [[package]]
 name = "jaraco-classes"
 version = "3.4.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "more-itertools" },
 ]
@@ -703,7 +703,7 @@ wheels = [
 [[package]]
 name = "jaraco-context"
 version = "6.0.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "backports-tarfile", marker = "python_full_version < '3.12'" },
 ]
@@ -715,7 +715,7 @@ wheels = [
 [[package]]
 name = "jaraco-functools"
 version = "4.4.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "more-itertools" },
 ]
@@ -727,7 +727,7 @@ wheels = [
 [[package]]
 name = "jeepney"
 version = "0.9.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7b/6f/357efd7602486741aa73ffc0617fb310a29b588ed0fd69c2399acbb85b0c/jeepney-0.9.0.tar.gz", hash = "sha256:cf0e9e845622b81e4a28df94c40345400256ec608d0e55bb8a3feaa9163f5732", size = 106758, upload-time = "2025-02-27T18:51:01.684Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b2/a3/e137168c9c44d18eff0376253da9f1e9234d0239e0ee230d2fee6cea8e55/jeepney-0.9.0-py3-none-any.whl", hash = "sha256:97e5714520c16fc0a45695e5365a2e11b81ea79bba796e26f9f1d178cb182683", size = 49010, upload-time = "2025-02-27T18:51:00.104Z" },
@@ -736,7 +736,7 @@ wheels = [
 [[package]]
 name = "jinja2"
 version = "3.1.6"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "markupsafe" },
 ]
@@ -748,7 +748,7 @@ wheels = [
 [[package]]
 name = "joblib"
 version = "1.5.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/41/f2/d34e8b3a08a9cc79a50b2208a93dce981fe615b64d5a4d4abee421d898df/joblib-1.5.3.tar.gz", hash = "sha256:8561a3269e6801106863fd0d6d84bb737be9e7631e33aaed3fb9ce5953688da3", size = 331603, upload-time = "2025-12-15T08:41:46.427Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7b/91/984aca2ec129e2757d1e4e3c81c3fcda9d0f85b74670a094cc443d9ee949/joblib-1.5.3-py3-none-any.whl", hash = "sha256:5fc3c5039fc5ca8c0276333a188bbd59d6b7ab37fe6632daa76bc7f9ec18e713", size = 309071, upload-time = "2025-12-15T08:41:44.973Z" },
@@ -757,7 +757,7 @@ wheels = [
 [[package]]
 name = "jsonschema"
 version = "4.25.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "attrs" },
     { name = "jsonschema-specifications" },
@@ -772,7 +772,7 @@ wheels = [
 [[package]]
 name = "jsonschema-specifications"
 version = "2025.9.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "referencing" },
 ]
@@ -784,7 +784,7 @@ wheels = [
 [[package]]
 name = "keyring"
 version = "25.7.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "importlib-metadata", marker = "python_full_version < '3.12'" },
     { name = "jaraco-classes" },
@@ -802,7 +802,7 @@ wheels = [
 [[package]]
 name = "librt"
 version = "0.7.7"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b7/29/47f29026ca17f35cf299290292d5f8331f5077364974b7675a353179afa2/librt-0.7.7.tar.gz", hash = "sha256:81d957b069fed1890953c3b9c3895c7689960f233eea9a1d9607f71ce7f00b2c", size = 145910, upload-time = "2026-01-01T23:52:22.87Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/f0/56/30b5c342518005546df78841cb0820ae85a17e7d07d521c10ef367306d0d/librt-0.7.7-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:a487b71fbf8a9edb72a8c7a456dda0184642d99cd007bc819c0b7ab93676a8ee", size = 54709, upload-time = "2026-01-01T23:51:02.774Z" },
@@ -865,7 +865,7 @@ wheels = [
 [[package]]
 name = "markdown"
 version = "3.10"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7d/ab/7dd27d9d863b3376fcf23a5a13cb5d024aed1db46f963f1b5735ae43b3be/markdown-3.10.tar.gz", hash = "sha256:37062d4f2aa4b2b6b32aefb80faa300f82cc790cb949a35b8caede34f2b68c0e", size = 364931, upload-time = "2025-11-03T19:51:15.007Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/70/81/54e3ce63502cd085a0c556652a4e1b919c45a446bd1e5300e10c44c8c521/markdown-3.10-py3-none-any.whl", hash = "sha256:b5b99d6951e2e4948d939255596523444c0e677c669700b1d17aa4a8a464cb7c", size = 107678, upload-time = "2025-11-03T19:51:13.887Z" },
@@ -874,7 +874,7 @@ wheels = [
 [[package]]
 name = "markdown-it-py"
 version = "3.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "mdurl" },
 ]
@@ -886,7 +886,7 @@ wheels = [
 [[package]]
 name = "markupsafe"
 version = "3.0.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7e/99/7690b6d4034fffd95959cbe0c02de8deb3098cc577c67bb6a24fe5d7caa7/markupsafe-3.0.3.tar.gz", hash = "sha256:722695808f4b6457b320fdc131280796bdceb04ab50fe1795cd540799ebe1698", size = 80313, upload-time = "2025-09-27T18:37:40.426Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/08/db/fefacb2136439fc8dd20e797950e749aa1f4997ed584c62cfb8ef7c2be0e/markupsafe-3.0.3-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:1cc7ea17a6824959616c525620e387f6dd30fec8cb44f649e31712db02123dad", size = 11631, upload-time = "2025-09-27T18:36:18.185Z" },
@@ -960,7 +960,7 @@ wheels = [
 [[package]]
 name = "marshmallow"
 version = "4.1.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e9/e1/5edfd1edf05d3cc98415b0810ca45fa19d7dee6def0d0ec639eb4eb14e20/marshmallow-4.1.2.tar.gz", hash = "sha256:083f250643d2e75fd363f256aeb6b1af369a7513ad37647ce4a601f6966e3ba5", size = 220974, upload-time = "2025-12-22T06:16:35.283Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/af/b6/66d1748fb45453e337c8a334dafed7b818e72ac9cf9d105a56e0cf21865f/marshmallow-4.1.2-py3-none-any.whl", hash = "sha256:a8cfa18bd8d0e5f7339e734edf84815fe8db1bdb57358c7ccc05472b746eeadc", size = 48360, upload-time = "2025-12-22T06:16:33.994Z" },
@@ -969,7 +969,7 @@ wheels = [
 [[package]]
 name = "mcp"
 version = "1.25.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "anyio" },
     { name = "httpx" },
@@ -994,7 +994,7 @@ wheels = [
 [[package]]
 name = "md-toc"
 version = "9.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "fpyutils" },
 ]
@@ -1006,7 +1006,7 @@ wheels = [
 [[package]]
 name = "mdurl"
 version = "0.1.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
@@ -1015,7 +1015,7 @@ wheels = [
 [[package]]
 name = "mergedeep"
 version = "1.3.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/3a/41/580bb4006e3ed0361b8151a01d324fb03f420815446c7def45d02f74c270/mergedeep-1.3.4.tar.gz", hash = "sha256:0096d52e9dad9939c3d975a774666af186eda617e6ca84df4c94dec30004f2a8", size = 4661, upload-time = "2021-02-05T18:55:30.623Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/2c/19/04f9b178c2d8a15b076c8b5140708fa6ffc5601fb6f1e975537072df5b2a/mergedeep-1.3.4-py3-none-any.whl", hash = "sha256:70775750742b25c0d8f36c55aed03d24c3384d17c951b3175d898bd778ef0307", size = 6354, upload-time = "2021-02-05T18:55:29.583Z" },
@@ -1024,7 +1024,7 @@ wheels = [
 [[package]]
 name = "mkdocs"
 version = "1.6.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "click" },
     { name = "colorama", marker = "sys_platform == 'win32'" },
@@ -1048,7 +1048,7 @@ wheels = [
 [[package]]
 name = "mkdocs-autorefs"
 version = "1.4.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "markdown" },
     { name = "markupsafe" },
@@ -1062,7 +1062,7 @@ wheels = [
 [[package]]
 name = "mkdocs-get-deps"
 version = "0.2.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "mergedeep" },
     { name = "platformdirs" },
@@ -1076,7 +1076,7 @@ wheels = [
 [[package]]
 name = "mkdocs-material"
 version = "9.7.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "babel" },
     { name = "backrefs" },
@@ -1098,7 +1098,7 @@ wheels = [
 [[package]]
 name = "mkdocs-material-extensions"
 version = "1.3.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/79/9b/9b4c96d6593b2a541e1cb8b34899a6d021d208bb357042823d4d2cabdbe7/mkdocs_material_extensions-1.3.1.tar.gz", hash = "sha256:10c9511cea88f568257f960358a467d12b970e1f7b2c0e5fb2bb48cab1928443", size = 11847, upload-time = "2023-11-22T19:09:45.208Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/5b/54/662a4743aa81d9582ee9339d4ffa3c8fd40a4965e033d77b9da9774d3960/mkdocs_material_extensions-1.3.1-py3-none-any.whl", hash = "sha256:adff8b62700b25cb77b53358dad940f3ef973dd6db797907c49e3c2ef3ab4e31", size = 8728, upload-time = "2023-11-22T19:09:43.465Z" },
@@ -1107,7 +1107,7 @@ wheels = [
 [[package]]
 name = "mkdocstrings"
 version = "1.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "jinja2" },
     { name = "markdown" },
@@ -1129,7 +1129,7 @@ python = [
 [[package]]
 name = "mkdocstrings-python"
 version = "2.0.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "griffe" },
     { name = "mkdocs-autorefs" },
@@ -1143,7 +1143,7 @@ wheels = [
 [[package]]
 name = "more-itertools"
 version = "10.8.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ea/5d/38b681d3fce7a266dd9ab73c66959406d565b3e85f21d5e66e1181d93721/more_itertools-10.8.0.tar.gz", hash = "sha256:f638ddf8a1a0d134181275fb5d58b086ead7c6a72429ad725c67503f13ba30bd", size = 137431, upload-time = "2025-09-02T15:23:11.018Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a4/8e/469e5a4a2f5855992e425f3cb33804cc07bf18d48f2db061aec61ce50270/more_itertools-10.8.0-py3-none-any.whl", hash = "sha256:52d4362373dcf7c52546bc4af9a86ee7c4579df9a8dc268be0a2f949d376cc9b", size = 69667, upload-time = "2025-09-02T15:23:09.635Z" },
@@ -1152,7 +1152,7 @@ wheels = [
 [[package]]
 name = "mypy"
 version = "1.19.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "librt", marker = "platform_python_implementation != 'PyPy'" },
     { name = "mypy-extensions" },
@@ -1191,7 +1191,7 @@ wheels = [
 [[package]]
 name = "mypy-extensions"
 version = "1.1.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a2/6e/371856a3fb9d31ca8dac321cda606860fa4548858c0cc45d9d1d4ca2628b/mypy_extensions-1.1.0.tar.gz", hash = "sha256:52e68efc3284861e772bbcd66823fde5ae21fd2fdb51c62a211403730b916558", size = 6343, upload-time = "2025-04-22T14:54:24.164Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/79/7b/2c79738432f5c924bef5071f933bcc9efd0473bac3b4aa584a6f7c1c8df8/mypy_extensions-1.1.0-py3-none-any.whl", hash = "sha256:1be4cccdb0f2482337c4743e60421de3a356cd97508abadd57d47403e94f5505", size = 4963, upload-time = "2025-04-22T14:54:22.983Z" },
@@ -1200,7 +1200,7 @@ wheels = [
 [[package]]
 name = "nh3"
 version = "0.3.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ca/a5/34c26015d3a434409f4d2a1cd8821a06c05238703f49283ffeb937bef093/nh3-0.3.2.tar.gz", hash = "sha256:f394759a06df8b685a4ebfb1874fb67a9cbfd58c64fc5ed587a663c0e63ec376", size = 19288, upload-time = "2025-10-30T11:17:45.948Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/5b/01/a1eda067c0ba823e5e2bb033864ae4854549e49fb6f3407d2da949106bfb/nh3-0.3.2-cp314-cp314t-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:d18957a90806d943d141cc5e4a0fefa1d77cf0d7a156878bf9a66eed52c9cc7d", size = 1419839, upload-time = "2025-10-30T11:17:09.956Z" },
@@ -1233,7 +1233,7 @@ wheels = [
 [[package]]
 name = "nltk"
 version = "3.9.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "click" },
     { name = "joblib" },
@@ -1248,7 +1248,7 @@ wheels = [
 [[package]]
 name = "nodeenv"
 version = "1.10.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/24/bf/d1bda4f6168e0b2e9e5958945e01910052158313224ada5ce1fb2e1113b8/nodeenv-1.10.0.tar.gz", hash = "sha256:996c191ad80897d076bdfba80a41994c2b47c68e224c542b48feba42ba00f8bb", size = 55611, upload-time = "2025-12-20T14:08:54.006Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/88/b2/d0896bdcdc8d28a7fc5717c305f1a861c26e18c05047949fb371034d98bd/nodeenv-1.10.0-py2.py3-none-any.whl", hash = "sha256:5bb13e3eed2923615535339b3c620e76779af4cb4c6a90deccc9e36b274d3827", size = 23438, upload-time = "2025-12-20T14:08:52.782Z" },
@@ -1257,7 +1257,7 @@ wheels = [
 [[package]]
 name = "packaging"
 version = "25.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a1/d4/1fc4078c65507b51b96ca8f8c3ba19e6a61c8253c72794544580a7b6c24d/packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f", size = 165727, upload-time = "2025-04-19T11:48:59.673Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484", size = 66469, upload-time = "2025-04-19T11:48:57.875Z" },
@@ -1266,7 +1266,7 @@ wheels = [
 [[package]]
 name = "paginate"
 version = "0.5.7"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ec/46/68dde5b6bc00c1296ec6466ab27dddede6aec9af1b99090e1107091b3b84/paginate-0.5.7.tar.gz", hash = "sha256:22bd083ab41e1a8b4f3690544afb2c60c25e5c9a63a30fa2f483f6c60c8e5945", size = 19252, upload-time = "2024-08-25T14:17:24.139Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/90/96/04b8e52da071d28f5e21a805b19cb9390aa17a47462ac87f5e2696b9566d/paginate-0.5.7-py2.py3-none-any.whl", hash = "sha256:b885e2af73abcf01d9559fd5216b57ef722f8c42affbb63942377668e35c7591", size = 13746, upload-time = "2024-08-25T14:17:22.55Z" },
@@ -1275,7 +1275,7 @@ wheels = [
 [[package]]
 name = "pathspec"
 version = "0.12.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ca/bc/f35b8446f4531a7cb215605d100cd88b7ac6f44ab3fc94870c120ab3adbf/pathspec-0.12.1.tar.gz", hash = "sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712", size = 51043, upload-time = "2023-12-10T22:30:45Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl", hash = "sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08", size = 31191, upload-time = "2023-12-10T22:30:43.14Z" },
@@ -1284,7 +1284,7 @@ wheels = [
 [[package]]
 name = "platformdirs"
 version = "4.5.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cf/86/0248f086a84f01b37aaec0fa567b397df1a119f73c16f6c7a9aac73ea309/platformdirs-4.5.1.tar.gz", hash = "sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda", size = 21715, upload-time = "2025-12-05T13:52:58.638Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cb/28/3bfe2fa5a7b9c46fe7e13c97bda14c895fb10fa2ebf1d0abb90e0cea7ee1/platformdirs-4.5.1-py3-none-any.whl", hash = "sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31", size = 18731, upload-time = "2025-12-05T13:52:56.823Z" },
@@ -1293,7 +1293,7 @@ wheels = [
 [[package]]
 name = "pluggy"
 version = "1.6.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/f9/e2/3e91f31a7d2b083fe6ef3fa267035b518369d9511ffab804f839851d2779/pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3", size = 69412, upload-time = "2025-05-15T12:30:07.975Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/54/20/4d324d65cc6d9205fabedc306948156824eb9f0ee1633355a8f7ec5c66bf/pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746", size = 20538, upload-time = "2025-05-15T12:30:06.134Z" },
@@ -1302,7 +1302,7 @@ wheels = [
 [[package]]
 name = "pre-commit"
 version = "4.5.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "cfgv" },
     { name = "identify" },
@@ -1318,7 +1318,7 @@ wheels = [
 [[package]]
 name = "pycparser"
 version = "2.23"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/fe/cf/d2d3b9f5699fb1e4615c8e32ff220203e43b248e1dfcc6736ad9057731ca/pycparser-2.23.tar.gz", hash = "sha256:78816d4f24add8f10a06d6f05b4d424ad9e96cfebf68a4ddc99c65c0720d00c2", size = 173734, upload-time = "2025-09-09T13:23:47.91Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/a0/e3/59cd50310fc9b59512193629e1984c1f95e5c8ae6e5d8c69532ccc65a7fe/pycparser-2.23-py3-none-any.whl", hash = "sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934", size = 118140, upload-time = "2025-09-09T13:23:46.651Z" },
@@ -1327,7 +1327,7 @@ wheels = [
 [[package]]
 name = "pydantic"
 version = "2.12.5"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "annotated-types" },
     { name = "pydantic-core" },
@@ -1342,7 +1342,7 @@ wheels = [
 [[package]]
 name = "pydantic-core"
 version = "2.41.5"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "typing-extensions" },
 ]
@@ -1439,7 +1439,7 @@ wheels = [
 [[package]]
 name = "pydantic-settings"
 version = "2.12.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
@@ -1453,7 +1453,7 @@ wheels = [
 [[package]]
 name = "pygments"
 version = "2.19.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b0/77/a5b8c569bf593b0140bde72ea885a803b82086995367bf2037de0159d924/pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887", size = 4968631, upload-time = "2025-06-21T13:39:12.283Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/c7/21/705964c7812476f378728bdf590ca4b771ec72385c533964653c68e86bdc/pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b", size = 1225217, upload-time = "2025-06-21T13:39:07.939Z" },
@@ -1462,7 +1462,7 @@ wheels = [
 [[package]]
 name = "pyjwt"
 version = "2.10.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785, upload-time = "2024-11-28T03:43:29.933Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997, upload-time = "2024-11-28T03:43:27.893Z" },
@@ -1476,7 +1476,7 @@ crypto = [
 [[package]]
 name = "pymdown-extensions"
 version = "10.20"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "markdown" },
     { name = "pyyaml" },
@@ -1489,7 +1489,7 @@ wheels = [
 [[package]]
 name = "pyproject-hooks"
 version = "1.2.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e7/82/28175b2414effca1cdac8dc99f76d660e7a4fb0ceefa4b4ab8f5f6742925/pyproject_hooks-1.2.0.tar.gz", hash = "sha256:1e859bd5c40fae9448642dd871adf459e5e2084186e8d2c2a79a824c970da1f8", size = 19228, upload-time = "2024-09-29T09:24:13.293Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl", hash = "sha256:9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913", size = 10216, upload-time = "2024-09-29T09:24:11.978Z" },
@@ -1498,7 +1498,7 @@ wheels = [
 [[package]]
 name = "pytest"
 version = "9.0.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "iniconfig" },
@@ -1514,7 +1514,7 @@ wheels = [
 [[package]]
 name = "pytest-asyncio"
 version = "1.3.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pytest" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
@@ -1527,7 +1527,7 @@ wheels = [
 [[package]]
 name = "pytest-cov"
 version = "7.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "coverage", extra = ["toml"] },
     { name = "pluggy" },
@@ -1541,7 +1541,7 @@ wheels = [
 [[package]]
 name = "pytest-timeout"
 version = "2.4.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pytest" },
 ]
@@ -1553,7 +1553,7 @@ wheels = [
 [[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "six" },
 ]
@@ -1565,7 +1565,7 @@ wheels = [
 [[package]]
 name = "python-dotenv"
 version = "1.2.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/f0/26/19cadc79a718c5edbec86fd4919a6b6d3f681039a2f6d66d14be94e75fb9/python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6", size = 44221, upload-time = "2025-10-26T15:12:10.434Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61", size = 21230, upload-time = "2025-10-26T15:12:09.109Z" },
@@ -1574,7 +1574,7 @@ wheels = [
 [[package]]
 name = "python-multipart"
 version = "0.0.21"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/78/96/804520d0850c7db98e5ccb70282e29208723f0964e88ffd9d0da2f52ea09/python_multipart-0.0.21.tar.gz", hash = "sha256:7137ebd4d3bbf70ea1622998f902b97a29434a9e8dc40eb203bbcf7c2a2cba92", size = 37196, upload-time = "2025-12-17T09:24:22.446Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/aa/76/03af049af4dcee5d27442f71b6924f01f3efb5d2bd34f23fcd563f2cc5f5/python_multipart-0.0.21-py3-none-any.whl", hash = "sha256:cf7a6713e01c87aa35387f4774e812c4361150938d20d232800f75ffcf266090", size = 24541, upload-time = "2025-12-17T09:24:21.153Z" },
@@ -1583,7 +1583,7 @@ wheels = [
 [[package]]
 name = "pywin32"
 version = "311"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/7c/af/449a6a91e5d6db51420875c54f6aff7c97a86a3b13a0b4f1a5c13b988de3/pywin32-311-cp311-cp311-win32.whl", hash = "sha256:184eb5e436dea364dcd3d2316d577d625c0351bf237c4e9a5fabbcfa5a58b151", size = 8697031, upload-time = "2025-07-14T20:13:13.266Z" },
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/51/8f/9bb81dd5bb77d22243d33c8397f09377056d5c687aa6d4042bea7fbf8364/pywin32-311-cp311-cp311-win_amd64.whl", hash = "sha256:3ce80b34b22b17ccbd937a6e78e7225d80c52f5ab9940fe0506a1a16f3dab503", size = 9508308, upload-time = "2025-07-14T20:13:15.147Z" },
@@ -1602,7 +1602,7 @@ wheels = [
 [[package]]
 name = "pywin32-ctypes"
 version = "0.2.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/85/9f/01a1a99704853cb63f253eea009390c88e7131c67e66a0a02099a8c917cb/pywin32-ctypes-0.2.3.tar.gz", hash = "sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755", size = 29471, upload-time = "2024-08-14T10:15:34.626Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/de/3d/8161f7711c017e01ac9f008dfddd9410dff3674334c233bde66e7ba65bbf/pywin32_ctypes-0.2.3-py3-none-any.whl", hash = "sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8", size = 30756, upload-time = "2024-08-14T10:15:33.187Z" },
@@ -1611,7 +1611,7 @@ wheels = [
 [[package]]
 name = "pyyaml"
 version = "6.0.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz", hash = "sha256:d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f", size = 130960, upload-time = "2025-09-25T21:33:16.546Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/6d/16/a95b6757765b7b031c9374925bb718d55e0a9ba8a1b6a12d25962ea44347/pyyaml-6.0.3-cp311-cp311-macosx_10_13_x86_64.whl", hash = "sha256:44edc647873928551a01e7a563d7452ccdebee747728c1080d881d68af7b997e", size = 185826, upload-time = "2025-09-25T21:31:58.655Z" },
@@ -1666,7 +1666,7 @@ wheels = [
 [[package]]
 name = "pyyaml-env-tag"
 version = "1.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "pyyaml" },
 ]
@@ -1678,7 +1678,7 @@ wheels = [
 [[package]]
 name = "readme-renderer"
 version = "44.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "docutils" },
     { name = "nh3" },
@@ -1692,7 +1692,7 @@ wheels = [
 [[package]]
 name = "referencing"
 version = "0.37.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "attrs" },
     { name = "rpds-py" },
@@ -1706,7 +1706,7 @@ wheels = [
 [[package]]
 name = "regex"
 version = "2025.11.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cc/a9/546676f25e573a4cf00fe8e119b78a37b6a8fe2dc95cda877b30889c9c45/regex-2025.11.3.tar.gz", hash = "sha256:1fedc720f9bb2494ce31a58a1631f9c82df6a09b49c19517ea5cc280b4541e01", size = 414669, upload-time = "2025-11-03T21:34:22.089Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/f7/90/4fb5056e5f03a7048abd2b11f598d464f0c167de4f2a51aa868c376b8c70/regex-2025.11.3-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:eadade04221641516fa25139273505a1c19f9bf97589a05bc4cfcd8b4a618031", size = 488081, upload-time = "2025-11-03T21:31:11.946Z" },
@@ -1798,7 +1798,7 @@ wheels = [
 [[package]]
 name = "requests"
 version = "2.32.5"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "certifi" },
     { name = "charset-normalizer" },
@@ -1813,7 +1813,7 @@ wheels = [
 [[package]]
 name = "requests-toolbelt"
 version = "1.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "requests" },
 ]
@@ -1825,7 +1825,7 @@ wheels = [
 [[package]]
 name = "rfc3986"
 version = "2.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/85/40/1520d68bfa07ab5a6f065a186815fb6610c86fe957bc065754e47f7b0840/rfc3986-2.0.0.tar.gz", hash = "sha256:97aacf9dbd4bfd829baad6e6309fa6573aaf1be3f6fa735c8ab05e46cecb261c", size = 49026, upload-time = "2022-01-10T00:52:30.832Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/ff/9a/9afaade874b2fa6c752c36f1548f718b5b83af81ed9b76628329dab81c1b/rfc3986-2.0.0-py2.py3-none-any.whl", hash = "sha256:50b1502b60e289cb37883f3dfd34532b8873c7de9f49bb546641ce9cbd256ebd", size = 31326, upload-time = "2022-01-10T00:52:29.594Z" },
@@ -1834,7 +1834,7 @@ wheels = [
 [[package]]
 name = "rich"
 version = "14.2.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "markdown-it-py" },
     { name = "pygments" },
@@ -1847,7 +1847,7 @@ wheels = [
 [[package]]
 name = "rpds-py"
 version = "0.30.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/20/af/3f2f423103f1113b36230496629986e0ef7e199d2aa8392452b484b38ced/rpds_py-0.30.0.tar.gz", hash = "sha256:dd8ff7cf90014af0c0f787eea34794ebf6415242ee1d6fa91eaba725cc441e84", size = 69469, upload-time = "2025-11-30T20:24:38.837Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/4d/6e/f964e88b3d2abee2a82c1ac8366da848fce1c6d834dc2132c3fda3970290/rpds_py-0.30.0-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:a2bffea6a4ca9f01b3f8e548302470306689684e61602aa3d141e34da06cf425", size = 370157, upload-time = "2025-11-30T20:21:53.789Z" },
@@ -1955,7 +1955,7 @@ wheels = [
 [[package]]
 name = "ruamel-yaml"
 version = "0.19.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "ruamel-yaml-clibz", marker = "platform_python_implementation == 'CPython'" },
 ]
@@ -1967,13 +1967,13 @@ wheels = [
 [[package]]
 name = "ruamel-yaml-clibz"
 version = "0.3.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/8f/95/9bcc25e84703180c3941062796572e0fc73bd659086efdc4ef9b8af19e36/ruamel_yaml_clibz-0.3.4.tar.gz", hash = "sha256:e99077ac6aa4943af1000161a0cb793a379c5c8cd03ea8dd3803e0b58739b685", size = 231076, upload-time = "2025-12-31T17:11:09.341Z" }
 
 [[package]]
 name = "ruff"
 version = "0.14.10"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/57/08/52232a877978dd8f9cf2aeddce3e611b40a63287dfca29b6b8da791f5e8d/ruff-0.14.10.tar.gz", hash = "sha256:9a2e830f075d1a42cd28420d7809ace390832a490ed0966fe373ba288e77aaf4", size = 5859763, upload-time = "2025-12-18T19:28:57.98Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/60/01/933704d69f3f05ee16ef11406b78881733c186fe14b6a46b05cfcaf6d3b2/ruff-0.14.10-py3-none-linux_armv6l.whl", hash = "sha256:7a3ce585f2ade3e1f29ec1b92df13e3da262178df8c8bdf876f48fa0e8316c49", size = 13527080, upload-time = "2025-12-18T19:29:25.642Z" },
@@ -1999,7 +1999,7 @@ wheels = [
 [[package]]
 name = "safety"
 version = "3.7.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "authlib" },
     { name = "click" },
@@ -2027,7 +2027,7 @@ wheels = [
 [[package]]
 name = "safety-schemas"
 version = "0.0.16"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "dparse" },
     { name = "packaging" },
@@ -2043,7 +2043,7 @@ wheels = [
 [[package]]
 name = "secretstorage"
 version = "3.5.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "cryptography" },
     { name = "jeepney" },
@@ -2056,7 +2056,7 @@ wheels = [
 [[package]]
 name = "shellingham"
 version = "1.5.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/58/15/8b3609fd3830ef7b27b655beb4b4e9c62313a4e8da8c676e142cc210d58e/shellingham-1.5.4.tar.gz", hash = "sha256:8dbca0739d487e5bd35ab3ca4b36e11c4078f3a234bfce294b0a0291363404de", size = 10310, upload-time = "2023-10-24T04:13:40.426Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e0/f9/0595336914c5619e5f28a1fb793285925a8cd4b432c9da0a987836c7f822/shellingham-1.5.4-py2.py3-none-any.whl", hash = "sha256:7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686", size = 9755, upload-time = "2023-10-24T04:13:38.866Z" },
@@ -2065,7 +2065,7 @@ wheels = [
 [[package]]
 name = "six"
 version = "1.17.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031, upload-time = "2024-12-04T17:35:28.174Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050, upload-time = "2024-12-04T17:35:26.475Z" },
@@ -2074,7 +2074,7 @@ wheels = [
 [[package]]
 name = "sse-starlette"
 version = "3.1.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "anyio" },
     { name = "starlette" },
@@ -2087,7 +2087,7 @@ wheels = [
 [[package]]
 name = "starlette"
 version = "0.50.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "anyio" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
@@ -2100,7 +2100,7 @@ wheels = [
 [[package]]
 name = "stevedore"
 version = "5.6.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/96/5b/496f8abebd10c3301129abba7ddafd46c71d799a70c44ab080323987c4c9/stevedore-5.6.0.tar.gz", hash = "sha256:f22d15c6ead40c5bbfa9ca54aa7e7b4a07d59b36ae03ed12ced1a54cf0b51945", size = 516074, upload-time = "2025-11-20T10:06:07.264Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/f4/40/8561ce06dc46fd17242c7724ab25b257a2ac1b35f4ebf551b40ce6105cfa/stevedore-5.6.0-py3-none-any.whl", hash = "sha256:4a36dccefd7aeea0c70135526cecb7766c4c84c473b1af68db23d541b6dc1820", size = 54428, upload-time = "2025-11-20T10:06:05.946Z" },
@@ -2109,7 +2109,7 @@ wheels = [
 [[package]]
 name = "tenacity"
 version = "9.1.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/0a/d4/2b0cd0fe285e14b36db076e78c93766ff1d529d70408bd1d2a5a84f1d929/tenacity-9.1.2.tar.gz", hash = "sha256:1169d376c297e7de388d18b4481760d478b0e99a777cad3a9c86e556f4b697cb", size = 48036, upload-time = "2025-04-02T08:25:09.966Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e5/30/643397144bfbfec6f6ef821f36f33e57d35946c44a2352d3c9f0ae847619/tenacity-9.1.2-py3-none-any.whl", hash = "sha256:f77bf36710d8b73a50b2dd155c97b870017ad21afe6ab300326b0371b3b05138", size = 28248, upload-time = "2025-04-02T08:25:07.678Z" },
@@ -2118,7 +2118,7 @@ wheels = [
 [[package]]
 name = "tomli"
 version = "2.3.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/52/ed/3f73f72945444548f33eba9a87fc7a6e969915e7b1acc8260b30e1f76a2f/tomli-2.3.0.tar.gz", hash = "sha256:64be704a875d2a59753d80ee8a533c3fe183e3f06807ff7dc2232938ccb01549", size = 17392, upload-time = "2025-10-08T22:01:47.119Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/b3/2e/299f62b401438d5fe1624119c723f5d877acc86a4c2492da405626665f12/tomli-2.3.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:88bd15eb972f3664f5ed4b57c1634a97153b4bac4479dcb6a495f41921eb7f45", size = 153236, upload-time = "2025-10-08T22:01:00.137Z" },
@@ -2167,7 +2167,7 @@ wheels = [
 [[package]]
 name = "tomlkit"
 version = "0.13.3"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/cc/18/0bbf3884e9eaa38819ebe46a7bd25dcd56b67434402b66a58c4b8e552575/tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1", size = 185207, upload-time = "2025-06-05T07:13:44.947Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/bd/75/8539d011f6be8e29f339c42e633aae3cb73bffa95dd0f9adec09b9c58e85/tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0", size = 38901, upload-time = "2025-06-05T07:13:43.546Z" },
@@ -2176,7 +2176,7 @@ wheels = [
 [[package]]
 name = "tqdm"
 version = "4.67.1"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
@@ -2188,7 +2188,7 @@ wheels = [
 [[package]]
 name = "twine"
 version = "6.2.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "id" },
     { name = "keyring", marker = "platform_machine != 'ppc64le' and platform_machine != 's390x'" },
@@ -2208,7 +2208,7 @@ wheels = [
 [[package]]
 name = "typer"
 version = "0.21.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "click" },
     { name = "rich" },
@@ -2223,7 +2223,7 @@ wheels = [
 [[package]]
 name = "typing-extensions"
 version = "4.15.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466", size = 109391, upload-time = "2025-08-25T13:49:26.313Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548", size = 44614, upload-time = "2025-08-25T13:49:24.86Z" },
@@ -2232,7 +2232,7 @@ wheels = [
 [[package]]
 name = "typing-inspection"
 version = "0.4.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "typing-extensions" },
 ]
@@ -2244,7 +2244,7 @@ wheels = [
 [[package]]
 name = "urllib3"
 version = "2.6.2"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/1e/24/a2a2ed9addd907787d7aa0355ba36a6cadf1768b934c652ea78acbd59dcd/urllib3-2.6.2.tar.gz", hash = "sha256:016f9c98bb7e98085cb2b4b17b87d2c702975664e4f060c6532e64d1c1a5e797", size = 432930, upload-time = "2025-12-11T15:56:40.252Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/6d/b9/4095b668ea3678bf6a0af005527f39de12fb026516fb3df17495a733b7f8/urllib3-2.6.2-py3-none-any.whl", hash = "sha256:ec21cddfe7724fc7cb4ba4bea7aa8e2ef36f607a4bab81aa6ce42a13dc3f03dd", size = 131182, upload-time = "2025-12-11T15:56:38.584Z" },
@@ -2253,7 +2253,7 @@ wheels = [
 [[package]]
 name = "uvicorn"
 version = "0.40.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "click" },
     { name = "h11" },
@@ -2266,7 +2266,7 @@ wheels = [
 [[package]]
 name = "virtualenv"
 version = "20.35.4"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 dependencies = [
     { name = "distlib" },
     { name = "filelock" },
@@ -2280,7 +2280,7 @@ wheels = [
 [[package]]
 name = "watchdog"
 version = "6.0.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/db/7d/7f3d619e951c88ed75c6037b246ddcf2d322812ee8ea189be89511721d54/watchdog-6.0.0.tar.gz", hash = "sha256:9ddf7c82fda3ae8e24decda1338ede66e1c99883db93711d8fb941eaa2d8c282", size = 131220, upload-time = "2024-11-01T14:07:13.037Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e0/24/d9be5cd6642a6aa68352ded4b4b10fb0d7889cb7f45814fb92cecd35f101/watchdog-6.0.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:6eb11feb5a0d452ee41f824e271ca311a09e250441c262ca2fd7ebcf2461a06c", size = 96393, upload-time = "2024-11-01T14:06:31.756Z" },
@@ -2307,7 +2307,7 @@ wheels = [
 [[package]]
 name = "zipp"
 version = "3.23.0"
-source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/" }
+source = { registry = "https://pkgs.safetycli.com/repository/techlabssh/pypi/simple/" }
 sdist = { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/e3/02/0f2892c661036d50ede074e376733dca2ae7c6eb617489437771209d4180/zipp-3.23.0.tar.gz", hash = "sha256:a07157588a12518c9d4034df3fbbee09c814741a33ff63c05fa29d26a2404166", size = 25547, upload-time = "2025-06-08T17:06:39.4Z" }
 wheels = [
     { url = "https://pkgs.safetycli.com/package/techlabssh/pypi/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl", hash = "sha256:071652d6115ed432f5ce1d34c336c0adfd6a884660d1e9712a256d3d3bd4b14e", size = 10276, upload-time = "2025-06-08T17:06:38.034Z" },

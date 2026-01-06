@@ -308,8 +308,3 @@ skips = [
 [tool.codespell]
 skip = ".git,*.lock,*.toml"
 ignore-words-list = "crate"
-
-[[tool.uv.index]]
-name = "safety"
-url = "https://pkgs.safetycli.com/repository/techlabssh/project/freecad-mcp-and-more/pypi/simple/"
-default = false

@@ -56,13 +56,13 @@ class StartMCPBridgeCommand:
         """Return True if the command can be executed."""
         global _mcp_plugin  # noqa: PLW0602
         # Can only start if not already running
-        return _mcp_plugin is None or not _mcp_plugin._running
+        return _mcp_plugin is None or not _mcp_plugin.is_running
 
     def Activated(self) -> None:
         """Execute the command to start the MCP bridge."""
         global _mcp_plugin
 
-        if _mcp_plugin is not None and _mcp_plugin._running:
+        if _mcp_plugin is not None and _mcp_plugin.is_running:
             FreeCAD.Console.PrintWarning("MCP Bridge is already running.\n")
             return
 
@@ -113,13 +113,13 @@ class StopMCPBridgeCommand:
         """Return True if the command can be executed."""
         global _mcp_plugin  # noqa: PLW0602
         # Can only stop if currently running
-        return _mcp_plugin is not None and _mcp_plugin._running
+        return _mcp_plugin is not None and _mcp_plugin.is_running
 
     def Activated(self) -> None:
         """Execute the command to stop the MCP bridge."""
         global _mcp_plugin
 
-        if _mcp_plugin is None or not _mcp_plugin._running:
+        if _mcp_plugin is None or not _mcp_plugin.is_running:
             FreeCAD.Console.PrintWarning("MCP Bridge is not running.\n")
             return
 
@@ -163,17 +163,15 @@ class MCPBridgeStatusCommand:
 
         if _mcp_plugin is None:
             FreeCAD.Console.PrintMessage("Status: Not initialized\n")
-        elif not _mcp_plugin._running:
+        elif not _mcp_plugin.is_running:
             FreeCAD.Console.PrintMessage("Status: Stopped\n")
         else:
             FreeCAD.Console.PrintMessage("Status: Running\n")
-            FreeCAD.Console.PrintMessage(f"  Instance ID: {_mcp_plugin._instance_id}\n")
+            FreeCAD.Console.PrintMessage(f"  Instance ID: {_mcp_plugin.instance_id}\n")
+            FreeCAD.Console.PrintMessage(f"  XML-RPC Port: {_mcp_plugin.xmlrpc_port}\n")
+            FreeCAD.Console.PrintMessage(f"  Socket Port: {_mcp_plugin.socket_port}\n")
             FreeCAD.Console.PrintMessage(
-                f"  XML-RPC Port: {_mcp_plugin._xmlrpc_port}\n"
-            )
-            FreeCAD.Console.PrintMessage(f"  Socket Port: {_mcp_plugin._port}\n")
-            FreeCAD.Console.PrintMessage(
-                f"  Requests processed: {_mcp_plugin._request_count}\n"
+                f"  Requests processed: {_mcp_plugin.request_count}\n"
             )
 
         FreeCAD.Console.PrintMessage("=" * 50 + "\n")

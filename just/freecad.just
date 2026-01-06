@@ -141,7 +141,9 @@ run-gui:
             FreeCAD.Console.PrintMessage("  - Socket: localhost:9876\n\n")
             started = True
             break
-        except Exception:
+        except Exception as e:
+            import FreeCAD
+            FreeCAD.Console.PrintWarning(f"Failed to start MCP Bridge from {addon_path}: {e}\n")
             continue
 
     if not started:

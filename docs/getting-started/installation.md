@@ -48,7 +48,7 @@ docker pull spkane/freecad-robust-mcp
 docker build -t freecad-robust-mcp .
 ```
 
-**Note:** The containerized MCP server only supports `xmlrpc` and `socket` modes since FreeCAD runs on your host machine (not in the container).
+**Note:** The Docker container runs the MCP server only—it does not include FreeCAD itself. You must run FreeCAD with the MCP Bridge workbench on your host machine (or in a separate container) and configure the MCP server to connect via `xmlrpc` or `socket` mode.
 
 ---
 
@@ -79,11 +79,21 @@ The MCP Bridge Workbench runs inside FreeCAD and provides the connection point f
 
 After installation, verify everything is working:
 
-1. **Start FreeCAD** and open the MCP Bridge workbench
-1. **Click "Start Bridge"** in the toolbar
-1. You should see a message confirming the bridge is running on ports 9875 (XML-RPC) and 9876 (Socket)
+### Step 1: Start FreeCAD with the MCP Bridge
 
-Then test from the command line:
+1. **Start FreeCAD** and select the **MCP Bridge** workbench from the workbench selector dropdown
+1. **Click "Start MCP Bridge"** in the toolbar (or use the MCP Bridge menu)
+1. Check the FreeCAD console for confirmation messages:
+
+```text
+MCP Bridge started!
+  - XML-RPC: localhost:9875
+  - Socket:  localhost:9876
+```
+
+### Step 2: Verify the MCP Server
+
+Test that the MCP server command is available:
 
 ```bash
 # With pip installation
@@ -92,6 +102,19 @@ freecad-mcp --help
 # With source installation
 uv run freecad-mcp --help
 ```
+
+### Step 3: Test the Connection
+
+With FreeCAD running and the bridge started, you can verify connectivity:
+
+```bash
+# Quick connectivity test using curl (XML-RPC)
+curl -X POST http://localhost:9875 \
+  -H "Content-Type: text/xml" \
+  -d '<?xml version="1.0"?><methodCall><methodName>ping</methodName></methodCall>'
+```
+
+A successful response indicates the bridge is working correctly.
 
 ---
 
