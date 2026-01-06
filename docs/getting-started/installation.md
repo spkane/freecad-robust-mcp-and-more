@@ -50,6 +50,8 @@ docker build -t freecad-robust-mcp .
 
 **Note:** The Docker container runs the MCP server only—it does not include FreeCAD itself. You must run FreeCAD with the MCP Bridge workbench on your host machine (or in a separate container) and configure the MCP server to connect via `xmlrpc` or `socket` mode.
 
+**Why embedded mode doesn't work with Docker:** Embedded mode requires FreeCAD and the MCP server to run in the same process, which is impossible when FreeCAD runs on the host and the MCP server runs inside a Docker container. Additionally, embedded mode fails on macOS due to ABI incompatibility with FreeCAD's bundled Python libraries (`libpython3.11.dylib`). Always use `xmlrpc` or `socket` mode for Docker deployments.
+
 ---
 
 ## Installing the MCP Bridge Workbench

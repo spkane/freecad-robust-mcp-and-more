@@ -2,11 +2,12 @@
 # https://just.systems/
 #
 # Commands are organized into modules:
-#   just docker::build       - Docker commands
-#   just quality::check      - Code quality commands
-#   just testing::unit       - Testing commands
-#   just freecad::run-gui    - FreeCAD commands
+#   just docker::build        - Docker commands
+#   just quality::check       - Code quality commands
+#   just testing::unit        - Testing commands
+#   just freecad::run-gui     - FreeCAD commands
 #   just documentation::build - Documentation commands
+#   just coderabbit::review   - AI code review commands
 #
 # Or use the shortcut commands defined below.
 
@@ -16,6 +17,7 @@ mod quality 'just/quality.just'
 mod testing 'just/testing.just'
 mod freecad 'just/freecad.just'
 mod documentation 'just/documentation.just'
+mod coderabbit 'just/coderabbit.just'
 
 # Default recipe - show available commands
 default:
@@ -75,9 +77,6 @@ markdown-lint: (quality::markdown-lint)
 # Fix markdown files (shortcut for quality::markdown-fix)
 markdown-fix: (quality::markdown-fix)
 
-# Format markdown files (shortcut for quality::markdown-format)
-markdown-format: (quality::markdown-format)
-
 # Run unit tests (shortcut for testing::unit)
 test: (testing::unit)
 
@@ -102,11 +101,11 @@ docs: (documentation::build)
 # Build documentation with strict mode (shortcut for documentation::build-strict)
 docs-strict: (documentation::build-strict)
 
-# Validate documentation (shortcut for documentation::validate)
-docs-validate: (documentation::validate)
-
 # Serve documentation (shortcut for documentation::serve)
 docs-serve: (documentation::serve)
+
+# AI code review of staged changes (shortcut for coderabbit::review)
+review: (coderabbit::review)
 
 # =============================================================================
 # Running the MCP Server

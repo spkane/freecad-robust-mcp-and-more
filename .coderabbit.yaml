@@ -96,6 +96,13 @@ reviews:
 
         CRITICAL: Python 3.11 is required - FreeCAD bundles libpython3.11.
         Using a different Python version causes ABI incompatibility crashes.
+
+        INTENTIONAL PATTERN - Dependency version ranges:
+        - Dependencies use '>=' minimum version constraints (e.g., pydantic>=2.0)
+        - This is correct for Python libraries per PEP 440 best practices
+        - Exact versions are pinned in uv.lock for reproducible builds
+        - Do NOT suggest changing '>=' to '==' - this would break library usability
+        - The combination of '>=' in pyproject.toml + uv.lock is the modern standard
     - path: "README.md"
       instructions: >
         INTENTIONAL NAMING: The repo is "freecad-robust-mcp-and-more" but Docker
@@ -114,6 +121,25 @@ reviews:
         This is consistent and intentional. Do not flag as inconsistent pinning.
 
         CRITICAL: Python must stay at 3.11 to match FreeCAD's bundled Python.
+    - path: "justfile"
+      instructions: >
+        Main task runner configuration using just (https://just.systems/).
+        Imports modules from the just/ directory.
+    - path: "just/*.just"
+      instructions: >
+        Just module files for task automation.
+
+        INTENTIONAL PATTERN - Heredoc indentation:
+        - Heredoc content inside recipes IS indented with 4 spaces (matching recipe body)
+        - This is CORRECT - just automatically strips leading indentation from heredocs
+        - Do NOT suggest adding more indentation to heredoc content
+        - Do NOT suggest removing indentation from heredoc content
+        - The 4-space indent prevents just from parsing embedded code as justfile syntax
+        - Example: Python code in heredocs uses 4-space indent, just outputs it unindented
+
+        INTENTIONAL PATTERN - Module paths:
+        - Modules use `project_root := justfile_directory()` to get project root
+        - Do NOT suggest using $(pwd) - it returns the wrong directory in modules
 
   # Tools to use for analysis
   tools:

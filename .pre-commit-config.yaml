@@ -260,6 +260,33 @@ repos:
         name: commitizen (commit format)
         stages: [commit-msg]
 
+  # ==========================================================================
+  # AI Code Review (Local Only)
+  # ==========================================================================
+  # CodeRabbit CLI - AI-powered code review
+  # https://www.coderabbit.ai/cli
+  #
+  # SETUP REQUIRED:
+  #   1. Install: just coderabbit::install
+  #   2. Authenticate: just coderabbit::login
+  #
+  # USAGE:
+  #   - Run manually: just review (or just coderabbit::review)
+  #   - Run via pre-commit: uv run pre-commit run coderabbit --all-files
+  #
+  # NOTE: This hook uses 'manual' stage so it doesn't run automatically.
+  # The CodeRabbit GitHub App already reviews PRs, so CLI is for local use.
+  # Rate limits: Free=1/hour, Lite=1/hour, Pro=5/hour
+  - repo: local
+    hooks:
+      - id: coderabbit
+        name: coderabbit (AI code review)
+        entry: coderabbit review --plain --type uncommitted
+        language: system
+        pass_filenames: false
+        stages: [manual]
+        verbose: true
+
 # ==========================================================================
 # CI Configuration
 # ==========================================================================
@@ -271,3 +298,4 @@ ci:
     - hadolint-docker   # Needs Docker
     - trivyconfig-docker  # Needs Docker
     - trufflehog        # Can be slow in CI
+    - coderabbit        # GitHub App handles PR reviews; CLI is for local use

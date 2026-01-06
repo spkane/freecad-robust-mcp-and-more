@@ -5,7 +5,7 @@
 build:
     uv run mkdocs build
 
-# Build documentation with strict mode (fails on warnings)
+# Build documentation with strict mode (fails on warnings, for CI)
 build-strict:
     uv run mkdocs build --strict
 
@@ -23,7 +23,3 @@ open:
     else \
         echo "Documentation built at: site/index.html"; \
     fi
-
-# Validate documentation (same as build-strict, for CI)
-validate:
-    uv run mkdocs build --strict

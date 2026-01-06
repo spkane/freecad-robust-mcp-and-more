@@ -15,7 +15,6 @@ from typing import Any
 
 import FreeCAD
 import FreeCADGui
-from FreeCAD import Gui
 
 # Global reference to the plugin instance
 _mcp_plugin: Any = None
@@ -177,7 +176,7 @@ class MCPBridgeStatusCommand:
         FreeCAD.Console.PrintMessage("=" * 50 + "\n")
 
 
-class FreecadRobustMCPWorkbench(Gui.Workbench):
+class FreecadRobustMCPWorkbench(FreeCADGui.Workbench):
     """FreeCAD Robust MCP Workbench.
 
     Provides toolbar and menu commands to start, stop, and monitor
@@ -220,4 +219,4 @@ class FreecadRobustMCPWorkbench(Gui.Workbench):
 
 
 # Register the workbench
-Gui.addWorkbench(FreecadRobustMCPWorkbench())
+FreeCADGui.addWorkbench(FreecadRobustMCPWorkbench())

@@ -108,6 +108,40 @@ uv run safety auth --login
 
 **CI/CD:** Safety runs in CI using the `SAFETY_API_KEY` repository secret. The API key is passed via environment variable to the pre-commit hook.
 
+### CodeRabbit CLI (for AI Code Reviews)
+
+This project supports [CodeRabbit CLI](https://www.coderabbit.ai/cli) for AI-powered code reviews in your terminal. The CLI is optional for local development - the CodeRabbit GitHub App automatically reviews all PRs.
+
+**First-time setup:**
+
+```bash
+# Install CodeRabbit CLI
+just coderabbit::install
+
+# Authenticate (opens browser)
+just coderabbit::login
+```
+
+**Usage:**
+
+```bash
+# Review staged changes (most common)
+just review
+
+# Review with auto-fix suggestions
+just coderabbit::review-fix
+
+# Review changes since main branch
+just coderabbit::review-branch
+
+# See all available commands
+just --list coderabbit
+```
+
+**Rate limits:** Free tier allows 1 review per hour. Pro tier allows 5 reviews per hour.
+
+**CI/CD:** The CodeRabbit GitHub App handles PR reviews automatically. The CLI is skipped in CI since it's for local development workflow only.
+
 ### Workflow Commands (via `just`)
 
 This project uses [`just`](https://just.systems/) as a command runner. Always prefer `just` commands over raw commands.
@@ -124,6 +158,7 @@ just --list quality
 just --list testing
 just --list freecad
 just --list documentation
+just --list coderabbit
 
 # Common shortcut commands (aliases to module commands)
 just install      # Install project dependencies
@@ -153,6 +188,7 @@ just documentation::serve # Serve documentation locally
 | `testing`       | Test execution                      | `unit`, `cov`, `integration`, `all`          |
 | `freecad`       | FreeCAD plugin and macro management | `run-gui`, `run-headless`, `install-*-macro` |
 | `documentation` | Documentation building              | `build`, `serve`, `open`                     |
+| `coderabbit`    | AI code reviews (local)             | `install`, `login`, `review`, `review-fix`   |
 
 Module files are located in the `just/` directory.
 
@@ -413,8 +449,12 @@ This catches issues early and ensures code quality standards are met. Never skip
 ### Version Policy
 
 - **Always use the most recent stable releases** of all libraries and tools
-- Pin exact versions in `pyproject.toml` for reproducibility
-- Regularly update dependencies with `just update-deps`
+- **Dependency specification follows Python best practices**:
+  - `pyproject.toml` uses `>=` minimum version constraints (e.g., `pydantic>=2.0`)
+  - `uv.lock` contains exact pinned versions for reproducible builds
+  - This allows the package to work as a library while ensuring reproducibility
+  - **Do not change `>=` to `==` in pyproject.toml** - this would break library usability
+- Regularly update dependencies with `just update-deps` (updates uv.lock)
 - Check for security vulnerabilities with `just security`
 
 ### Core Dependencies
@@ -480,20 +520,31 @@ When creating new files, always use the full extension.
 
 ## Justfile HEREDOC Syntax
 
-**CRITICAL**: When writing heredocs in justfile recipes, the content must be indented to match the recipe body. Just parses non-indented lines as justfile syntax, which causes errors with Python code containing dots (e.g., `sys.path`).
+**CRITICAL**: When writing heredocs in justfile recipes, the content must be indented to match the recipe body (4 spaces). Just parses non-indented lines as justfile syntax, which causes errors with Python code containing dots (e.g., `sys.path`).
+
+**Important**: Just automatically strips leading indentation from heredoc content when executing. So while you write indented code in the justfile, the output will be properly unindented. Use `just --dry-run recipe-name` to verify the output.
 
 ### Correct Pattern
 
 ```just
-# Recipe with heredoc - content MUST be indented
+# Recipe with heredoc - content MUST be indented with 4 spaces
 my-recipe:
     #!/usr/bin/env bash
     cat > "$FILE" << EOF
-    # Python code goes here - indented with spaces
+    # Python code goes here - indented with 4 spaces
     import sys
     if project_path not in sys.path:
         sys.path.insert(0, project_path)
     EOF
+```
+
+When executed, just strips the 4-space indent, producing valid Python:
+
+```python
+# Python code goes here - indented with 4 spaces
+import sys
+if project_path not in sys.path:
+    sys.path.insert(0, project_path)
 ```
 
 ### Incorrect Pattern (Will Fail)
@@ -511,10 +562,11 @@ EOF
 
 ### Key Rules
 
-1. **Indent heredoc content**: All lines inside the heredoc must be indented (4 spaces typically)
-1. **Indent the EOF marker**: The closing `EOF` must also be indented to match
-1. **Use `\\n` for newlines**: In heredoc strings that need literal `\n`, use `\\n`
-1. **Variable expansion**: `${VAR}` works inside heredocs for bash variables
+1. **Indent heredoc content with 4 spaces**: Match the recipe body indentation
+2. **Indent the EOF marker**: The closing `EOF` must also be indented
+3. **Do NOT double-indent**: 4 spaces is correct; 8 spaces would produce indented output
+4. **Variable expansion**: `${VAR}` works inside heredocs for bash variables
+5. **Use `\\n` for newlines**: In heredoc strings that need literal `\n`, use `\\n`
 
 See the recipes in `just/freecad.just` (e.g., `run-gui`, `run-headless`, `install-cut-macro`) for working examples.
 

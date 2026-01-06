@@ -271,14 +271,15 @@ class TestFreecadResources:
 
     @pytest.mark.asyncio
     async def test_resource_active_document_none(self, register_resources, mock_bridge):
-        """freecad://active-document should handle no active document."""
+        """freecad://active-document should return null when no active document."""
         mock_bridge.get_active_document = AsyncMock(return_value=None)
 
         resource_active = register_resources["freecad://active-document"]
         result = await resource_active()
         data = json.loads(result)
 
-        assert data is None or "error" in data or data == {}
+        # Implementation returns json.dumps(None) which deserializes to Python None
+        assert data is None
 
     @pytest.mark.asyncio
     async def test_resource_workbenches(self, register_resources, mock_bridge):
