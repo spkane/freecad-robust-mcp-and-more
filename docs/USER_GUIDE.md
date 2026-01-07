@@ -33,7 +33,7 @@ You have two options depending on your workflow:
 Best for automated workflows, batch processing, or when you don't need visual feedback.
 
 ```bash
-just run-headless
+just freecad::run-headless
 ```
 
 **Capabilities:** All modeling operations, export, scripting.
@@ -44,7 +44,7 @@ just run-headless
 Best for interactive design work where you want to see results visually.
 
 ```bash
-just run-gui
+just freecad::run-gui
 ```
 
 **Capabilities:** Everything headless mode can do, plus screenshots, colors, view control.
@@ -441,7 +441,7 @@ Instead of creating many individual features:
 
 You're running in headless mode and trying to use a GUI-only feature. Either:
 
-- Switch to GUI mode: `just run-gui`
+- Switch to GUI mode: `just freecad::run-gui`
 - Use an alternative approach (e.g., skip visual operations)
 
 ### Objects Not Appearing
@@ -474,7 +474,7 @@ If the MCP bridge isn't responding:
 
 1. Check FreeCAD is running with the bridge started
 1. Verify ports 9875 (XML-RPC) and 9876 (socket) are available
-1. Restart FreeCAD with `just run-gui` or `just run-headless`
+1. Restart FreeCAD with `just freecad::run-gui` or `just freecad::run-headless`
 
 ---
 
