@@ -7,6 +7,7 @@
 [![CodeQL](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/codeql.yaml/badge.svg)](https://github.com/spkane/freecad-robust-mcp-and-more/actions/workflows/codeql.yaml)
 [![PyPI Version](https://img.shields.io/pypi/v/freecad-robust-mcp)](https://pypi.org/project/freecad-robust-mcp/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/freecad-robust-mcp)](https://pypi.org/project/freecad-robust-mcp/)
+
 [![Docker Image Version](https://img.shields.io/docker/v/spkane/freecad-robust-mcp?sort=semver&label=docker)](https://hub.docker.com/r/spkane/freecad-robust-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
