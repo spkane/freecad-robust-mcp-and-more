@@ -80,32 +80,47 @@ runs:
             echo "Using cached extracted AppImage"
         fi
 
-        # Create wrapper scripts that use AppRun to properly set up library paths
-        # This is required because running the binaries directly from extracted AppImage
-        # doesn't set LD_LIBRARY_PATH and other environment variables
+        # Create wrapper scripts that use AppRun to properly set up the environment
+        # The conda-based FreeCAD AppImage has complex environment requirements
+        # Using AppRun ensures all paths and variables are correctly configured
         APPIMAGE_DIR="$HOME/freecad-appimage/squashfs-root"
 
-        # Create freecadcmd wrapper using echo to avoid YAML heredoc issues
+        # Check if AppRun exists and show its structure
+        echo "Checking AppImage structure..."
+        ls -la "$APPIMAGE_DIR/" | head -20
+        if [ -f "$APPIMAGE_DIR/AppRun" ]; then
+            echo "AppRun found, will use it for wrappers"
+        else
+            echo "WARNING: AppRun not found, falling back to direct execution"
+        fi
+
+        # Create freecadcmd wrapper - use AppRun with freecadcmd as argument
         {
             echo '#!/bin/bash'
             echo "export APPDIR=\"$APPIMAGE_DIR\""
-            echo 'export LD_LIBRARY_PATH="$APPDIR/usr/lib:$LD_LIBRARY_PATH"'
-            echo 'export PYTHONHOME="$APPDIR/usr"'
-            echo 'export PYTHONPATH="$APPDIR/usr/lib/python3.11:$APPDIR/usr/lib/python3.11/site-packages"'
-            echo 'exec "$APPDIR/usr/bin/freecadcmd" "$@"'
+            echo "export APPIMAGE_EXTRACT_AND_RUN=1"
+            echo "# Use AppRun if available, otherwise direct execution"
+            echo "if [ -f \"\$APPDIR/AppRun\" ]; then"
+            echo "    exec \"\$APPDIR/AppRun\" freecadcmd \"\$@\""
+            echo "else"
+            echo "    export LD_LIBRARY_PATH=\"\$APPDIR/usr/lib:\$LD_LIBRARY_PATH\""
+            echo "    exec \"\$APPDIR/usr/bin/freecadcmd\" \"\$@\""
+            echo "fi"
         } | sudo tee /usr/local/bin/freecadcmd > /dev/null
         sudo chmod +x /usr/local/bin/freecadcmd
 
-        # Create freecad (GUI) wrapper
+        # Create freecad (GUI) wrapper - use AppRun with freecad as argument
         {
             echo '#!/bin/bash'
             echo "export APPDIR=\"$APPIMAGE_DIR\""
-            echo 'export LD_LIBRARY_PATH="$APPDIR/usr/lib:$LD_LIBRARY_PATH"'
-            echo 'export PYTHONHOME="$APPDIR/usr"'
-            echo 'export PYTHONPATH="$APPDIR/usr/lib/python3.11:$APPDIR/usr/lib/python3.11/site-packages"'
-            echo 'export QT_PLUGIN_PATH="$APPDIR/usr/lib/plugins"'
-            echo 'export QT_QPA_PLATFORM_PLUGIN_PATH="$APPDIR/usr/lib/plugins/platforms"'
-            echo 'exec "$APPDIR/usr/bin/freecad" "$@"'
+            echo "export APPIMAGE_EXTRACT_AND_RUN=1"
+            echo "# Use AppRun if available, otherwise direct execution"
+            echo "if [ -f \"\$APPDIR/AppRun\" ]; then"
+            echo "    exec \"\$APPDIR/AppRun\" freecad \"\$@\""
+            echo "else"
+            echo "    export LD_LIBRARY_PATH=\"\$APPDIR/usr/lib:\$LD_LIBRARY_PATH\""
+            echo "    exec \"\$APPDIR/usr/bin/freecad\" \"\$@\""
+            echo "fi"
         } | sudo tee /usr/local/bin/freecad > /dev/null
         sudo chmod +x /usr/local/bin/freecad
 

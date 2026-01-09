@@ -263,6 +263,14 @@ jobs:
           echo "=== Testing freecad --version ==="
           timeout 10 freecad --version 2>&1 || echo "Version check timed out or failed"
 
+          # Try to get more info about what's happening
+          echo "=== Testing with QT_DEBUG_PLUGINS ==="
+          QT_DEBUG_PLUGINS=1 timeout 15 freecad --version 2>&1 | head -50 || echo "Debug test failed/timed out"
+
+          # Check X11 connection
+          echo "=== Verifying X11 display ==="
+          xdpyinfo -display :99 | head -5 || echo "Cannot connect to display :99"
+
           # Export fontconfig vars so they're available to backgrounded process
           export FONTCONFIG_FILE FONTCONFIG_PATH
 
