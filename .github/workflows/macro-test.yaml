@@ -218,7 +218,9 @@ jobs:
             libegl1 \
             libgl1-mesa-dri \
             libgl1 \
-            mesa-utils
+            mesa-utils \
+            fontconfig \
+            fonts-dejavu-core
 
       - name: Get latest FreeCAD release info
         id: freecad-release
