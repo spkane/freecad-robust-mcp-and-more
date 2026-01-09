@@ -67,6 +67,17 @@ integration-freecad-auto:
     # Track whether we started FreeCAD (so cleanup knows to stop it)
     STARTED_FREECAD=false
 
+    # Helper function to kill process on a port (with fallback for systems without lsof)
+    kill_port() {
+        local port=$1
+        local signal=${2:-}
+        if command -v lsof &>/dev/null; then
+            lsof -ti:"$port" | xargs ${signal:+kill $signal} ${signal:-kill} 2>/dev/null || true
+        elif command -v fuser &>/dev/null; then
+            fuser ${signal:+-k $signal} -k "$port/tcp" 2>/dev/null || true
+        fi
+    }
+
     # Cleanup function to ensure FreeCAD is stopped
     # We kill by port since the subshell approach makes PID tracking unreliable
     cleanup() {
@@ -74,13 +85,13 @@ integration-freecad-auto:
             echo ""
             echo "Stopping FreeCAD..."
             # Kill processes on our ports - these are the ones we started
-            lsof -ti:9875 | xargs kill 2>/dev/null || true
-            lsof -ti:9876 | xargs kill 2>/dev/null || true
+            kill_port 9875
+            kill_port 9876
             # Wait briefly for graceful shutdown
             sleep 1
             # Force kill if still running
-            lsof -ti:9875 | xargs kill -9 2>/dev/null || true
-            lsof -ti:9876 | xargs kill -9 2>/dev/null || true
+            kill_port 9875 -9
+            kill_port 9876 -9
         fi
     }
 
@@ -99,14 +110,14 @@ integration-freecad-auto:
             echo "Options:"
             echo "  1. Use 'just testing::integration' to run tests against the existing bridge"
             echo "  2. Stop the existing FreeCAD instance and try again"
-            echo "  3. If this is a zombie process, kill it with: lsof -ti:9875 | xargs kill -9"
+            echo "  3. If this is a zombie process, run: just testing::kill-bridge"
             exit 1
         else
             # Port is bound but not responding to ping - likely a zombie
             echo "WARNING: Port 9875 is bound but not responding (zombie process?)"
             echo "Attempting to kill zombie process..."
-            lsof -ti:9875 | xargs kill -9 2>/dev/null || true
-            lsof -ti:9876 | xargs kill -9 2>/dev/null || true
+            kill_port 9875 -9
+            kill_port 9876 -9
             sleep 2
         fi
     fi
@@ -145,3 +156,27 @@ integration-freecad-auto:
 
     # Cleanup is handled by trap
     exit $TEST_EXIT_CODE
+
+# Kill any zombie FreeCAD MCP bridge processes on the default ports
+kill-bridge:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "Killing any processes on MCP bridge ports (9875, 9876)..."
+
+    # Helper function to kill process on a port (with fallback for systems without lsof)
+    kill_port() {
+        local port=$1
+        if command -v lsof &>/dev/null; then
+            lsof -ti:"$port" | xargs kill -9 2>/dev/null || true
+        elif command -v fuser &>/dev/null; then
+            fuser -k -9 "$port/tcp" 2>/dev/null || true
+        else
+            echo "Warning: Neither lsof nor fuser available, cannot kill port $port"
+        fi
+    }
+
+    kill_port 9875
+    kill_port 9876
+
+    echo "Done."

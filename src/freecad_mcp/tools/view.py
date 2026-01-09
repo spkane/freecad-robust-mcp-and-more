@@ -5,10 +5,11 @@ capturing screenshots. Based on learnings from neka-nat which
 has excellent screenshot handling with view type detection.
 """
 
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 
-def register_view_tools(mcp: Any, get_bridge: Any) -> None:
+def register_view_tools(mcp: Any, get_bridge: Callable[..., Awaitable[Any]]) -> None:
     """Register view-related tools with the Robust MCP Server.
 
     Args:

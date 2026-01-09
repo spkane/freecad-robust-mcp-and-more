@@ -125,6 +125,15 @@ jobs:
         run: |
           uv run pytest tests/integration/test_headless_mode.py -v --tb=short
 
+      - name: Upload FreeCAD logs on failure
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: freecad-headless-logs
+          path: /tmp/freecad_bridge.log
+          retention-days: 7
+          if-no-files-found: ignore
+
       - name: Stop FreeCAD
         if: always()
         run: |
@@ -142,6 +151,14 @@ jobs:
 
       - name: Install mise
         uses: jdx/mise-action@v3
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('.github/workflows/macro-test.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
 
       - name: Install Xvfb and X11 dependencies
         run: |
@@ -258,12 +275,13 @@ jobs:
           uv run pytest tests/integration/test_gui_mode.py -v --tb=short
 
       - name: Upload FreeCAD logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@v6
         with:
           name: freecad-gui-logs
           path: /tmp/freecad_gui.log
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Stop FreeCAD and Xvfb
         if: always()

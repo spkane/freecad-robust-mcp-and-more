@@ -57,6 +57,11 @@ class TestAddonFileStructure:
         blocking_file = ADDON_DIR / "freecad_mcp_bridge" / "blocking_bridge.py"
         assert blocking_file.exists(), f"blocking_bridge.py not found: {blocking_file}"
 
+    def test_bridge_utils_exists(self):
+        """The bridge_utils.py should exist for shared utilities."""
+        utils_file = ADDON_DIR / "freecad_mcp_bridge" / "bridge_utils.py"
+        assert utils_file.exists(), f"bridge_utils.py not found: {utils_file}"
+
 
 class TestAddonPythonSyntax:
     """Tests to verify Python files have valid syntax."""
@@ -91,6 +96,12 @@ class TestAddonPythonSyntax:
         """blocking_bridge.py should have valid Python syntax."""
         blocking_file = ADDON_DIR / "freecad_mcp_bridge" / "blocking_bridge.py"
         code = blocking_file.read_text()
+        ast.parse(code)
+
+    def test_bridge_utils_valid_syntax(self):
+        """bridge_utils.py should have valid Python syntax."""
+        utils_file = ADDON_DIR / "freecad_mcp_bridge" / "bridge_utils.py"
+        code = utils_file.read_text()
         ast.parse(code)
 
 
@@ -140,6 +151,12 @@ class TestAddonMetadata:
         blocking_file = ADDON_DIR / "freecad_mcp_bridge" / "blocking_bridge.py"
         code = blocking_file.read_text()
         assert "run_forever" in code
+
+    def test_bridge_utils_has_get_running_plugin(self):
+        """bridge_utils.py should have get_running_plugin function."""
+        utils_file = ADDON_DIR / "freecad_mcp_bridge" / "bridge_utils.py"
+        code = utils_file.read_text()
+        assert "def get_running_plugin" in code
 
     def test_icon_is_valid_svg(self):
         """The icon should be a valid SVG file."""

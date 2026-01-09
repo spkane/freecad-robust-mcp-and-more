@@ -60,32 +60,13 @@ except ImportError:
 # Import the plugin server directly from the module file in the same directory
 script_dir = str(Path(__file__).resolve().parent)
 sys.path.insert(0, script_dir)
+from bridge_utils import get_running_plugin  # noqa: E402
 from server import FreecadMCPPlugin  # noqa: E402
 
 # Check if bridge is already running (from auto-start in Init.py)
-bridge_already_running = False
-plugin = None
-try:
-    # Check if the workbench commands module has a running plugin
-    from commands import _mcp_plugin
+plugin = get_running_plugin()
 
-    if _mcp_plugin is not None and _mcp_plugin.is_running:
-        bridge_already_running = True
-        plugin = _mcp_plugin
-        FreeCAD.Console.PrintMessage(
-            "\nMCP Bridge already running (from auto-start).\n"
-        )
-        FreeCAD.Console.PrintMessage("  - XML-RPC: localhost:9875\n")
-        FreeCAD.Console.PrintMessage("  - Socket: localhost:9876\n\n")
-except ImportError:
-    # Workbench commands module not available, we'll start our own
-    pass
-except AttributeError as e:
-    # _mcp_plugin exists but is malformed (missing is_running, etc.)
-    FreeCAD.Console.PrintWarning(f"MCP plugin state check failed: {e}\n")
-    pass
-
-if not bridge_already_running:
+if plugin is None:
     # Create and run the plugin
     plugin = FreecadMCPPlugin(
         host="localhost",

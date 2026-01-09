@@ -7,10 +7,13 @@ Based on learnings from contextform/freecad-mcp which has the most
 comprehensive PartDesign coverage.
 """
 
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 
-def register_partdesign_tools(mcp: Any, get_bridge: Any) -> None:
+def register_partdesign_tools(
+    mcp: Any, get_bridge: Callable[..., Awaitable[Any]]
+) -> None:
     """Register PartDesign-related tools with the Robust MCP Server.
 
     Args:

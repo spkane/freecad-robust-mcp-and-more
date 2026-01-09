@@ -8,7 +8,7 @@ import pytest
 from freecad_mcp.config import FreecadMode
 
 # Default argv for main() tests to avoid argparse errors
-DEFAULT_ARGV = ["freecad-mcp"]
+DEFAULT_ARGV: list[str] = ["freecad-mcp"]
 
 
 class TestGetInstanceId:

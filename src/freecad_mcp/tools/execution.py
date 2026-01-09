@@ -7,12 +7,15 @@ getting version information, and accessing the console.
 import os
 import platform
 import socket
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from freecad_mcp.server import get_instance_id
 
 
-def register_execution_tools(mcp: Any, get_bridge: Any) -> None:
+def register_execution_tools(
+    mcp: Any, get_bridge: Callable[..., Awaitable[Any]]
+) -> None:
     """Register execution-related tools with the Robust MCP Server.
 
     Args:

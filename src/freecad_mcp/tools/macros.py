@@ -7,10 +7,11 @@ Based on learnings from ATOI-Ming/FreeCAD-MCP which has a
 macro-centric workflow with templates and validation.
 """
 
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 
-def register_macro_tools(mcp: Any, get_bridge: Any) -> None:
+def register_macro_tools(mcp: Any, get_bridge: Callable[..., Awaitable[Any]]) -> None:
     """Register macro-related tools with the Robust MCP Server.
 
     Args:

@@ -56,8 +56,14 @@ runs:
         chmod +x ~/freecad-appimage/FreeCAD.AppImage
 
         # Extract AppImage for headless use (AppImages need FUSE which isn't available in CI)
+        # Skip extraction if already extracted (from cache)
         cd ~/freecad-appimage
-        ./FreeCAD.AppImage --appimage-extract > /dev/null 2>&1
+        if [ ! -d "squashfs-root" ]; then
+            echo "Extracting AppImage..."
+            ./FreeCAD.AppImage --appimage-extract > /dev/null 2>&1
+        else
+            echo "Using cached extracted AppImage"
+        fi
 
         # Create symlinks for easy access
         sudo ln -sf ~/freecad-appimage/squashfs-root/usr/bin/freecadcmd /usr/local/bin/freecadcmd
@@ -67,7 +73,10 @@ runs:
       shell: bash
       run: |
         echo "Checking FreeCAD installation..."
-        freecadcmd --version || freecad --version || echo "Version check failed"
+        if ! freecadcmd --version && ! freecad --version; then
+            echo "ERROR: FreeCAD version check failed"
+            exit 1
+        fi
         which freecadcmd
         # Show Python version bundled with FreeCAD
         freecadcmd -c "import sys; print(f'FreeCAD Python: {sys.version}')" || true

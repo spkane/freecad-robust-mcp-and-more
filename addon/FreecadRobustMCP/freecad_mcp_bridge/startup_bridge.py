@@ -40,27 +40,9 @@ except ImportError:
     sys.exit(1)
 
 # Check if bridge is already running (from auto-start in Init.py)
-bridge_already_running = False
-try:
-    # Check if the workbench commands module has a running plugin
-    from commands import _mcp_plugin
+from bridge_utils import get_running_plugin  # noqa: E402
 
-    if _mcp_plugin is not None and _mcp_plugin.is_running:
-        bridge_already_running = True
-        FreeCAD.Console.PrintMessage(
-            "\nMCP Bridge already running (from auto-start).\n"
-        )
-        FreeCAD.Console.PrintMessage("  - XML-RPC: localhost:9875\n")
-        FreeCAD.Console.PrintMessage("  - Socket: localhost:9876\n\n")
-except ImportError:
-    # Workbench commands module not available, we'll start our own
-    pass
-except AttributeError as e:
-    # _mcp_plugin exists but is malformed (missing is_running, etc.)
-    FreeCAD.Console.PrintWarning(f"MCP plugin state check failed: {e}\n")
-    pass
-
-if not bridge_already_running:
+if get_running_plugin() is None:
     try:
         from server import FreecadMCPPlugin
 
