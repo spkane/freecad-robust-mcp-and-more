@@ -210,9 +210,9 @@ jobs:
           echo "Starting FreeCAD GUI with MCP bridge under Xvfb..."
 
           # Start FreeCAD GUI (not headless) with MCP bridge
-          # Uses startup_bridge.py which starts the bridge and returns (non-blocking)
-          # Unlike headless_server.py which calls run_forever() and blocks
-          freecad --no-splash addon/FreecadRobustMCP/freecad_mcp_bridge/startup_bridge.py > /tmp/freecad_gui.log 2>&1 &
+          # Uses headless_server.py which blocks with run_forever() to keep process alive
+          # GUI features are still available since we're using 'freecad' not 'freecadcmd'
+          freecad --no-splash addon/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py > /tmp/freecad_gui.log 2>&1 &
           FREECAD_PID=$!
           echo "FREECAD_PID=$FREECAD_PID" >> "$GITHUB_ENV"
 
