@@ -48,7 +48,7 @@ repos:
   # Python - Linting and Formatting
   # ==========================================================================
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.11
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
@@ -215,33 +215,22 @@ repos:
   # ==========================================================================
   # Shell Script Linting
   # ==========================================================================
-  # Uses mise-managed shellcheck binary instead of pre-commit repo.
-  # This avoids case-conflicting git refs in shellcheck-py repo that break
-  # `pre-commit autoupdate` on case-insensitive filesystems (macOS).
-  # Version is managed in .mise.toml - update with `mise upgrade shellcheck`
-  - repo: local
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
     hooks:
       - id: shellcheck
         name: shellcheck (shell linter)
-        entry: shellcheck
         args: [--severity=warning]
-        language: system
-        types: [shell]
 
   # ==========================================================================
   # Dockerfile Linting
   # ==========================================================================
-  # Uses mise-managed hadolint binary instead of pre-commit repo.
-  # This avoids case-conflicting git refs in hadolint repo that break
-  # `pre-commit autoupdate` on case-insensitive filesystems (macOS).
-  # Version is managed in .mise.toml - update with `mise upgrade hadolint`
-  - repo: local
+  # hadolint-py: Python wrapper that auto-downloads hadolint binary
+  # No Docker or system installation required
+  - repo: https://github.com/AleksaC/hadolint-py
+    rev: v2.14.0
     hooks:
       - id: hadolint
-        name: hadolint (Dockerfile linter)
-        entry: hadolint
-        language: system
-        types: [dockerfile]
 
   # ==========================================================================
   # Dockerfile Security Scanning (Misconfigurations)
@@ -322,8 +311,6 @@ ci:
   autoupdate_commit_msg: "chore(deps): update pre-commit hooks"
   skip:
     - mypy              # Needs dependencies installed
-    - shellcheck        # Uses mise-managed binary (local repo)
-    - hadolint          # Uses mise-managed binary (local repo)
     - trivy             # Uses mise-managed binary (local repo)
     - trufflehog        # Can be slow in CI
     - coderabbit        # GitHub App handles PR reviews; CLI is for local use

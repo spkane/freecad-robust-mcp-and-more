@@ -56,16 +56,39 @@ script_dir = str(Path(__file__).resolve().parent)
 sys.path.insert(0, script_dir)
 from server import FreecadMCPPlugin  # noqa: E402
 
-# Create and run the plugin
-plugin = FreecadMCPPlugin(
-    host="localhost",
-    port=9876,  # JSON-RPC socket port
-    xmlrpc_port=9875,  # XML-RPC port
-    enable_xmlrpc=True,
-)
+# Check if bridge is already running (from auto-start in Init.py)
+bridge_already_running = False
+plugin = None
+try:
+    # Check if the workbench commands module has a running plugin
+    from commands import _mcp_plugin
 
-# Start the plugin
-plugin.start()
+    if _mcp_plugin is not None and _mcp_plugin.is_running:
+        bridge_already_running = True
+        plugin = _mcp_plugin
+        FreeCAD.Console.PrintMessage(
+            "\nMCP Bridge already running (from auto-start).\n"
+        )
+        FreeCAD.Console.PrintMessage("  - XML-RPC: localhost:9875\n")
+        FreeCAD.Console.PrintMessage("  - Socket: localhost:9876\n\n")
+except ImportError:
+    # Workbench commands module not available, we'll start our own
+    pass
+except Exception:
+    # Other error, proceed to start
+    pass
+
+if not bridge_already_running:
+    # Create and run the plugin
+    plugin = FreecadMCPPlugin(
+        host="localhost",
+        port=9876,  # JSON-RPC socket port
+        xmlrpc_port=9875,  # XML-RPC port
+        enable_xmlrpc=True,
+    )
+
+    # Start the plugin
+    plugin.start()
 
 # Print status messages with flush to ensure they appear immediately
 # (FreeCAD's Python may have buffered stdout)
@@ -83,4 +106,8 @@ print("=" * 60, flush=True)
 print("", flush=True)
 
 # Run forever (blocks until Ctrl+C)
-plugin.run_forever()
+if plugin is not None:
+    plugin.run_forever()
+else:
+    print("ERROR: Failed to initialize MCP Bridge plugin.", flush=True)
+    sys.exit(1)

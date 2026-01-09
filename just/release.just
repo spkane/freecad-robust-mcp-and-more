@@ -730,3 +730,234 @@ dry-run-tag component version:
             exit 1
             ;;
     esac
+
+# =============================================================================
+# FreeCAD Wiki Update Helpers
+# =============================================================================
+
+# Helper to update FreeCAD wiki for a macro (copies content to clipboard and opens edit page)
+wiki-update macro:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    case "{{macro}}" in
+        macro-magnets|magnets|cut)
+            WIKI_SOURCE="{{project_root}}/macros/Cut_Object_for_Magnets/wiki-source.txt"
+            WIKI_PAGE="Macro_Cut_Object_for_Magnets"
+            MACRO_NAME="Cut Object for Magnets"
+            ;;
+        macro-export|export|multi)
+            WIKI_SOURCE="{{project_root}}/macros/Multi_Export/wiki-source.txt"
+            WIKI_PAGE="Macro_Multi_Export"
+            MACRO_NAME="Multi Export"
+            ;;
+        *)
+            echo "Unknown macro: {{macro}}"
+            echo "Valid options: macro-magnets (or magnets, cut), macro-export (or export, multi)"
+            exit 1
+            ;;
+    esac
+
+    WIKI_URL="https://wiki.freecad.org/index.php?title=${WIKI_PAGE}&action=edit"
+
+    echo "=========================================="
+    echo "FreeCAD Wiki Update Helper"
+    echo "=========================================="
+    echo ""
+    echo "Macro: $MACRO_NAME"
+    echo "Wiki Page: https://wiki.freecad.org/${WIKI_PAGE}"
+    echo ""
+
+    # Check if wiki-source.txt exists
+    if [ ! -f "$WIKI_SOURCE" ]; then
+        echo "ERROR: Wiki source file not found: $WIKI_SOURCE"
+        exit 1
+    fi
+
+    # Extract current version from wiki-source.txt
+    CURRENT_VERSION=$(grep -o '|Version=[^|]*' "$WIKI_SOURCE" | cut -d= -f2 | tr -d '\n')
+    CURRENT_DATE=$(grep -o '|Date=[^|]*' "$WIKI_SOURCE" | cut -d= -f2 | tr -d '\n')
+
+    echo "Current version in wiki-source.txt:"
+    echo "  Version: $CURRENT_VERSION"
+    echo "  Date:    $CURRENT_DATE"
+    echo ""
+
+    # Try to copy to clipboard (platform-specific)
+    COPIED=false
+    if command -v pbcopy &> /dev/null; then
+        # macOS
+        cat "$WIKI_SOURCE" | pbcopy
+        COPIED=true
+        echo "Content copied to clipboard (macOS pbcopy)"
+    elif command -v xclip &> /dev/null; then
+        # Linux with xclip
+        cat "$WIKI_SOURCE" | xclip -selection clipboard
+        COPIED=true
+        echo "Content copied to clipboard (xclip)"
+    elif command -v xsel &> /dev/null; then
+        # Linux with xsel
+        cat "$WIKI_SOURCE" | xsel --clipboard --input
+        COPIED=true
+        echo "Content copied to clipboard (xsel)"
+    elif command -v wl-copy &> /dev/null; then
+        # Wayland
+        cat "$WIKI_SOURCE" | wl-copy
+        COPIED=true
+        echo "Content copied to clipboard (wl-copy)"
+    else
+        echo "NOTE: No clipboard utility found (pbcopy, xclip, xsel, wl-copy)"
+        echo "      You'll need to manually copy the content."
+    fi
+
+    echo ""
+    echo "=========================================="
+    echo "INSTRUCTIONS"
+    echo "=========================================="
+    echo ""
+    echo "1. The wiki edit page will open in your browser"
+    echo "2. Log in to your FreeCAD wiki account if prompted"
+    echo "3. Select ALL content in the edit box (Ctrl+A / Cmd+A)"
+    echo "4. Paste the new content (Ctrl+V / Cmd+V)"
+    echo "5. Add an edit summary like: 'Update to version $CURRENT_VERSION'"
+    echo "6. Click 'Show preview' to verify changes"
+    echo "7. Click 'Save changes' when satisfied"
+    echo ""
+
+    # Ask for confirmation before opening browser
+    read -p "Open wiki edit page in browser? [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        echo ""
+        echo "Aborted. You can manually visit:"
+        echo "  $WIKI_URL"
+        echo ""
+        echo "Wiki source file location:"
+        echo "  $WIKI_SOURCE"
+        exit 0
+    fi
+
+    # Open the wiki edit page in browser (platform-specific)
+    if command -v open &> /dev/null; then
+        # macOS
+        open "$WIKI_URL"
+    elif command -v xdg-open &> /dev/null; then
+        # Linux
+        xdg-open "$WIKI_URL"
+    elif command -v wslview &> /dev/null; then
+        # WSL
+        wslview "$WIKI_URL"
+    else
+        echo "Could not open browser automatically."
+        echo "Please manually visit: $WIKI_URL"
+    fi
+
+    echo ""
+    echo "Browser opened to: $WIKI_URL"
+    if [ "$COPIED" = true ]; then
+        echo ""
+        echo "The wiki content is in your clipboard - ready to paste!"
+    fi
+
+# Show the wiki source content for a macro (for review)
+wiki-show macro:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    case "{{macro}}" in
+        macro-magnets|magnets|cut)
+            WIKI_SOURCE="{{project_root}}/macros/Cut_Object_for_Magnets/wiki-source.txt"
+            MACRO_NAME="Cut Object for Magnets"
+            ;;
+        macro-export|export|multi)
+            WIKI_SOURCE="{{project_root}}/macros/Multi_Export/wiki-source.txt"
+            MACRO_NAME="Multi Export"
+            ;;
+        *)
+            echo "Unknown macro: {{macro}}"
+            echo "Valid options: macro-magnets (or magnets, cut), macro-export (or export, multi)"
+            exit 1
+            ;;
+    esac
+
+    echo "=========================================="
+    echo "Wiki Source: $MACRO_NAME"
+    echo "=========================================="
+    echo "File: $WIKI_SOURCE"
+    echo ""
+
+    # Show version info
+    CURRENT_VERSION=$(grep -o '|Version=[^|]*' "$WIKI_SOURCE" | cut -d= -f2 | tr -d '\n')
+    CURRENT_DATE=$(grep -o '|Date=[^|]*' "$WIKI_SOURCE" | cut -d= -f2 | tr -d '\n')
+    echo "Version: $CURRENT_VERSION"
+    echo "Date:    $CURRENT_DATE"
+    echo ""
+    echo "=========================================="
+    echo ""
+
+    cat "$WIKI_SOURCE"
+
+# Diff the local wiki source against the current wiki page (requires curl)
+wiki-diff macro:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    case "{{macro}}" in
+        macro-magnets|magnets|cut)
+            WIKI_SOURCE="{{project_root}}/macros/Cut_Object_for_Magnets/wiki-source.txt"
+            WIKI_PAGE="Macro_Cut_Object_for_Magnets"
+            MACRO_NAME="Cut Object for Magnets"
+            ;;
+        macro-export|export|multi)
+            WIKI_SOURCE="{{project_root}}/macros/Multi_Export/wiki-source.txt"
+            WIKI_PAGE="Macro_Multi_Export"
+            MACRO_NAME="Multi Export"
+            ;;
+        *)
+            echo "Unknown macro: {{macro}}"
+            echo "Valid options: macro-magnets (or magnets, cut), macro-export (or export, multi)"
+            exit 1
+            ;;
+    esac
+
+    WIKI_RAW_URL="https://wiki.freecad.org/index.php?title=${WIKI_PAGE}&action=raw"
+
+    echo "Fetching current wiki content for $MACRO_NAME..."
+    echo ""
+
+    # Create temp file for wiki content
+    TEMP_WIKI=$(mktemp)
+    trap "rm -f $TEMP_WIKI" EXIT
+
+    # Fetch current wiki content
+    if ! curl -sS "$WIKI_RAW_URL" > "$TEMP_WIKI" 2>/dev/null; then
+        echo "ERROR: Could not fetch wiki page. The page may not exist yet."
+        echo "URL: $WIKI_RAW_URL"
+        exit 1
+    fi
+
+    # Check if page exists (MediaWiki returns specific content for missing pages)
+    if grep -q "There is currently no text in this page" "$TEMP_WIKI"; then
+        echo "NOTE: Wiki page does not exist yet."
+        echo "This will be a new page creation."
+        echo ""
+        echo "Local content to be uploaded:"
+        echo "=========================================="
+        head -20 "$WIKI_SOURCE"
+        echo "..."
+        echo "(truncated - run 'just release::wiki-show {{macro}}' to see full content)"
+        exit 0
+    fi
+
+    echo "Comparing local wiki-source.txt with live wiki page..."
+    echo ""
+
+    # Show diff
+    if diff -u "$TEMP_WIKI" "$WIKI_SOURCE"; then
+        echo "No differences found - wiki is up to date!"
+    else
+        echo ""
+        echo "=========================================="
+        echo "Differences found (above)"
+        echo "Run 'just release::wiki-update {{macro}}' to update the wiki"
+    fi

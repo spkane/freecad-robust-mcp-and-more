@@ -88,6 +88,11 @@ mcp-server:
         uv tool uninstall freecad-robust-mcp 2>/dev/null || true
     fi
 
+    # Clear uv cache to ensure we rebuild from current source
+    # This is needed because uv caches wheels and may not pick up uncommitted changes
+    echo "Clearing uv cache for fresh build..."
+    uv cache clean --force 2>/dev/null || true
+
     # Install from the local project directory
     uv tool install --force "$PROJECT_DIR"
 
@@ -429,6 +434,16 @@ status:
     # Set FreeCAD directories
     eval "$(just install::_freecad-dirs)"
 
+    # Helper function to get file modification time (cross-platform)
+    get_mod_time() {
+        local file="$1"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$file" 2>/dev/null || echo "unknown"
+        else
+            stat -c "%y" "$file" 2>/dev/null | cut -d'.' -f1 || echo "unknown"
+        fi
+    }
+
     echo "=========================================="
     echo "Installation Status"
     echo "=========================================="
@@ -436,12 +451,19 @@ status:
 
     # Check Robust MCP Server (installed as uv tool)
     if command -v freecad-mcp &> /dev/null; then
+        MCP_VERSION=$(freecad-mcp --version 2>/dev/null || echo "unknown")
+        MCP_PATH=$(command -v freecad-mcp)
+        MCP_MOD_TIME=$(get_mod_time "$MCP_PATH")
         echo "✓ Robust MCP Server: INSTALLED (as uv tool)"
+        echo "  Version: $MCP_VERSION"
+        echo "  Updated: $MCP_MOD_TIME"
         echo "  Run: freecad-mcp"
     elif [[ -f "{{project_root}}/pyproject.toml" ]] && grep -q 'name = "freecad-robust-mcp"' "{{project_root}}/pyproject.toml" 2>/dev/null; then
         # Dev environment exists - check if synced by looking for .venv
         if [[ -d "{{project_root}}/.venv" ]]; then
+            DEV_VERSION=$(cd "{{project_root}}" && uv run python -c "from freecad_mcp import __version__; print(__version__)" 2>/dev/null || echo "unknown")
             echo "✓ Robust MCP Server: AVAILABLE (via dev environment)"
+            echo "  Version: $DEV_VERSION"
             echo "  Run: just mcp::run"
             echo "  For system-wide install: just install::mcp-server"
         else
@@ -457,7 +479,16 @@ status:
 
     # Check workbench
     if [[ -d "$MOD_DIR/FreecadRobustMCP" ]]; then
+        # Get version from package.xml if available
+        WB_VERSION="unknown"
+        if [[ -f "$MOD_DIR/FreecadRobustMCP/package.xml" ]]; then
+            # Extract version for "Robust MCP Bridge" workbench
+            WB_VERSION=$(grep -A1 '<name>Robust MCP Bridge</name>' "$MOD_DIR/FreecadRobustMCP/package.xml" 2>/dev/null | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' || echo "unknown")
+        fi
+        WB_MOD_TIME=$(get_mod_time "$MOD_DIR/FreecadRobustMCP/InitGui.py")
         echo "✓ Robust MCP Bridge Workbench: INSTALLED"
+        echo "  Version: $WB_VERSION"
+        echo "  Updated: $WB_MOD_TIME"
         echo "  Path: $MOD_DIR/FreecadRobustMCP"
     else
         echo "✗ Robust MCP Bridge Workbench: NOT INSTALLED"
@@ -468,14 +499,22 @@ status:
     # Check macros
     echo "Macros:"
     if [[ -f "$MACRO_DIR/CutObjectForMagnets.FCMacro" ]]; then
+        CUT_VERSION=$(grep '__Version__' "$MACRO_DIR/CutObjectForMagnets.FCMacro" 2>/dev/null | sed 's/.*= *"\([^"]*\)".*/\1/' || echo "unknown")
+        CUT_MOD_TIME=$(get_mod_time "$MACRO_DIR/CutObjectForMagnets.FCMacro")
         echo "  ✓ CutObjectForMagnets: INSTALLED"
+        echo "    Version: $CUT_VERSION"
+        echo "    Updated: $CUT_MOD_TIME"
     else
         echo "  ✗ CutObjectForMagnets: NOT INSTALLED"
         echo "    Install: just install::macro-cut"
     fi
 
     if [[ -f "$MACRO_DIR/MultiExport.FCMacro" ]]; then
+        EXPORT_VERSION=$(grep '__Version__' "$MACRO_DIR/MultiExport.FCMacro" 2>/dev/null | sed 's/.*= *"\([^"]*\)".*/\1/' || echo "unknown")
+        EXPORT_MOD_TIME=$(get_mod_time "$MACRO_DIR/MultiExport.FCMacro")
         echo "  ✓ MultiExport: INSTALLED"
+        echo "    Version: $EXPORT_VERSION"
+        echo "    Updated: $EXPORT_MOD_TIME"
     else
         echo "  ✗ MultiExport: NOT INSTALLED"
         echo "    Install: just install::macro-export"

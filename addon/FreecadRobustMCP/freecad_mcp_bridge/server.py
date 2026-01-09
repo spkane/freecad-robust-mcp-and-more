@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import errno
 import io
 import json
 import queue
@@ -576,6 +577,17 @@ class FreecadMCPPlugin:
         try:
             self._socket_loop.run_until_complete(self._start_socket_server())
             self._socket_loop.run_forever()
+        except OSError as e:
+            if e.errno == errno.EADDRINUSE:
+                if FREECAD_AVAILABLE:
+                    FreeCAD.Console.PrintWarning(
+                        f"MCP Bridge: JSON-RPC port {self._port} already in use. "
+                        f"Another instance may be running.\n"
+                    )
+            elif FREECAD_AVAILABLE:
+                FreeCAD.Console.PrintError(
+                    f"MCP Bridge: Failed to start JSON-RPC server: {e}\n"
+                )
         finally:
             self._socket_loop.close()
 
@@ -598,10 +610,6 @@ class FreecadMCPPlugin:
             reader: Stream reader for incoming data.
             writer: Stream writer for outgoing data.
         """
-        peer = writer.get_extra_info("peername")
-        if FREECAD_AVAILABLE:
-            FreeCAD.Console.PrintMessage(f"MCP client connected (socket): {peer}\n")
-
         try:
             while self._running:
                 data = await reader.readline()
@@ -630,8 +638,6 @@ class FreecadMCPPlugin:
             if FREECAD_AVAILABLE:
                 FreeCAD.Console.PrintError(f"MCP socket error: {e}\n")
         finally:
-            if FREECAD_AVAILABLE:
-                FreeCAD.Console.PrintMessage(f"MCP client disconnected: {peer}\n")
             writer.close()
             with contextlib.suppress(Exception):
                 await writer.wait_closed()
@@ -707,11 +713,25 @@ class FreecadMCPPlugin:
 
     def _run_xmlrpc_server(self) -> None:
         """Run the XML-RPC server."""
-        self._xmlrpc_server = xmlrpc.server.SimpleXMLRPCServer(
-            (self._host, self._xmlrpc_port),
-            allow_none=True,
-            logRequests=False,
-        )
+        try:
+            self._xmlrpc_server = xmlrpc.server.SimpleXMLRPCServer(
+                (self._host, self._xmlrpc_port),
+                allow_none=True,
+                logRequests=False,
+            )
+        except OSError as e:
+            if e.errno == errno.EADDRINUSE:
+                if FREECAD_AVAILABLE:
+                    FreeCAD.Console.PrintWarning(
+                        f"MCP Bridge: XML-RPC port {self._xmlrpc_port} already in use. "
+                        f"Another instance may be running.\n"
+                    )
+            elif FREECAD_AVAILABLE:
+                FreeCAD.Console.PrintError(
+                    f"MCP Bridge: Failed to start XML-RPC server: {e}\n"
+                )
+            return
+
         # Set a timeout so handle_request() doesn't block forever
         # This allows the server to check self._running periodically
         self._xmlrpc_server.timeout = 0.5

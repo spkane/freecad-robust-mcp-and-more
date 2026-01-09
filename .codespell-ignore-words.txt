@@ -21,6 +21,7 @@ fcstd
 mcp
 impl
 vertexes
+Vertexes
 recomputation
 heredoc
 heredocs

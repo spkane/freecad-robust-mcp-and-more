@@ -223,6 +223,8 @@ class TestMain:
 
     def test_main_prints_instance_id(self):
         """Main should print instance ID on startup."""
+        import sys
+
         import freecad_mcp.server as server_module
         from freecad_mcp.config import TransportType
 
@@ -232,6 +234,7 @@ class TestMain:
         mock_config.transport = TransportType.STDIO
 
         with (
+            patch.object(sys, "argv", ["freecad-mcp"]),
             patch.object(server_module, "get_config", return_value=mock_config),
             patch.object(server_module.mcp, "run") as mock_run,
             patch("builtins.print") as mock_print,
@@ -247,6 +250,8 @@ class TestMain:
 
     def test_main_http_transport(self):
         """Main should start HTTP transport when configured."""
+        import sys
+
         import freecad_mcp.server as server_module
         from freecad_mcp.config import TransportType
 
@@ -257,6 +262,7 @@ class TestMain:
         mock_config.http_port = 8080
 
         with (
+            patch.object(sys, "argv", ["freecad-mcp"]),
             patch.object(server_module, "get_config", return_value=mock_config),
             patch.object(server_module.mcp, "run") as mock_run,
             patch("builtins.print"),
@@ -271,6 +277,8 @@ class TestMain:
 
     def test_main_stdio_transport(self):
         """Main should start stdio transport by default."""
+        import sys
+
         import freecad_mcp.server as server_module
         from freecad_mcp.config import TransportType
 
@@ -280,6 +288,7 @@ class TestMain:
         mock_config.transport = TransportType.STDIO
 
         with (
+            patch.object(sys, "argv", ["freecad-mcp"]),
             patch.object(server_module, "get_config", return_value=mock_config),
             patch.object(server_module.mcp, "run") as mock_run,
             patch("builtins.print"),

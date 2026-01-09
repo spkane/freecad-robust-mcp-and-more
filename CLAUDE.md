@@ -720,7 +720,7 @@ This section describes the purpose and key settings in each configuration file.
 
 | File             | Purpose                                                                                                                                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.mise.toml`     | Pins versions for Python, uv, just, pre-commit, and security tools (trivy, gitleaks, hadolint, shellcheck, actionlint, markdownlint-cli2). Also sets environment variables for FreeCAD connection settings.   |
+| `.mise.toml`     | Pins versions for Python, uv, just, pre-commit, and security tools (trivy, gitleaks, actionlint, markdownlint-cli2). Also sets environment variables for FreeCAD connection settings.                         |
 | `pyproject.toml` | Python project configuration: dependencies, build system, tool configs (ruff, mypy, pytest, bandit, codespell, commitizen).                                                                                   |
 | `uv.lock`        | Exact locked versions of all Python dependencies for reproducible builds.                                                                                                                                     |
 

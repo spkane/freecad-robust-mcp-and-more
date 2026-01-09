@@ -104,7 +104,20 @@ class StartMCPBridgeCommand:
 
         try:
             from freecad_mcp_bridge.server import FreecadMCPPlugin
-            from preferences import get_socket_port, get_xmlrpc_port
+            from preferences import (
+                get_socket_port,
+                get_status_bar_enabled,
+                get_xmlrpc_port,
+            )
+            from status_widget import (
+                update_status_error,
+                update_status_running,
+                update_status_starting,
+            )
+
+            # Update status bar widget if enabled
+            if get_status_bar_enabled():
+                update_status_starting()
 
             xmlrpc_port = get_xmlrpc_port()
             socket_port = get_socket_port()
@@ -123,6 +136,12 @@ class StartMCPBridgeCommand:
                 "socket_port": socket_port,
             }
 
+            # Update status bar widget
+            if get_status_bar_enabled():
+                update_status_running(
+                    xmlrpc_port, socket_port, _mcp_plugin.request_count
+                )
+
             FreeCAD.Console.PrintMessage("\n")
             FreeCAD.Console.PrintMessage("=" * 50 + "\n")
             FreeCAD.Console.PrintMessage("MCP Bridge started!\n")
@@ -138,8 +157,24 @@ class StartMCPBridgeCommand:
             FreeCAD.Console.PrintError(
                 "Ensure the FreecadRobustMCP addon is properly installed.\n"
             )
+            try:
+                from preferences import get_status_bar_enabled
+                from status_widget import update_status_error
+
+                if get_status_bar_enabled():
+                    update_status_error(str(e))
+            except Exception:
+                pass
         except Exception as e:
             FreeCAD.Console.PrintError(f"Failed to start MCP Bridge: {e}\n")
+            try:
+                from preferences import get_status_bar_enabled
+                from status_widget import update_status_error
+
+                if get_status_bar_enabled():
+                    update_status_error(str(e))
+            except Exception:
+                pass
 
 
 class StopMCPBridgeCommand:
@@ -170,6 +205,16 @@ class StopMCPBridgeCommand:
             _mcp_plugin.stop()
             _mcp_plugin = None
             _running_config = None
+
+            # Update status bar widget
+            try:
+                from preferences import get_status_bar_enabled
+                from status_widget import update_status_stopped
+
+                if get_status_bar_enabled():
+                    update_status_stopped()
+            except Exception:
+                pass
 
             FreeCAD.Console.PrintMessage("\n")
             FreeCAD.Console.PrintMessage("=" * 50 + "\n")
@@ -233,6 +278,16 @@ def restart_bridge_if_running() -> bool:
 
     FreeCAD.Console.PrintMessage("Restarting MCP Bridge with new configuration...\n")
 
+    # Update status bar widget
+    try:
+        from preferences import get_status_bar_enabled
+        from status_widget import update_status_starting
+
+        if get_status_bar_enabled():
+            update_status_starting()
+    except Exception:
+        pass
+
     # Stop the current bridge
     try:
         _mcp_plugin.stop()
@@ -240,12 +295,21 @@ def restart_bridge_if_running() -> bool:
         _running_config = None
     except Exception as e:
         FreeCAD.Console.PrintError(f"Failed to stop MCP Bridge: {e}\n")
+        try:
+            from preferences import get_status_bar_enabled
+            from status_widget import update_status_error
+
+            if get_status_bar_enabled():
+                update_status_error(str(e))
+        except Exception:
+            pass
         return False
 
     # Start with new configuration
     try:
         from freecad_mcp_bridge.server import FreecadMCPPlugin
-        from preferences import get_socket_port, get_xmlrpc_port
+        from preferences import get_socket_port, get_status_bar_enabled, get_xmlrpc_port
+        from status_widget import update_status_running
 
         xmlrpc_port = get_xmlrpc_port()
         socket_port = get_socket_port()
@@ -263,6 +327,10 @@ def restart_bridge_if_running() -> bool:
             "socket_port": socket_port,
         }
 
+        # Update status bar widget
+        if get_status_bar_enabled():
+            update_status_running(xmlrpc_port, socket_port, _mcp_plugin.request_count)
+
         FreeCAD.Console.PrintMessage("MCP Bridge restarted successfully.\n")
         FreeCAD.Console.PrintMessage(f"  - XML-RPC: localhost:{xmlrpc_port}\n")
         FreeCAD.Console.PrintMessage(f"  - Socket:  localhost:{socket_port}\n")
@@ -270,6 +338,14 @@ def restart_bridge_if_running() -> bool:
 
     except Exception as e:
         FreeCAD.Console.PrintError(f"Failed to restart MCP Bridge: {e}\n")
+        try:
+            from preferences import get_status_bar_enabled
+            from status_widget import update_status_error
+
+            if get_status_bar_enabled():
+                update_status_error(str(e))
+        except Exception:
+            pass
         return False
 
 

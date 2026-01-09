@@ -125,6 +125,8 @@ target-version = "py311"
 line-length = 88
 src = ["src", "tests", "macros"]
 extend-include = ["*.FCMacro"]
+# Exclude auto-generated files (setuptools-scm version file)
+exclude = ["src/freecad_mcp/_version.py"]
 
 [tool.ruff.lint]
 select = [

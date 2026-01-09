@@ -25,8 +25,13 @@ Example:
     With environment variables::
 
         $ FREECAD_MODE=socket FREECAD_SOCKET_HOST=localhost freecad-mcp
+
+    Show help::
+
+        $ freecad-mcp --help
 """
 
+import argparse
 import logging
 import sys
 import uuid
@@ -178,8 +183,229 @@ def register_all_components() -> None:
 register_all_components()
 
 
+async def check_freecad_connection(
+    mode: str | None = None, host: str | None = None, port: int | None = None
+) -> bool:
+    """Test FreeCAD bridge connection.
+
+    Args:
+        mode: Connection mode override (xmlrpc, socket, embedded).
+        host: Host override for connection.
+        port: Port override for connection.
+
+    Returns:
+        True if connection successful, False otherwise.
+    """
+    import os
+
+    # Apply overrides to env
+    if mode:
+        os.environ["FREECAD_MODE"] = mode
+    if host:
+        os.environ["FREECAD_SOCKET_HOST"] = host
+    if port:
+        mode_val = mode or os.environ.get("FREECAD_MODE", "xmlrpc")
+        if mode_val == "xmlrpc":
+            os.environ["FREECAD_XMLRPC_PORT"] = str(port)
+        else:
+            os.environ["FREECAD_SOCKET_PORT"] = str(port)
+
+    config = get_config()
+    print(f"Testing connection to FreeCAD ({config.mode.value} mode)...")
+
+    try:
+        bridge: FreecadBridge
+        if config.mode == FreecadMode.EMBEDDED:
+            from freecad_mcp.bridge.embedded import EmbeddedBridge
+
+            bridge = EmbeddedBridge(
+                freecad_path=(
+                    str(config.freecad_path) if config.freecad_path else None
+                ),
+            )
+        elif config.mode == FreecadMode.XMLRPC:
+            from freecad_mcp.bridge.xmlrpc import XmlRpcBridge
+
+            bridge = XmlRpcBridge(
+                host=config.socket_host,
+                port=config.xmlrpc_port,
+            )
+            print(f"  Host: {config.socket_host}:{config.xmlrpc_port}")
+        else:
+            from freecad_mcp.bridge.socket import SocketBridge
+
+            bridge = SocketBridge(
+                host=config.socket_host,
+                port=config.socket_port,
+            )
+            print(f"  Host: {config.socket_host}:{config.socket_port}")
+
+        await bridge.connect()
+        version_info = await bridge.get_freecad_version()
+        await bridge.disconnect()
+
+        print("✓ Connection successful!")
+        print(f"  FreeCAD version: {version_info.get('version', 'unknown')}")
+        print(f"  GUI available: {version_info.get('gui_available', 'unknown')}")
+        return True
+    except Exception as e:
+        print(f"✗ Connection failed: {e}")
+        return False
+
+
+def apply_cli_args_to_env(args: argparse.Namespace) -> None:
+    """Apply CLI arguments as environment variables.
+
+    CLI arguments override existing environment variables.
+
+    Args:
+        args: Parsed command-line arguments.
+    """
+    import os
+
+    if args.mode:
+        os.environ["FREECAD_MODE"] = args.mode
+    if args.transport:
+        os.environ["FREECAD_TRANSPORT"] = args.transport
+    if args.host:
+        os.environ["FREECAD_SOCKET_HOST"] = args.host
+    if args.port:
+        # Set appropriate port based on mode
+        mode = os.environ.get("FREECAD_MODE", "xmlrpc")
+        if mode == "xmlrpc":
+            os.environ["FREECAD_XMLRPC_PORT"] = str(args.port)
+        else:
+            os.environ["FREECAD_SOCKET_PORT"] = str(args.port)
+    if args.http_port:
+        os.environ["FREECAD_HTTP_PORT"] = str(args.http_port)
+    if args.log_level:
+        os.environ["FREECAD_LOG_LEVEL"] = args.log_level
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments.
+
+    Returns:
+        Parsed arguments namespace.
+    """
+    parser = argparse.ArgumentParser(
+        prog="freecad-mcp",
+        description="FreeCAD Robust MCP Server - Connect AI assistants to FreeCAD",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Environment Variables:
+  FREECAD_MODE           Connection mode: xmlrpc, socket, or embedded
+                         (default: xmlrpc)
+  FREECAD_SOCKET_HOST    Host for socket/XML-RPC connection (default: localhost)
+  FREECAD_SOCKET_PORT    Port for socket connection (default: 9876)
+  FREECAD_XMLRPC_PORT    Port for XML-RPC connection (default: 9875)
+  FREECAD_TRANSPORT      Transport type: stdio or http (default: stdio)
+  FREECAD_HTTP_PORT      Port for HTTP transport (default: 8000)
+  FREECAD_LOG_LEVEL      Logging level: DEBUG, INFO, WARNING, ERROR
+                         (default: INFO)
+
+Examples:
+  # Start with default settings (XML-RPC mode, stdio transport)
+  freecad-mcp
+
+  # Use socket mode
+  FREECAD_MODE=socket freecad-mcp
+
+  # Use HTTP transport for remote access
+  FREECAD_TRANSPORT=http FREECAD_HTTP_PORT=8080 freecad-mcp
+
+  # Connect to remote FreeCAD instance
+  FREECAD_SOCKET_HOST=192.168.1.100 freecad-mcp
+
+Prerequisites:
+  The FreeCAD MCP Bridge must be running before starting this server.
+  Start it via:
+    - FreeCAD GUI: Install Robust MCP Bridge workbench, enable auto-start
+    - Headless: just freecad::run-headless
+    - Development: just freecad::run-gui
+""",
+    )
+
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Show version information and exit",
+    )
+
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Test FreeCAD connection and exit (doesn't start MCP server)",
+    )
+
+    parser.add_argument(
+        "--mode",
+        choices=["xmlrpc", "socket", "embedded"],
+        help="Connection mode (overrides FREECAD_MODE env var)",
+    )
+
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "http"],
+        help="Transport type (overrides FREECAD_TRANSPORT env var)",
+    )
+
+    parser.add_argument(
+        "--host",
+        help="Host for FreeCAD connection (overrides FREECAD_SOCKET_HOST)",
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="Port for FreeCAD connection (mode-dependent)",
+    )
+
+    parser.add_argument(
+        "--http-port",
+        type=int,
+        help="Port for HTTP transport (overrides FREECAD_HTTP_PORT)",
+    )
+
+    parser.add_argument(
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Logging level (overrides FREECAD_LOG_LEVEL)",
+    )
+
+    return parser.parse_args()
+
+
 def main() -> None:
     """Run the FreeCAD Robust MCP Server."""
+    # Parse arguments first - this handles --help without connecting to FreeCAD
+    args = parse_args()
+
+    # Handle --version
+    if args.version:
+        try:
+            from importlib.metadata import version
+
+            ver = version("freecad-mcp")
+        except Exception:
+            ver = "unknown"
+        print(f"freecad-mcp {ver}")
+        print(f"Instance ID: {INSTANCE_ID}")
+        sys.exit(0)
+
+    # Handle --check (test connection without starting MCP server)
+    if args.check:
+        import asyncio
+
+        success = asyncio.run(
+            check_freecad_connection(mode=args.mode, host=args.host, port=args.port)
+        )
+        sys.exit(0 if success else 1)
+
+    # Apply CLI arguments as environment variables (they override existing ones)
+    apply_cli_args_to_env(args)
+
+    # Now get config (which reads from environment)
     config = get_config()
 
     # Set up logging
@@ -204,6 +430,12 @@ def main() -> None:
         )
     else:
         logger.info("Starting stdio transport")
+        logger.info(
+            "Waiting for MCP client connection (FreeCAD connection tested on first request)..."
+        )
+        logger.info(
+            "Tip: Use 'freecad-mcp --check' to test FreeCAD connection directly"
+        )
         mcp.run()
 
 

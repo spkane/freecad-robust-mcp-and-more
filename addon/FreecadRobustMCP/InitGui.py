@@ -138,22 +138,56 @@ class FreecadRobustMCPWorkbench(FreeCADGui.Workbench):
         FreeCAD.Console.PrintMessage("Robust MCP Bridge workbench initialized\n")
 
         # Auto-start bridge if preference is enabled
+        # This is a fallback if the module-level timer didn't fire
+        # (which can happen if the module isn't loaded until workbench selection)
         try:
             from preferences import get_auto_start
 
             if get_auto_start():
-                FreeCAD.Console.PrintMessage(
-                    "Auto-starting MCP Bridge (configured in preferences)...\n"
-                )
-                FreeCADGui.runCommand("Start_MCP_Bridge")
+                # Check if already running (timer might have started it)
+                from commands import _mcp_plugin
+
+                if _mcp_plugin is None or not _mcp_plugin.is_running:
+                    FreeCAD.Console.PrintMessage(
+                        "Auto-starting MCP Bridge (configured in preferences)...\n"
+                    )
+                    FreeCADGui.runCommand("Start_MCP_Bridge")
         except Exception as e:
-            FreeCAD.Console.PrintWarning(
-                f"Could not check auto-start preference: {e}\n"
-            )
+            FreeCAD.Console.PrintWarning(f"Could not auto-start MCP Bridge: {e}\n")
+
+        # Sync status bar widget with current bridge state
+        # (bridge may have been started by Init.py before workbench was selected)
+        self._sync_status_bar()
 
     def Activated(self) -> None:
         """Called when the workbench is activated."""
-        pass
+        # Sync status bar widget with current bridge state
+        self._sync_status_bar()
+
+    def _sync_status_bar(self) -> None:
+        """Sync status bar widget with current bridge state."""
+        try:
+            from commands import _mcp_plugin
+            from preferences import get_status_bar_enabled
+
+            if not get_status_bar_enabled():
+                return
+
+            from status_widget import (
+                update_status_running,
+                update_status_stopped,
+            )
+
+            if _mcp_plugin is not None and _mcp_plugin.is_running:
+                update_status_running(
+                    _mcp_plugin.xmlrpc_port,
+                    _mcp_plugin.socket_port,
+                    _mcp_plugin.request_count,
+                )
+            else:
+                update_status_stopped()
+        except Exception as e:
+            FreeCAD.Console.PrintWarning(f"Could not sync status bar: {e}\n")
 
     def Deactivated(self) -> None:
         """Called when the workbench is deactivated."""
@@ -166,3 +200,42 @@ class FreecadRobustMCPWorkbench(FreeCADGui.Workbench):
 
 # Register the workbench
 FreeCADGui.addWorkbench(FreecadRobustMCPWorkbench())
+
+# Schedule status bar sync after a short delay to allow GUI to finish initializing
+# This runs on the main thread (InitGui.py is executed on main thread)
+try:
+    try:
+        from PySide2 import QtCore
+    except ImportError:
+        from PySide6 import QtCore
+
+    def _deferred_status_bar_sync() -> None:
+        """Sync status bar with bridge state after GUI is ready."""
+        try:
+            from commands import _mcp_plugin
+            from preferences import get_status_bar_enabled
+            from status_widget import sync_status_with_bridge
+
+            if (
+                get_status_bar_enabled()
+                and _mcp_plugin is not None
+                and _mcp_plugin.is_running
+            ):
+                FreeCAD.Console.PrintMessage(
+                    "Robust MCP Bridge: Syncing status bar from InitGui...\n"
+                )
+                sync_status_with_bridge()
+        except Exception as e:
+            FreeCAD.Console.PrintWarning(
+                f"Robust MCP Bridge: Deferred status bar sync failed: {e}\n"
+            )
+
+    # Use QTimer.singleShot on the main thread - this should work
+    QtCore.QTimer.singleShot(2000, _deferred_status_bar_sync)
+    FreeCAD.Console.PrintMessage(
+        "Robust MCP Bridge: Status bar sync scheduled from InitGui (2s)\n"
+    )
+except Exception as e:
+    FreeCAD.Console.PrintWarning(
+        f"Robust MCP Bridge: Could not schedule status bar sync: {e}\n"
+    )
