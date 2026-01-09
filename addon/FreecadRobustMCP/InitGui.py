@@ -16,26 +16,9 @@ import FreeCADGui
 # Register icons path for preferences page icon
 # This must be done at module level, before the preferences page is registered
 try:
-    import os as _os  # noqa: PTH
+    from path_utils import get_icons_dir
 
-    # Find the addon's icons directory
-    _icons_dir = ""
-    _base = FreeCAD.getUserAppDataDir()
-    for _item in _os.listdir(_base):  # noqa: PTH208
-        if _item.startswith("v1-"):
-            _candidate = _os.path.join(  # noqa: PTH118
-                _base, _item, "Mod", "FreecadRobustMCP", "icons"
-            )
-            if _os.path.isdir(_candidate):  # noqa: PTH112
-                _icons_dir = _candidate
-                break
-    if not _icons_dir:
-        _candidate = _os.path.join(  # noqa: PTH118
-            _base, "Mod", "FreecadRobustMCP", "icons"
-        )
-        if _os.path.isdir(_candidate):  # noqa: PTH112
-            _icons_dir = _candidate
-
+    _icons_dir = get_icons_dir()
     if _icons_dir:
         FreeCADGui.addIconPath(_icons_dir)
 except Exception as e:
@@ -65,40 +48,9 @@ class FreecadRobustMCPWorkbench(FreeCADGui.Workbench):
 
     def __init__(self) -> None:
         """Initialize workbench with icon path."""
-        # NOTE: Using os.path instead of pathlib due to FreeCAD's module loading
-        # behavior which can have issues with some Python features at load time
-        import os as _os  # noqa: PTH
+        from path_utils import get_workbench_icon
 
-        icon_path = ""
-        # Try versioned FreeCAD directory first (FreeCAD 1.x)
-        try:
-            base = FreeCAD.getUserAppDataDir()
-            for item in _os.listdir(base):  # noqa: PTH208
-                if item.startswith("v1-"):
-                    candidate = _os.path.join(  # noqa: PTH118
-                        base, item, "Mod", "FreecadRobustMCP", "FreecadRobustMCP.svg"
-                    )
-                    if _os.path.exists(candidate):  # noqa: PTH110
-                        icon_path = candidate
-                        break
-        except Exception:
-            pass
-
-        # Fallback to non-versioned path
-        if not icon_path:
-            try:
-                candidate = _os.path.join(  # noqa: PTH118
-                    FreeCAD.getUserAppDataDir(),
-                    "Mod",
-                    "FreecadRobustMCP",
-                    "FreecadRobustMCP.svg",
-                )
-                if _os.path.exists(candidate):  # noqa: PTH110
-                    icon_path = candidate
-            except Exception:
-                pass
-
-        self.Icon = icon_path
+        self.Icon = get_workbench_icon()
 
     def Initialize(self) -> None:
         """Initialize the workbench - called once when first activated."""
