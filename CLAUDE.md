@@ -1188,12 +1188,14 @@ This project uses component-specific release workflows along with CI/CD pipeline
 
 This project uses **component-specific versioning**. Each component has its own git tag and release workflow:
 
-| Component                   | Tag Format                            | Releases To                          |
-| --------------------------- | ------------------------------------- | ------------------------------------ |
-| MCP Server                  | `robust-mcp-server-vX.Y.Z`            | PyPI, Docker Hub, GitHub Release     |
-| Robust MCP Bridge Workbench | `robust-mcp-workbench-vX.Y.Z`         | GitHub Release (archive)             |
-| Cut Object for Magnets Macro| `macro-cut-object-for-magnets-vX.Y.Z` | GitHub Release (archive)             |
-| Multi Export Macro          | `macro-multi-export-vX.Y.Z`           | GitHub Release (archive)             |
+| Component                   | Tag Format                            | Releases To                                     |
+| --------------------------- | ------------------------------------- | ----------------------------------------------- |
+| MCP Server                  | `robust-mcp-server-vX.Y.Z`            | PyPI/TestPyPI*, Docker Hub, GitHub Release      |
+| Robust MCP Bridge Workbench | `robust-mcp-workbench-vX.Y.Z`         | GitHub Release (archive)                        |
+| Cut Object for Magnets Macro| `macro-cut-object-for-magnets-vX.Y.Z` | GitHub Release (archive)                        |
+| Multi Export Macro          | `macro-multi-export-vX.Y.Z`           | GitHub Release (archive)                        |
+
+*Stable releases (`X.Y.Z`) publish to PyPI; non-stable releases (alpha, beta, rc) publish to TestPyPI only.
 
 ### Changelog Management
 

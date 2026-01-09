@@ -85,9 +85,9 @@ if plugin is None:
 
 # Print status messages with flush to ensure they appear immediately
 # (FreeCAD's Python may have buffered stdout)
-# Use configured ports from plugin or defaults if plugin existed before
-actual_xmlrpc_port = getattr(plugin, "xmlrpc_port", 9875) if plugin else 9875
-actual_socket_port = getattr(plugin, "port", 9876) if plugin else 9876
+# Plugin is guaranteed non-None at this point (either from get_running_plugin or created above)
+actual_xmlrpc_port = plugin.xmlrpc_port
+actual_socket_port = plugin.socket_port
 
 print("", flush=True)
 print("=" * 60, flush=True)
@@ -106,8 +106,5 @@ print("=" * 60, flush=True)
 print("", flush=True)
 
 # Run forever (blocks until Ctrl+C)
-if plugin is not None:
-    plugin.run_forever()
-else:
-    print("ERROR: Failed to initialize MCP Bridge plugin.", flush=True)
-    sys.exit(1)
+# Plugin is guaranteed non-None at this point
+plugin.run_forever()

@@ -8,6 +8,36 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 
 
+def _build_object_selection_code(object_names: list[str] | None) -> str:
+    """Generate Python code for GUI-aware object selection.
+
+    This helper eliminates code duplication across export functions by
+    generating the common object selection logic that handles both GUI
+    and headless modes appropriately.
+
+    Args:
+        object_names: Optional list of specific object names to select.
+
+    Returns:
+        Python code string for object selection logic.
+    """
+    return f"""
+# Get objects to export
+if {object_names!r} is not None:
+    objects = [doc.getObject(n) for n in {object_names!r}]
+elif FreeCAD.GuiUp:
+    # GUI mode: export visible objects with shapes
+    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
+else:
+    # Headless mode: export all objects with shapes
+    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
+objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
+
+if not objects:
+    raise ValueError("No exportable objects found")
+"""
+
+
 def register_export_tools(mcp: Any, get_bridge: Callable[[], Awaitable[Any]]) -> None:
     """Register export-related tools with the Robust MCP Server.
 
@@ -46,21 +76,7 @@ import Part
 doc = FreeCAD.ActiveDocument if {doc_name!r} is None else FreeCAD.getDocument({doc_name!r})
 if doc is None:
     raise ValueError("No document found")
-
-# Get objects to export
-if {object_names!r} is not None:
-    objects = [doc.getObject(n) for n in {object_names!r}]
-elif FreeCAD.GuiUp:
-    # GUI mode: export visible objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
-else:
-    # Headless mode: export all objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
-objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
-
-if not objects:
-    raise ValueError("No exportable objects found")
-
+{_build_object_selection_code(object_names)}
 # Combine shapes
 if len(objects) == 1:
     shape = objects[0].Shape
@@ -113,21 +129,7 @@ import Part
 doc = FreeCAD.ActiveDocument if {doc_name!r} is None else FreeCAD.getDocument({doc_name!r})
 if doc is None:
     raise ValueError("No document found")
-
-# Get objects to export
-if {object_names!r} is not None:
-    objects = [doc.getObject(n) for n in {object_names!r}]
-elif FreeCAD.GuiUp:
-    # GUI mode: export visible objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
-else:
-    # Headless mode: export all objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
-objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
-
-if not objects:
-    raise ValueError("No exportable objects found")
-
+{_build_object_selection_code(object_names)}
 # Create mesh from shapes
 meshes = []
 for obj in objects:
@@ -190,21 +192,7 @@ import Part
 doc = FreeCAD.ActiveDocument if {doc_name!r} is None else FreeCAD.getDocument({doc_name!r})
 if doc is None:
     raise ValueError("No document found")
-
-# Get objects to export
-if {object_names!r} is not None:
-    objects = [doc.getObject(n) for n in {object_names!r}]
-elif FreeCAD.GuiUp:
-    # GUI mode: export visible objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
-else:
-    # Headless mode: export all objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
-objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
-
-if not objects:
-    raise ValueError("No exportable objects found")
-
+{_build_object_selection_code(object_names)}
 # Create mesh from shapes
 meshes = []
 for obj in objects:
@@ -266,21 +254,7 @@ import Mesh
 doc = FreeCAD.ActiveDocument if {doc_name!r} is None else FreeCAD.getDocument({doc_name!r})
 if doc is None:
     raise ValueError("No document found")
-
-# Get objects to export
-if {object_names!r} is not None:
-    objects = [doc.getObject(n) for n in {object_names!r}]
-elif FreeCAD.GuiUp:
-    # GUI mode: export visible objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
-else:
-    # Headless mode: export all objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
-objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
-
-if not objects:
-    raise ValueError("No exportable objects found")
-
+{_build_object_selection_code(object_names)}
 # Create mesh from shapes
 meshes = []
 for obj in objects:
@@ -339,21 +313,7 @@ import Part
 doc = FreeCAD.ActiveDocument if {doc_name!r} is None else FreeCAD.getDocument({doc_name!r})
 if doc is None:
     raise ValueError("No document found")
-
-# Get objects to export
-if {object_names!r} is not None:
-    objects = [doc.getObject(n) for n in {object_names!r}]
-elif FreeCAD.GuiUp:
-    # GUI mode: export visible objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape') and obj.ViewObject and obj.ViewObject.Visibility]
-else:
-    # Headless mode: export all objects with shapes
-    objects = [obj for obj in doc.Objects if hasattr(obj, 'Shape')]
-objects = [obj for obj in objects if obj is not None and hasattr(obj, 'Shape')]
-
-if not objects:
-    raise ValueError("No exportable objects found")
-
+{_build_object_selection_code(object_names)}
 # Combine shapes
 if len(objects) == 1:
     shape = objects[0].Shape

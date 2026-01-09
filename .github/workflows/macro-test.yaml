@@ -31,6 +31,7 @@ jobs:
   test-integration:
     name: Integration Tests with FreeCAD
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -144,6 +145,7 @@ jobs:
   test-gui:
     name: GUI Tests with FreeCAD + Xvfb
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -156,9 +158,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('.github/workflows/macro-test.yaml') }}
+          # Use versioned key - bump v1 to v2 etc. when package list changes
+          key: ${{ runner.os }}-apt-gui-deps-v1
           restore-keys: |
-            ${{ runner.os }}-apt-
+            ${{ runner.os }}-apt-gui-deps-
 
       - name: Install Xvfb and X11 dependencies
         run: |
