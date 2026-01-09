@@ -135,7 +135,6 @@ run-gui:
     fi
 
     if [[ -z "$FREECAD_GUI" ]]; then
-        rm -f "$STARTUP_SCRIPT"
         echo "ERROR: FreeCAD not found!"
         echo ""
         echo "Please install FreeCAD or use:"
