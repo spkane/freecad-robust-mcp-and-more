@@ -8,13 +8,13 @@ project_root := justfile_directory()
 # Running FreeCAD with MCP Bridge
 # =============================================================================
 
-# Run MCP bridge server in FreeCAD headless mode
+# Run MCP bridge server in FreeCAD headless mode (blocking)
 run-headless:
     #!/usr/bin/env bash
     set -euo pipefail
     PROJECT_DIR="{{project_root}}"
-    # Use the headless server from the addon directory (source of truth)
-    SCRIPT_PATH="${PROJECT_DIR}/addon/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py"
+    # Use the blocking bridge script from the addon directory (source of truth)
+    SCRIPT_PATH="${PROJECT_DIR}/addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py"
 
     # Find FreeCADCmd executable based on OS
     FREECAD_CMD=""
@@ -65,15 +65,15 @@ run-headless:
     echo "Using FreeCAD: $FREECAD_CMD"
     echo ""
 
-    # Run FreeCADCmd with the headless server script
+    # Run FreeCADCmd with the blocking bridge script
     "$FREECAD_CMD" "$SCRIPT_PATH"
 
-# Run MCP bridge with custom FreeCAD path
+# Run MCP bridge with custom FreeCAD path (blocking)
 run-headless-custom freecad_cmd:
     #!/usr/bin/env bash
     set -euo pipefail
     PROJECT_DIR="{{project_root}}"
-    SCRIPT_PATH="${PROJECT_DIR}/addon/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py"
+    SCRIPT_PATH="${PROJECT_DIR}/addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py"
 
     if [[ ! -x "{{freecad_cmd}}" ]]; then
         echo "ERROR: FreeCADCmd not found or not executable: {{freecad_cmd}}"
@@ -83,7 +83,7 @@ run-headless-custom freecad_cmd:
     echo "Using FreeCAD: {{freecad_cmd}}"
     echo ""
 
-    # Run FreeCADCmd with the headless server script
+    # Run FreeCADCmd with the blocking bridge script
     "{{freecad_cmd}}" "$SCRIPT_PATH"
 
 # Run FreeCAD GUI with MCP bridge (uses local source code for development)

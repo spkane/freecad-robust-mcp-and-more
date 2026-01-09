@@ -277,7 +277,8 @@ freecad_mcp/
 │   ├── __init__.py
 │   ├── server.py            # XML-RPC/JSON-RPC server
 │   ├── handlers.py          # Request handlers
-│   └── headless_server.py   # Headless mode launcher
+│   ├── blocking_bridge.py   # Blocking server (keeps FreeCAD running)
+│   └── startup_bridge.py    # Non-blocking startup (for interactive GUI)
 │
 └── utils/                    # Utility modules
     └── __init__.py

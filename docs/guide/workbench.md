@@ -68,21 +68,21 @@ Click **Stop Bridge** in the toolbar. The status indicator turns red.
 
 ## Headless Mode Usage
 
-The workbench includes a headless server script for running without the FreeCAD GUI.
+The workbench includes a blocking bridge script for running in server mode (keeps FreeCAD running).
 
 ### Starting Headless Mode
 
 **Linux:**
 
 ```bash
-freecadcmd ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py
+freecadcmd ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py
 ```
 
 **macOS:**
 
 ```bash
 /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
-    ~/Library/Application\ Support/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py
+    ~/Library/Application\ Support/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py
 ```
 
 **Using just commands (from source):**

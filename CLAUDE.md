@@ -1008,7 +1008,7 @@ just freecad::run-headless
 
 **CRITICAL**: Code running inside FreeCAD's Python environment cannot import packages that aren't available in FreeCAD's bundled Python (like `mcp`, `pydantic`, etc.).
 
-The `headless_server.py` script in the workbench addon imports the plugin directly from the module file to avoid triggering the `mcp` import:
+The `blocking_bridge.py` script in the workbench addon imports the plugin directly from the module file to avoid triggering the `mcp` import:
 
 ```python
 # CORRECT - import directly from the module file in the same directory

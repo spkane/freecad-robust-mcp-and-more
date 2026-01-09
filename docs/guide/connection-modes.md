@@ -162,7 +162,7 @@ just freecad::run-gui  # From source
 **Headless Mode:**
 
 ```bash
-FreeCADCmd /path/to/headless_server.py
+FreeCADCmd /path/to/blocking_bridge.py
 just freecad::run-headless  # From source
 ```
 

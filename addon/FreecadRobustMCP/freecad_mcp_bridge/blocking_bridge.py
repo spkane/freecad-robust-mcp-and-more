@@ -1,22 +1,28 @@
 #!/usr/bin/env python3
-r"""Headless FreeCAD MCP Bridge Server.
+r"""Blocking FreeCAD MCP Bridge Server.
 
 SPDX-License-Identifier: MIT
 Copyright (c) 2025 Sean P. Kane (GitHub: spkane)
 
-This script starts the MCP bridge server in FreeCAD's headless mode.
-It should be run with FreeCADCmd (the headless FreeCAD executable).
+This script starts the MCP bridge server and blocks with run_forever().
+It works with both FreeCAD GUI and FreeCADCmd (headless) modes.
+
+Use this script when you need FreeCAD to keep running (CI, background servers).
+For interactive GUI sessions, use startup_bridge.py instead (non-blocking).
 
 Usage:
-    # If workbench is installed via FreeCAD Addon Manager:
-    FreeCADCmd ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py
+    # Headless mode (no GUI features):
+    FreeCADCmd ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py
+
+    # GUI mode (full features including screenshots):
+    freecad ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py
 
     # On macOS:
     /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
-        ~/Library/Application\ Support/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py
+        ~/Library/Application\ Support/FreeCAD/Mod/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py
 
-Note: In headless mode, GUI features like screenshots are not available.
-For full functionality, use the workbench in FreeCAD's GUI.
+Note: In headless mode (FreeCADCmd), GUI features like screenshots are not available.
+For full functionality, run with FreeCAD GUI executable.
 """
 
 from __future__ import annotations
@@ -30,24 +36,24 @@ try:
 
     print(f"FreeCAD version: {FreeCAD.Version()[0]}.{FreeCAD.Version()[1]}")
 except ImportError:
-    print("ERROR: This script must be run with FreeCADCmd or inside FreeCAD.")
+    print("ERROR: This script must be run with FreeCAD or FreeCADCmd.")
     print("")
     print("Usage:")
     print(
-        "  FreeCADCmd /path/to/FreecadRobustMCP/freecad_mcp_bridge/headless_server.py"
+        "  FreeCADCmd /path/to/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py"
     )
     print("")
     print("On macOS (if workbench installed):")
     print("  /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \\")
     print(
         "    ~/Library/Application\\ Support/FreeCAD/Mod/FreecadRobustMCP/"
-        "freecad_mcp_bridge/headless_server.py"
+        "freecad_mcp_bridge/blocking_bridge.py"
     )
     print("")
     print("On Linux (if workbench installed):")
     print(
         "  freecadcmd ~/.local/share/FreeCAD/Mod/FreecadRobustMCP/"
-        "freecad_mcp_bridge/headless_server.py"
+        "freecad_mcp_bridge/blocking_bridge.py"
     )
     sys.exit(1)
 
@@ -95,13 +101,16 @@ if not bridge_already_running:
 # (FreeCAD's Python may have buffered stdout)
 print("", flush=True)
 print("=" * 60, flush=True)
-print("MCP Bridge started in headless mode!", flush=True)
+gui_mode = "GUI" if FreeCAD.GuiUp else "headless"
+print(f"MCP Bridge started in {gui_mode} mode!", flush=True)
 print("  - XML-RPC: localhost:9875", flush=True)
 print("  - Socket: localhost:9876", flush=True)
 print("", flush=True)
-print(
-    "Note: Screenshot and view features are not available in headless mode.", flush=True
-)
+if not FreeCAD.GuiUp:
+    print(
+        "Note: Screenshot and view features are not available in headless mode.",
+        flush=True,
+    )
 print("Press Ctrl+C to stop.", flush=True)
 print("=" * 60, flush=True)
 print("", flush=True)
