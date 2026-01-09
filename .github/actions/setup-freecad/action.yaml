@@ -1,6 +1,12 @@
 name: Setup FreeCAD
 description: Downloads and sets up FreeCAD AppImage for CI testing
 
+inputs:
+  freecad-tag:
+    description: "Specific FreeCAD release tag to install (e.g., '1.0.2'). If empty, uses latest stable release."
+    required: false
+    default: ""
+
 outputs:
   freecad-tag:
     description: The FreeCAD release tag that was installed
@@ -14,13 +20,28 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
+        INPUT_FREECAD_TAG: ${{ inputs.freecad-tag }}
       run: |
-        # Get the latest stable release tag from GitHub API
+        # Get FreeCAD release info from GitHub API
         # Use GitHub token to avoid rate limiting
-        RELEASE_INFO=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/FreeCAD/FreeCAD/releases/latest)
+        if [ -n "$INPUT_FREECAD_TAG" ]; then
+            echo "Using specified FreeCAD tag: $INPUT_FREECAD_TAG"
+            RELEASE_INFO=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+                "https://api.github.com/repos/FreeCAD/FreeCAD/releases/tags/$INPUT_FREECAD_TAG")
+        else
+            echo "Fetching latest FreeCAD release..."
+            RELEASE_INFO=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+                https://api.github.com/repos/FreeCAD/FreeCAD/releases/latest)
+        fi
+
+        # Validate response has required fields
         TAG_NAME=$(echo "$RELEASE_INFO" | jq -r '.tag_name')
-        echo "Latest FreeCAD release: $TAG_NAME"
+        if [ -z "$TAG_NAME" ] || [ "$TAG_NAME" = "null" ]; then
+            echo "ERROR: Could not get tag_name from release info"
+            echo "Response: $RELEASE_INFO"
+            exit 1
+        fi
+        echo "FreeCAD release: $TAG_NAME"
         echo "tag=$TAG_NAME" >> "$GITHUB_OUTPUT"
 
         # Find the Linux AppImage asset URL
@@ -29,6 +50,8 @@ runs:
 
         if [ -z "$APPIMAGE_URL" ] || [ "$APPIMAGE_URL" = "null" ]; then
             echo "ERROR: Could not find Linux AppImage in release assets"
+            echo "Available assets:"
+            echo "$RELEASE_INFO" | jq -r '.assets[].name'
             exit 1
         fi
 
@@ -42,7 +65,7 @@ runs:
       uses: actions/cache@v5
       with:
         path: ~/freecad-appimage
-        key: freecad-appimage-${{ steps.freecad-release.outputs.tag }}
+        key: ${{ runner.os }}-freecad-appimage-${{ steps.freecad-release.outputs.tag }}
 
     - name: Download FreeCAD AppImage
       if: steps.cache-freecad.outputs.cache-hit != 'true'
@@ -132,8 +155,23 @@ runs:
         echo "Checking FreeCAD installation..."
         if ! freecadcmd --version && ! freecad --version; then
             echo "ERROR: FreeCAD version check failed"
+            echo ""
+            echo "=== Diagnostic Information ==="
+            echo "--- which freecadcmd ---"
+            which freecadcmd || echo "freecadcmd not found in PATH"
+            echo "--- which freecad ---"
+            which freecad || echo "freecad not found in PATH"
+            echo "--- FreeCAD AppImage bin directory ---"
+            ls -la ~/freecad-appimage/squashfs-root/usr/bin/ | head -20 || echo "Directory not found"
+            echo "--- /tmp contents ---"
+            ls -la /tmp/ | head -20 || echo "Cannot list /tmp"
+            echo "--- PATH ---"
+            echo "$PATH"
+            echo "=== End Diagnostic Information ==="
             exit 1
         fi
+        echo "FreeCAD version check passed"
         which freecadcmd
+        which freecad
         # Show Python version bundled with FreeCAD
         freecadcmd -c "import sys; print(f'FreeCAD Python: {sys.version}')" || true

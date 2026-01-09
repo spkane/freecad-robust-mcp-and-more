@@ -70,7 +70,8 @@ jobs:
 
           # Start FreeCAD headless with MCP bridge in background
           # Uses the workbench addon's blocking bridge script
-          freecadcmd addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py > /tmp/freecad_bridge.log 2>&1 &
+          # Use setsid to create a new process group for reliable cleanup
+          setsid freecadcmd addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py > /tmp/freecad_bridge.log 2>&1 &
           FREECAD_PID=$!
           echo "FREECAD_PID=$FREECAD_PID" >> "$GITHUB_ENV"
 
@@ -127,7 +128,7 @@ jobs:
           uv run pytest tests/integration/test_headless_mode.py -v --tb=short
 
       - name: Upload FreeCAD logs on failure
-        if: always()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@v6
         with:
           name: freecad-headless-logs
@@ -139,7 +140,8 @@ jobs:
         if: always()
         run: |
           if [ -n "$FREECAD_PID" ]; then
-              kill "$FREECAD_PID" 2>/dev/null || true
+              # Kill process group (handles child processes spawned by FreeCAD/AppImage)
+              kill -- "-$FREECAD_PID" 2>/dev/null || kill "$FREECAD_PID" 2>/dev/null || true
           fi
 
   test-gui:
@@ -154,14 +156,8 @@ jobs:
       - name: Install mise
         uses: jdx/mise-action@v3
 
-      - name: Cache apt packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          # Use versioned key - bump v1 to v2 etc. when package list changes
-          key: ${{ runner.os }}-apt-gui-deps-v1
-          restore-keys: |
-            ${{ runner.os }}-apt-gui-deps-
+      # Note: apt cache removed - caching /var/cache/apt/archives causes permission
+      # issues and is largely negated by the immediate sudo apt-get update
 
       - name: Install Xvfb and X11 dependencies
         run: |
@@ -194,7 +190,8 @@ jobs:
       - name: Start Xvfb
         run: |
           echo "Starting Xvfb virtual display..."
-          Xvfb :99 -screen 0 1920x1080x24 &
+          # Use -nolisten tcp to prevent TCP listeners for security
+          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp &
           XVFB_PID=$!
           echo "XVFB_PID=$XVFB_PID" >> "$GITHUB_ENV"
           echo "DISPLAY=:99" >> "$GITHUB_ENV"
@@ -277,7 +274,8 @@ jobs:
           # Start FreeCAD GUI (not headless) with MCP bridge
           # Uses blocking_bridge.py which blocks with run_forever() to keep process alive
           # GUI features are available since we're using 'freecad' not 'freecadcmd'
-          freecad --no-splash addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py > /tmp/freecad_gui.log 2>&1 &
+          # Use setsid to create a new process group for reliable cleanup
+          setsid freecad --no-splash addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py > /tmp/freecad_gui.log 2>&1 &
           FREECAD_PID=$!
           echo "FREECAD_PID=$FREECAD_PID" >> "$GITHUB_ENV"
 
@@ -338,7 +336,7 @@ jobs:
           uv run pytest tests/integration/test_gui_mode.py -v --tb=short
 
       - name: Upload FreeCAD logs on failure
-        if: always()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@v6
         with:
           name: freecad-gui-logs
@@ -350,7 +348,8 @@ jobs:
         if: always()
         run: |
           if [ -n "$FREECAD_PID" ]; then
-              kill "$FREECAD_PID" 2>/dev/null || true
+              # Kill process group (handles child processes spawned by FreeCAD/AppImage)
+              kill -- "-$FREECAD_PID" 2>/dev/null || kill "$FREECAD_PID" 2>/dev/null || true
           fi
           if [ -n "$XVFB_PID" ]; then
               kill "$XVFB_PID" 2>/dev/null || true
