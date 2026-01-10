@@ -17,6 +17,18 @@ from tests.just_commands.conftest import assert_command_executed
 if TYPE_CHECKING:
     from tests.just_commands.conftest import JustRunner
 
+# Docker image name used in tests - defined once for maintainability
+DOCKER_IMAGE_NAME = "freecad-robust-mcp"
+
+# Mapping of commands to their required arguments for dry-run testing
+COMMAND_ARG_MAP: dict[str, tuple[str, ...]] = {
+    "docker::build-tag": ("test",),
+    "docker::build-push": ("test",),
+    "docker::scan-sarif": ("test.sarif",),
+    "docker::run-env": ("-e", "TEST=1"),
+    "docker::gui-test-cmd": ("echo", "test"),
+}
+
 
 def docker_available() -> bool:
     """Check if Docker is available and running."""
@@ -66,18 +78,9 @@ class TestDockerSyntax:
     @pytest.mark.parametrize("command", DOCKER_COMMANDS)
     def test_docker_command_syntax(self, just: JustRunner, command: str) -> None:
         """Docker command should have valid syntax."""
-        # Some commands require arguments
-        if command in {"docker::build-tag", "docker::build-push"}:
-            result = just.dry_run(command, "test")
-        elif command == "docker::scan-sarif":
-            result = just.dry_run(command, "test.sarif")
-        elif command == "docker::run-env":
-            result = just.dry_run(command, "-e", "TEST=1")
-        elif command == "docker::gui-test-cmd":
-            result = just.dry_run(command, "echo", "test")
-        else:
-            result = just.dry_run(command)
-
+        # Get args from mapping, or empty tuple for commands without required args
+        args = COMMAND_ARG_MAP.get(command, ())
+        result = just.dry_run(command, *args)
         assert result.success, f"Syntax error in '{command}': {result.stderr}"
 
 
@@ -97,7 +100,7 @@ class TestDockerRuntime:
         self, just: JustRunner, docker_image_cleanup: list[str]
     ) -> None:
         """Docker build should run successfully."""
-        docker_image_cleanup.append("freecad-robust-mcp")
+        docker_image_cleanup.append(DOCKER_IMAGE_NAME)
         result = just.run("docker::build", timeout=600)
         assert result.success, f"Docker build failed: {result.stderr}"
 

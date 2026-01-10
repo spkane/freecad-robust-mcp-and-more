@@ -111,8 +111,12 @@ class TestReleaseReadOnly:
     def test_changes_since_works(self, just: JustRunner, component: str) -> None:
         """changes-since should work for each component."""
         result = just.run("release::changes-since", component, timeout=30)
-        # May show "no previous releases" but should not fail
-        assert result.success or "No previous releases" in result.stdout
+        # Command should succeed (exit 0) even if there are no previous releases
+        # The "No previous releases" message is informational, not an error
+        assert result.success, (
+            f"changes-since failed for {component}: "
+            f"exit code {result.returncode}, output: {result.output}"
+        )
 
     @pytest.mark.just_runtime
     @pytest.mark.parametrize(

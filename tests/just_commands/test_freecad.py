@@ -66,10 +66,19 @@ class TestFreecadRuntime:
         """
         # Start headless and kill after short timeout
         result = just.run("freecad::run-headless", timeout=10)
+
+        # Check for missing executable first (exit code 127)
+        if result.returncode == 127:
+            pytest.fail(
+                "FreeCAD executable not found (exit code 127). "
+                "Ensure FreeCAD is installed and in PATH. "
+                f"Output: {result.output}"
+            )
+
         # Will timeout (expected) - we just want to verify it started
         # returncode -1 means timeout, which is expected
-        # returncode 127 would indicate missing command
-        # Any other quick failure would indicate a problem
+        # returncode 0 means it exited cleanly
+        # Any other exit code indicates a problem
         assert result.returncode in (-1, 0), (
             f"FreeCAD failed unexpectedly (exit {result.returncode}): {result.output}"
         )

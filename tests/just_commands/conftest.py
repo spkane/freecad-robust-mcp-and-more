@@ -254,8 +254,14 @@ def git_tag_cleanup() -> Generator[list[str], None, None]:
     tags_to_cleanup: list[str] = []
     yield tags_to_cleanup
 
-    # Cleanup: delete all tracked tags
+    # Cleanup: delete all tracked tags (only test- prefixed tags for safety)
     for tag in tags_to_cleanup:
+        # Safety guard: only delete tags starting with "test-" to prevent
+        # accidental deletion of real release tags
+        if not tag.startswith("test-"):
+            # Log and skip non-test tags
+            continue
+
         # Delete local tag
         # S603, S607: git is a well-known command, safe in test cleanup context
         subprocess.run(  # noqa: S603
@@ -264,15 +270,13 @@ def git_tag_cleanup() -> Generator[list[str], None, None]:
             capture_output=True,
             check=False,
         )
-        # Delete remote tag only if it looks like a test tag (safety guard)
-        # Only delete tags starting with "test-" to prevent accidental deletion
-        if tag.startswith("test-"):
-            subprocess.run(  # noqa: S603
-                ["git", "push", "origin", "--delete", tag],  # noqa: S607
-                cwd=PROJECT_ROOT,
-                capture_output=True,
-                check=False,
-            )
+        # Delete remote tag (already guarded by the startswith check above)
+        subprocess.run(  # noqa: S603
+            ["git", "push", "origin", "--delete", tag],  # noqa: S607
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            check=False,
+        )
 
 
 @pytest.fixture

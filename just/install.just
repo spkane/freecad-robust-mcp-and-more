@@ -263,7 +263,7 @@ mcp-bridge-workbench:
         # Write the standalone package.xml
         ET.indent(standalone, space='    ')
         tree = ET.ElementTree(standalone)
-        output_path = addon_dest + '/package.xml'
+        output_path = os.path.join(addon_dest, 'package.xml')
         tree.write(output_path, encoding='UTF-8', xml_declaration=True)
         print("Generated package.xml successfully")
 

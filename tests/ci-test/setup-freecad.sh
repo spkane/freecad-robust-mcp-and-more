@@ -5,6 +5,8 @@ set -euo pipefail
 # Validate required variables have safe defaults
 FREECAD_TAG="${FREECAD_TAG:-1.0.2}"
 APPIMAGE_DIR="${APPIMAGE_DIR:-$HOME/freecad-appimage}"
+# Optional SHA256 checksum for verification (if provided, download will be verified)
+APPIMAGE_SHA256="${APPIMAGE_SHA256:-}"
 
 # Validate APPIMAGE_DIR is set and non-empty after defaults
 if [[ -z "$APPIMAGE_DIR" ]]; then
@@ -12,12 +14,42 @@ if [[ -z "$APPIMAGE_DIR" ]]; then
     exit 1
 fi
 
+# Marker file to indicate complete installation
+MARKER_FILE="$APPIMAGE_DIR/.freecad_installed"
+
 echo "=== Setting up FreeCAD $FREECAD_TAG ==="
 
-# Skip if already set up (check for both wrapper scripts)
-if [ -d "$APPIMAGE_DIR/squashfs-root/usr/bin" ] && [ -f "/usr/local/bin/freecad" ] && [ -f "/usr/local/bin/freecadcmd" ]; then
-    echo "FreeCAD already set up (both wrapper scripts present), skipping download"
-    exit 0
+# Check for complete setup using marker file
+if [[ -f "$MARKER_FILE" ]]; then
+    # Verify marker file contains expected version
+    if grep -q "^${FREECAD_TAG}$" "$MARKER_FILE" 2>/dev/null; then
+        echo "FreeCAD $FREECAD_TAG already set up (marker file present), skipping"
+        exit 0
+    else
+        echo "Different FreeCAD version detected, will reinstall"
+    fi
+fi
+
+# Check for and clean up partial installations
+PARTIAL_INSTALL=false
+if [[ -f "/usr/local/bin/freecad" ]] && [[ ! -f "/usr/local/bin/freecadcmd" ]]; then
+    echo "Warning: Partial installation detected (freecad exists but freecadcmd missing)"
+    PARTIAL_INSTALL=true
+elif [[ ! -f "/usr/local/bin/freecad" ]] && [[ -f "/usr/local/bin/freecadcmd" ]]; then
+    echo "Warning: Partial installation detected (freecadcmd exists but freecad missing)"
+    PARTIAL_INSTALL=true
+fi
+
+if [[ "$PARTIAL_INSTALL" == "true" ]]; then
+    echo "Cleaning up partial installation..."
+    # Remove wrapper scripts if they exist (use sudo if needed)
+    if [[ $EUID -ne 0 ]] && command -v sudo &>/dev/null; then
+        sudo rm -f /usr/local/bin/freecad /usr/local/bin/freecadcmd 2>/dev/null || true
+    else
+        rm -f /usr/local/bin/freecad /usr/local/bin/freecadcmd 2>/dev/null || true
+    fi
+    # Remove marker file to force full reinstall
+    rm -f "$MARKER_FILE" 2>/dev/null || true
 fi
 
 # Detect architecture
@@ -59,19 +91,52 @@ if [ ! -f "$APPIMAGE_PATH" ]; then
         echo "ERROR: Download failed - file not found at $APPIMAGE_PATH"
         exit 1
     fi
+
+    # Verify SHA256 checksum if provided
+    if [[ -n "$APPIMAGE_SHA256" ]]; then
+        echo "Verifying SHA256 checksum..."
+        COMPUTED_SHA256=$(sha256sum "$APPIMAGE_PATH" | awk '{print $1}')
+        if [[ "$COMPUTED_SHA256" != "$APPIMAGE_SHA256" ]]; then
+            echo "ERROR: SHA256 checksum mismatch!"
+            echo "  Expected: $APPIMAGE_SHA256"
+            echo "  Computed: $COMPUTED_SHA256"
+            echo "Removing corrupted/tampered download..."
+            rm -f "$APPIMAGE_PATH"
+            exit 1
+        fi
+        echo "SHA256 checksum verified successfully"
+    else
+        echo "Note: No APPIMAGE_SHA256 provided, skipping checksum verification"
+    fi
 fi
 chmod +x "$APPIMAGE_PATH"
 
-# Extract
+# Extract with proper error handling
 cd "$APPIMAGE_DIR"
 if [ ! -d "squashfs-root" ]; then
     echo "Extracting AppImage..."
-    ./FreeCAD.AppImage --appimage-extract > /dev/null 2>&1
+    EXTRACTION_ERR=$(mktemp)
+    if ! ./FreeCAD.AppImage --appimage-extract > /dev/null 2>"$EXTRACTION_ERR"; then
+        EXTRACTION_EXIT_CODE=$?
+        echo "ERROR: AppImage extraction failed with exit code $EXTRACTION_EXIT_CODE"
+        if [[ -s "$EXTRACTION_ERR" ]]; then
+            echo "Extraction stderr:"
+            cat "$EXTRACTION_ERR"
+        fi
+        rm -f "$EXTRACTION_ERR"
+        exit 1
+    fi
+    # Check for any stderr output even on success
+    if [[ -s "$EXTRACTION_ERR" ]]; then
+        echo "Warning: Extraction produced stderr output:"
+        cat "$EXTRACTION_ERR"
+    fi
+    rm -f "$EXTRACTION_ERR"
 fi
 
-# Verify
+# Verify extraction produced expected structure
 if [ ! -d "squashfs-root/usr/bin" ]; then
-    echo "ERROR: Extracted AppImage missing expected structure"
+    echo "ERROR: Extracted AppImage missing expected structure (squashfs-root/usr/bin not found)"
     exit 1
 fi
 
@@ -152,5 +217,9 @@ if ! /usr/local/bin/freecadcmd -c "import sys; print(f'FreeCAD Python: {sys.vers
     echo "ERROR: FreeCAD Python test failed"
     exit 1
 fi
+
+# Create marker file to indicate successful installation
+echo "$FREECAD_TAG" > "$MARKER_FILE"
+echo "Created marker file: $MARKER_FILE"
 
 echo "=== FreeCAD setup complete ==="
