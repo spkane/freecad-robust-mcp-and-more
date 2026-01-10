@@ -71,8 +71,8 @@ echo "Creating wrapper scripts..."
 # Derive APPDIR_PATH from APPIMAGE_DIR for consistency
 APPDIR_PATH="$APPIMAGE_DIR/squashfs-root"
 
-# freecadcmd wrapper
-cat > /usr/local/bin/freecadcmd << WRAPPER_EOF
+# freecadcmd wrapper (use sudo for /usr/local/bin access)
+cat << WRAPPER_EOF | sudo tee /usr/local/bin/freecadcmd > /dev/null
 #!/bin/bash
 export APPDIR="$APPDIR_PATH"
 export APPIMAGE_EXTRACT_AND_RUN=1
@@ -83,10 +83,10 @@ else
     exec "\$APPDIR/usr/bin/freecadcmd" "\$@"
 fi
 WRAPPER_EOF
-chmod +x /usr/local/bin/freecadcmd
+sudo chmod +x /usr/local/bin/freecadcmd
 
-# freecad (GUI) wrapper
-cat > /usr/local/bin/freecad << WRAPPER_EOF
+# freecad (GUI) wrapper (use sudo for /usr/local/bin access)
+cat << WRAPPER_EOF | sudo tee /usr/local/bin/freecad > /dev/null
 #!/bin/bash
 export APPDIR="$APPDIR_PATH"
 export APPIMAGE_EXTRACT_AND_RUN=1
@@ -97,7 +97,7 @@ else
     exec "\$APPDIR/usr/bin/freecad" "\$@"
 fi
 WRAPPER_EOF
-chmod +x /usr/local/bin/freecad
+sudo chmod +x /usr/local/bin/freecad
 
 echo "Wrapper scripts created at /usr/local/bin/freecad{,cmd}"
 

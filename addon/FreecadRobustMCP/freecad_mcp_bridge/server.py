@@ -822,6 +822,11 @@ class FreecadMCPPlugin:
         """
         return self._execute_via_queue(code, 30000)
 
+    # Valid view types for screenshot capture
+    _VALID_VIEW_TYPES = frozenset(
+        {"FitAll", "Isometric", "Front", "Back", "Top", "Bottom", "Left", "Right"}
+    )
+
     def _xmlrpc_get_view(
         self,
         width: int = 800,
@@ -838,6 +843,21 @@ class FreecadMCPPlugin:
         Returns:
             Dictionary with base64 image data or error.
         """
+        # Validate inputs to prevent code injection
+        # Type hints don't enforce at runtime, so explicit conversion is needed
+        try:
+            width = int(width)
+            height = int(height)
+        except (ValueError, TypeError) as e:
+            return {"success": False, "error": f"Invalid dimensions: {e}"}
+
+        if view_type not in self._VALID_VIEW_TYPES:
+            return {
+                "success": False,
+                "error": f"Invalid view_type: {view_type}. "
+                f"Must be one of: {', '.join(sorted(self._VALID_VIEW_TYPES))}",
+            }
+
         code = f"""
 import base64
 import tempfile

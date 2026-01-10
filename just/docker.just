@@ -17,19 +17,24 @@ build:
 build-tag tag:
     docker build --load -t {{image_name}}:{{tag}} {{project_root}}
 
-# Build multi-architecture image (amd64 and arm64)
-# Note: Multi-arch builds cannot be loaded locally; use build-load for local testing
+# Validate multi-architecture build (amd64 and arm64)
+# This is a dry-run that verifies both architectures compile successfully.
+# The build populates the builder cache but does NOT produce a usable image.
+# Use cases:
+#   - CI validation before pushing (verify PR doesn't break either arch)
+#   - Local verification that changes build on both architectures
+# To actually publish a multi-arch image, use: just docker::build-push
 build-multi: setup-buildx
     docker buildx build --platform linux/amd64,linux/arm64 -t {{image_name}} {{project_root}}
 
-# Build and push multi-architecture image to registry
+# Build and push multi-architecture image to registry (produces usable multi-arch image)
 build-push tag="latest": setup-buildx
     docker buildx build --platform linux/amd64,linux/arm64 \
         -t {{registry}}/{{image_name}}:{{tag}} \
         --push {{project_root}}
 
 # Build and load image for current architecture using buildx
-build-load:
+build-load: setup-buildx
     #!/usr/bin/env bash
     set -euo pipefail
     # Detect current architecture
@@ -45,26 +50,23 @@ build-load:
         --load {{project_root}}
 
 # Run the Docker container (connects to FreeCAD on host)
-# Note: Ctrl+C exits cleanly (exit code ignored)
 run:
-    -docker run --rm -i \
+    docker run --rm -i \
         --add-host=host.docker.internal:host-gateway \
         -e FREECAD_MODE=xmlrpc \
         -e FREECAD_SOCKET_HOST=host.docker.internal \
         {{image_name}}
 
 # Run with custom environment variables
-# Note: Ctrl+C exits cleanly (exit code ignored)
 run-env *args:
-    -docker run --rm -i \
+    docker run --rm -i \
         --add-host=host.docker.internal:host-gateway \
         {{args}} \
         {{image_name}}
 
 # Run container interactively with shell
-# Note: Exit from shell exits cleanly (exit code ignored)
 shell:
-    -docker run --rm -it \
+    docker run --rm -it \
         --add-host=host.docker.internal:host-gateway \
         -e FREECAD_MODE=xmlrpc \
         -e FREECAD_SOCKET_HOST=host.docker.internal \
@@ -139,6 +141,22 @@ test:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Initialize variables for cleanup
+    STARTED_FREECAD=false
+    FREECAD_PID=""
+    FREECAD_LOG=""
+    MCP_INPUT=""
+
+    # Comprehensive cleanup trap for all exit paths
+    cleanup() {
+        [ -n "${MCP_INPUT:-}" ] && rm -f "$MCP_INPUT" 2>/dev/null || true
+        [ -n "${FREECAD_LOG:-}" ] && rm -f "$FREECAD_LOG" 2>/dev/null || true
+        if [ "$STARTED_FREECAD" = true ] && [ -n "${FREECAD_PID:-}" ]; then
+            kill "$FREECAD_PID" 2>/dev/null || true
+        fi
+    }
+    trap cleanup EXIT INT TERM
+
     echo "=========================================="
     echo "Docker Integration Test"
     echo "=========================================="
@@ -152,6 +170,14 @@ test:
             -d '<?xml version="1.0"?><methodCall><methodName>system.listMethods</methodName></methodCall>' \
             http://localhost:9875 > /dev/null 2>&1
     }
+
+    # Detect timeout command (not available on macOS by default)
+    TIMEOUT_CMD=""
+    if command -v timeout >/dev/null 2>&1; then
+        TIMEOUT_CMD="timeout"
+    elif command -v gtimeout >/dev/null 2>&1; then
+        TIMEOUT_CMD="gtimeout"  # macOS coreutils
+    fi
 
     # Build the Docker image
     echo "Step 1: Building Docker image..."
@@ -182,9 +208,7 @@ test:
                 echo "✗ ERROR: FreeCAD MCP bridge did not start within ${MAX_RETRIES}s"
                 echo ""
                 echo "FreeCAD log output:"
-                cat "$FREECAD_LOG" | tail -30
-                rm -f "$FREECAD_LOG"
-                kill $FREECAD_PID 2>/dev/null || true
+                tail -30 "$FREECAD_LOG"
                 exit 1
             fi
             # Show progress less frequently to reduce noise
@@ -194,6 +218,7 @@ test:
             sleep 1
         done
         rm -f "$FREECAD_LOG"
+        FREECAD_LOG=""  # Clear so cleanup doesn't try to delete again
         echo "✓ FreeCAD MCP bridge started (took ${RETRY_COUNT}s)"
         STARTED_FREECAD=true
     fi
@@ -207,17 +232,25 @@ test:
     # Using temp file for input so stdin closes after message
     # Note: Container may exit non-zero when stdin closes (ClosedResourceError), which is expected
     MCP_INPUT=$(mktemp)
-    # Ensure temp file is cleaned up on any exit (normal, error, or signal)
-    trap 'rm -f "$MCP_INPUT"' EXIT
     echo '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' > "$MCP_INPUT"
 
     # Capture output; ignore exit code since stdin close causes expected error
-    CONTAINER_OUTPUT=$(timeout 30 docker run --rm -i \
-        --add-host=host.docker.internal:host-gateway \
-        -e FREECAD_MODE=xmlrpc \
-        -e FREECAD_SOCKET_HOST=host.docker.internal \
-        {{image_name}}:test 2>&1 < "$MCP_INPUT" || true)
-    # Temp file will be cleaned up by trap on EXIT
+    # Use timeout command if available for better reliability
+    if [ -n "$TIMEOUT_CMD" ]; then
+        CONTAINER_OUTPUT=$($TIMEOUT_CMD 30 docker run --rm -i \
+            --add-host=host.docker.internal:host-gateway \
+            -e FREECAD_MODE=xmlrpc \
+            -e FREECAD_SOCKET_HOST=host.docker.internal \
+            {{image_name}}:test 2>&1 < "$MCP_INPUT" || true)
+    else
+        CONTAINER_OUTPUT=$(docker run --rm -i \
+            --add-host=host.docker.internal:host-gateway \
+            -e FREECAD_MODE=xmlrpc \
+            -e FREECAD_SOCKET_HOST=host.docker.internal \
+            {{image_name}}:test 2>&1 < "$MCP_INPUT" || true)
+    fi
+    rm -f "$MCP_INPUT"
+    MCP_INPUT=""  # Clear so cleanup doesn't try to delete again
 
     echo ""
     echo "Step 4: Verifying response..."
@@ -240,8 +273,8 @@ test:
         echo "⚠ Warning: Could not confirm server identity"
     fi
 
-    # Check for FreeCAD bridge connection in logs
-    if echo "$CONTAINER_OUTPUT" | grep -q 'FreeCAD bridge connected\|FreeCAD.*GUI'; then
+    # Check for FreeCAD bridge connection in logs (use grep -E for clearer alternation)
+    if echo "$CONTAINER_OUTPUT" | grep -Eq 'FreeCAD bridge connected|FreeCAD.*GUI'; then
         echo "✓ FreeCAD bridge connection logged"
     else
         echo "⚠ Warning: No FreeCAD bridge connection in logs"
@@ -254,12 +287,7 @@ test:
     echo "$CONTAINER_OUTPUT" | tail -20
     echo ""
 
-    # Cleanup
-    if [ "$STARTED_FREECAD" = true ]; then
-        echo "Step 5: Cleaning up..."
-        kill $FREECAD_PID 2>/dev/null || true
-        echo "✓ Stopped FreeCAD headless server"
-    fi
+    # Note: FreeCAD cleanup is handled by the EXIT trap
 
     echo ""
     echo "=========================================="
