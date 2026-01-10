@@ -28,11 +28,13 @@ from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
-from tests.just_commands.conftest import PROJECT_ROOT, JustRunner
+from tests.just_commands.conftest import PROJECT_ROOT
 
 if TYPE_CHECKING:
     from collections.abc import Generator
     from pathlib import Path
+
+    from tests.just_commands.conftest import JustRunner
 
 
 class TestReleaseSyntax:

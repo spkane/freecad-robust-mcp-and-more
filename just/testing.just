@@ -78,14 +78,23 @@ integration-freecad-auto:
     kill_port() {
         local port=$1
         local signal=${2:--TERM}  # Default to SIGTERM if no signal specified
+        local pids=""
+
         if command -v lsof &>/dev/null; then
-            lsof -ti:"$port" | xargs kill "$signal" 2>/dev/null || true
+            # Collect PIDs first, then kill only if non-empty
+            pids=$(lsof -ti:"$port" 2>/dev/null || true)
+            if [[ -n "$pids" ]]; then
+                echo "$pids" | xargs kill "$signal" 2>/dev/null || true
+            fi
         elif command -v fuser &>/dev/null; then
             # fuser -k sends SIGKILL by default; use --signal for others
-            if [ "$signal" = "-9" ] || [ "$signal" = "-KILL" ]; then
-                fuser -k "$port/tcp" 2>/dev/null || true
-            else
-                fuser -k --signal "${signal#-}" "$port/tcp" 2>/dev/null || true
+            # Check if port is in use first
+            if fuser "$port/tcp" 2>/dev/null; then
+                if [ "$signal" = "-9" ] || [ "$signal" = "-KILL" ]; then
+                    fuser -k "$port/tcp" 2>/dev/null || true
+                else
+                    fuser -k --signal "${signal#-}" "$port/tcp" 2>/dev/null || true
+                fi
             fi
         fi
     }
@@ -107,16 +116,18 @@ integration-freecad-auto:
         fi
     }
 
-    # Set trap to cleanup on exit, interrupt, or error
-    trap cleanup EXIT INT TERM
+    # Set trap: EXIT runs cleanup on normal exit, INT/TERM run cleanup then exit
+    trap cleanup EXIT
+    trap 'cleanup; exit 130' INT
+    trap 'cleanup; exit 143' TERM
 
     echo "Starting FreeCAD headless server for integration tests..."
     echo ""
 
     # Check if a bridge is already running and responsive
-    if curl -s http://localhost:9875 > /dev/null 2>&1; then
+    if curl -s --connect-timeout 1 --max-time 1 http://localhost:9875 > /dev/null 2>&1; then
         # Try to ping - if it responds, there's a healthy bridge already running
-        if uv run python -c "import xmlrpc.client; print(xmlrpc.client.ServerProxy('http://localhost:9875').ping())" 2>/dev/null | grep -q "pong"; then
+        if uv run python -c "import socket; socket.setdefaulttimeout(2); import xmlrpc.client; print(xmlrpc.client.ServerProxy('http://localhost:9875').ping())" 2>/dev/null | grep -q "pong"; then
             echo "ERROR: A FreeCAD MCP bridge is already running on port 9875."
             echo ""
             echo "Options:"
@@ -138,21 +149,27 @@ integration-freecad-auto:
     STARTED_FREECAD=true
 
     # Start FreeCAD headless in background
-    # Redirect stderr to suppress "terminated by signal" messages from just
+    # Redirect stderr to log file (not /dev/null) so startup failures are visible
     # Background process won't fail the script when killed by cleanup trap
-    just freecad::run-headless 2>/dev/null &
+    FREECAD_LOG="{{project_root}}/freecad-headless.log"
+    just freecad::run-headless 2>"$FREECAD_LOG" &
 
     # Give FreeCAD time to start the XML-RPC server
     echo "Waiting for FreeCAD MCP bridge to start..."
     sleep 5
 
-    # Check if the bridge is ready
+    # Check if the bridge is ready (verify XML-RPC ping, not just port open)
     MAX_RETRIES=30
     RETRY_COUNT=0
-    while ! curl -s http://localhost:9875 > /dev/null 2>&1; do
+    while ! uv run python -c "import socket; socket.setdefaulttimeout(2); import xmlrpc.client; print(xmlrpc.client.ServerProxy('http://localhost:9875').ping())" 2>/dev/null | grep -q "pong"; do
         RETRY_COUNT=$((RETRY_COUNT + 1))
         if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
             echo "ERROR: FreeCAD MCP bridge did not start within timeout"
+            echo "Check log file for details: $FREECAD_LOG"
+            if [ -f "$FREECAD_LOG" ]; then
+                echo "--- Last 20 lines of log ---"
+                tail -20 "$FREECAD_LOG"
+            fi
             exit 1
         fi
         echo "  Waiting... ($RETRY_COUNT/$MAX_RETRIES)"
@@ -201,12 +218,22 @@ kill-bridge:
     echo "Killing any processes on MCP bridge ports (9875, 9876)..."
 
     # Helper function to kill process on a port (with fallback for systems without lsof)
+    # Collects PIDs first to avoid calling kill with no arguments
     kill_port() {
         local port=$1
+        local pids=""
+
         if command -v lsof &>/dev/null; then
-            lsof -ti:"$port" | xargs kill -9 2>/dev/null || true
+            # Collect PIDs first, then kill only if non-empty
+            pids=$(lsof -ti:"$port" 2>/dev/null || true)
+            if [[ -n "$pids" ]]; then
+                echo "$pids" | xargs kill -9 2>/dev/null || true
+            fi
         elif command -v fuser &>/dev/null; then
-            fuser -k -9 "$port/tcp" 2>/dev/null || true
+            # Check if port is in use first
+            if fuser "$port/tcp" 2>/dev/null; then
+                fuser -k -9 "$port/tcp" 2>/dev/null || true
+            fi
         else
             echo "Warning: Neither lsof nor fuser available, cannot kill port $port"
         fi

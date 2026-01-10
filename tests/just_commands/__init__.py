@@ -9,10 +9,10 @@ Test Categories:
 - Release tests: Special tests for release commands with cleanup
 
 Usage:
-    pytest tests/just_commands/                    # Run all just command tests
-    pytest tests/just_commands/ -m just_syntax    # Only syntax checks
-    pytest tests/just_commands/ -m just_runtime   # Only runtime tests
-    pytest tests/just_commands/ -m just_release   # Only release tests (with cleanup)
+    uv run pytest tests/just_commands/                    # Run all just command tests
+    uv run pytest tests/just_commands/ -m just_syntax    # Only syntax checks
+    uv run pytest tests/just_commands/ -m just_runtime   # Only runtime tests
+    uv run pytest tests/just_commands/ -m just_release   # Only release tests (with cleanup)
 
 Maintenance:
     When adding or modifying just commands, update the corresponding test file.

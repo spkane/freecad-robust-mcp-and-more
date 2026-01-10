@@ -12,6 +12,8 @@ from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
+from tests.just_commands.conftest import assert_command_executed
+
 if TYPE_CHECKING:
     from tests.just_commands.conftest import JustRunner
 
@@ -21,7 +23,7 @@ def docker_available() -> bool:
     if not shutil.which("docker"):
         return False
     try:
-        # S607: docker is a well-known command, safe in test context
+        # S603, S607: docker is a well-known command, safe in test context
         result = subprocess.run(
             ["docker", "info"],  # noqa: S607
             capture_output=True,
@@ -103,15 +105,15 @@ class TestDockerRuntime:
     def test_inspect_runs(self, just: JustRunner) -> None:
         """Docker inspect should run (may fail if no image)."""
         result = just.run("docker::inspect", timeout=30)
-        # May fail if image doesn't exist, but should not crash
-        assert result.returncode != -1, f"Docker inspect crashed: {result.stderr}"
+        # May fail if image doesn't exist, but should run without missing deps
+        assert_command_executed(result, "docker::inspect")
 
     @pytest.mark.just_runtime
     def test_clean_runs(self, just: JustRunner) -> None:
         """Docker clean should run."""
         result = just.run("docker::clean", timeout=60)
-        # May fail if no images to clean, but should not crash
-        assert result.returncode != -1, f"Docker clean crashed: {result.stderr}"
+        # May fail if no images to clean, but should run without missing deps
+        assert_command_executed(result, "docker::clean")
 
     @pytest.mark.just_runtime
     def test_setup_buildx_runs(self, just: JustRunner) -> None:

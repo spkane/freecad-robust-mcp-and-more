@@ -65,8 +65,11 @@ class TestFreecadRuntime:
         In CI, this should work with Xvfb.
         """
         # Start headless and kill after short timeout
-        just.run("freecad::run-headless", timeout=10)
+        result = just.run("freecad::run-headless", timeout=10)
         # Will timeout (expected) - we just want to verify it started
         # returncode -1 means timeout, which is expected
-        # Any other error would indicate a problem with the command itself
-        pass  # Test passes if no exception raised
+        # returncode 127 would indicate missing command
+        # Any other quick failure would indicate a problem
+        assert result.returncode in (-1, 0), (
+            f"FreeCAD failed unexpectedly (exit {result.returncode}): {result.output}"
+        )

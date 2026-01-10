@@ -80,12 +80,14 @@ class TestModulesExist:
         self, just: JustRunner, module: str, commands: list[str]
     ) -> None:
         """Each module should have its expected commands."""
-        result = just.run(f"list-{module}", timeout=10)
-        assert result.success
+        # Use list_commands to get parsed command names
+        available_commands = just.list_commands(module)
+        assert available_commands, f"No commands found in {module} module"
 
         for cmd in commands:
-            assert cmd in result.stdout, (
-                f"Command '{cmd}' not found in {module} module. Output: {result.stdout}"
+            assert cmd in available_commands, (
+                f"Command '{cmd}' not found in {module} module. "
+                f"Available: {available_commands}"
             )
 
 

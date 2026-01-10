@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
+from tests.just_commands.conftest import assert_command_executed
+
 if TYPE_CHECKING:
     from tests.just_commands.conftest import JustRunner
 
@@ -61,7 +63,7 @@ class TestTestingRuntime:
             env={"PYTEST_ADDOPTS": "--collect-only -q"},
         )
         # Should at least find some tests or run without error
-        assert result.returncode != -1, f"Unit test setup failed: {result.stderr}"
+        assert_command_executed(result, "testing::unit")
 
     @pytest.mark.just_runtime
     def test_fast_command_recognizes_markers(self, just: JustRunner) -> None:
@@ -71,4 +73,4 @@ class TestTestingRuntime:
             timeout=60,
             env={"PYTEST_ADDOPTS": "--collect-only -q"},
         )
-        assert result.returncode != -1, f"Fast test setup failed: {result.stderr}"
+        assert_command_executed(result, "testing::fast")

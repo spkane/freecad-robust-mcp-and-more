@@ -68,7 +68,6 @@ class TestCoderabbitRuntime:
             assert "not installed" in result.output.lower()
 
     @pytest.mark.just_runtime
-    @pytest.mark.requires_coderabbit
     def test_version_runs(self, just: JustRunner) -> None:
         """version command should run if CodeRabbit is installed."""
         if not coderabbit_available():

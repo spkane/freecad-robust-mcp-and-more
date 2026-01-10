@@ -40,6 +40,26 @@ class JustResult:
         return f"{self.stdout}\n{self.stderr}".strip()
 
 
+def assert_command_executed(result: JustResult, command_name: str) -> None:
+    """Assert that a command actually executed (didn't timeout or have missing deps).
+
+    This checks for:
+    - Timeout (returncode -1)
+    - Missing command/dependency (returncode 127)
+    - "command not found" in stderr
+
+    It does NOT check for success - the command may legitimately fail
+    due to linting issues, type errors, etc.
+    """
+    assert result.returncode != -1, f"{command_name} timed out: {result.stderr}"
+    assert result.returncode != 127, (
+        f"{command_name} missing dependency (exit 127): {result.stderr}"
+    )
+    assert "command not found" not in result.output.lower(), (
+        f"{command_name} has missing tool: {result.output}"
+    )
+
+
 class JustRunner:
     """Helper class for running just commands in tests."""
 
@@ -244,13 +264,15 @@ def git_tag_cleanup() -> Generator[list[str], None, None]:
             capture_output=True,
             check=False,
         )
-        # Delete remote tag (if it was pushed)
-        subprocess.run(  # noqa: S603
-            ["git", "push", "origin", "--delete", tag],  # noqa: S607
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            check=False,
-        )
+        # Delete remote tag only if it looks like a test tag (safety guard)
+        # Only delete tags starting with "test-" to prevent accidental deletion
+        if tag.startswith("test-"):
+            subprocess.run(  # noqa: S603
+                ["git", "push", "origin", "--delete", tag],  # noqa: S607
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                check=False,
+            )
 
 
 @pytest.fixture
@@ -264,6 +286,7 @@ def docker_image_cleanup() -> Generator[list[str], None, None]:
         # S603, S607: docker is a well-known command, safe in test cleanup context
         subprocess.run(  # noqa: S603
             ["docker", "rmi", "-f", image],  # noqa: S607
+            cwd=PROJECT_ROOT,
             capture_output=True,
             check=False,
         )

@@ -6,6 +6,7 @@ such as creating files in the wrong directories.
 
 from __future__ import annotations
 
+import fnmatch
 from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
@@ -86,17 +87,11 @@ class TestNoUnexpectedFilesInJustDir:
         forbidden_found: list[str] = []
         for item in JUST_DIR.iterdir():
             name = item.name
-            # Check exact matches
-            if name in self.FORBIDDEN_PATTERNS:
-                forbidden_found.append(name)
-                continue
-            # Check glob patterns (simple *.ext matching)
+            # Check each pattern using fnmatch for proper glob support
             for pattern in self.FORBIDDEN_PATTERNS:
-                if "*" in pattern and pattern.startswith("*"):
-                    suffix = pattern[1:]
-                    if name.endswith(suffix):
-                        forbidden_found.append(name)
-                        break
+                if fnmatch.fnmatch(name, pattern):
+                    forbidden_found.append(name)
+                    break
 
         assert not forbidden_found, (
             f"Forbidden files found in just/ directory: {forbidden_found}\n"
@@ -147,22 +142,31 @@ class TestProjectRootIntegrity:
         if coverage_in_just.exists():
             coverage_in_just.unlink()
 
-        # Run coverage with minimal test collection
-        result = just.run(
-            "testing::cov",
-            timeout=120,
-            env={"PYTEST_ADDOPTS": "--collect-only -q"},
-        )
+        try:
+            # Run coverage with minimal test collection
+            result = just.run(
+                "testing::cov",
+                timeout=120,
+                env={"PYTEST_ADDOPTS": "--collect-only -q"},
+            )
 
-        # Check results
-        # Coverage file should NOT be in just/ directory
-        assert not coverage_in_just.exists(), (
-            ".coverage file was created in just/ directory instead of project root.\n"
-            "Fix the testing::cov recipe to run from the correct directory."
-        )
+            # Check results
+            # Coverage file should NOT be in just/ directory
+            assert not coverage_in_just.exists(), (
+                ".coverage file was created in just/ directory instead of "
+                "project root.\n"
+                "Fix the testing::cov recipe to run from the correct directory."
+            )
 
-        # If the command succeeded, coverage file should be in project root
-        # (It may not exist if --collect-only was used, so we only check on success)
-        if result.success and coverage_file.exists():
-            # This is the expected location - test passes
-            pass
+            # If the command succeeded, coverage file should be in project root
+            # (It may not exist if --collect-only was used, so we only check on
+            # success)
+            if result.success and coverage_file.exists():
+                # This is the expected location - test passes
+                pass
+        finally:
+            # Clean up coverage files created during test
+            if coverage_file.exists():
+                coverage_file.unlink()
+            if coverage_in_just.exists():
+                coverage_in_just.unlink()

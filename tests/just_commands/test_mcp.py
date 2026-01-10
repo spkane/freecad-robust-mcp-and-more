@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
+from tests.just_commands.conftest import assert_command_executed
+
 if TYPE_CHECKING:
     from tests.just_commands.conftest import JustRunner
 
@@ -50,7 +52,8 @@ class TestMCPRuntime:
         This will likely fail (no bridge running) but should not crash.
         """
         result = just.run("mcp::check", timeout=30)
-        # Command may fail if no bridge running, but should complete
-        assert result.returncode != -1, f"MCP check crashed: {result.stderr}"
-        # Should have some output about connection status
-        assert "FreeCAD" in result.output or "bridge" in result.output.lower()
+        # Command may fail if no bridge running, but should run without missing deps
+        assert_command_executed(result, "mcp::check")
+        # Should have some output about connection status (case-insensitive)
+        output_lower = result.output.lower()
+        assert "freecad" in output_lower or "bridge" in output_lower
