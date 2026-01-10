@@ -226,7 +226,6 @@ echo "=== Test 5: Start FreeCAD GUI with MCP bridge ==="
 if [ -f "/workspace/addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py" ]; then
     echo "Starting FreeCAD with MCP bridge..."
 
-    # Note: --no-splash causes FreeCAD to exit immediately when running scripts
     freecad /workspace/addon/FreecadRobustMCP/freecad_mcp_bridge/blocking_bridge.py > /tmp/freecad_bridge.log 2>&1 &
     FREECAD_PID=$!
     echo "FreeCAD PID: $FREECAD_PID"

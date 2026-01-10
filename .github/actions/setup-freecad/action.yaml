@@ -173,11 +173,12 @@ runs:
       shell: bash
       run: |
         echo "Checking FreeCAD installation..."
-        # Use short-circuit OR: if freecadcmd succeeds, skip freecad check
-        if freecadcmd --version || freecad --version; then
+        # Only verify with freecadcmd (headless) - freecad --version displays a GUI dialog
+        # and would hang without a window manager (Xvfb + openbox)
+        if freecadcmd --version; then
             echo "FreeCAD version check passed"
         else
-            echo "ERROR: FreeCAD version check failed (both freecadcmd and freecad failed)"
+            echo "ERROR: freecadcmd --version failed"
             echo ""
             echo "=== Diagnostic Information ==="
             echo "--- which freecadcmd ---"
@@ -186,8 +187,6 @@ runs:
             which freecad || echo "freecad not found in PATH"
             echo "--- FreeCAD AppImage bin directory ---"
             ls -la ~/freecad-appimage/squashfs-root/usr/bin/ | head -20 || echo "Directory not found"
-            echo "--- /tmp contents ---"
-            ls -la /tmp/ | head -20 || echo "Cannot list /tmp"
             echo "--- PATH ---"
             echo "$PATH"
             echo "=== End Diagnostic Information ==="
