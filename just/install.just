@@ -525,14 +525,14 @@ status:
     extract_macro_version() {
         local file="$1"
         python3 -c "
-import re
-try:
-    content = open('$file').read()
-    match = re.search(r'__Version__\s*=\s*[\"']([^\"']+)[\"']', content)
-    print(match.group(1) if match else 'unknown')
-except Exception:
-    print('unknown')
-" 2>/dev/null || echo "unknown"
+    import re
+    try:
+        content = open('$file').read()
+        match = re.search(r'__Version__\s*=\s*[\"']([^\"']+)[\"']', content)
+        print(match.group(1) if match else 'unknown')
+    except Exception:
+        print('unknown')
+    " 2>/dev/null || echo "unknown"
     }
 
     echo "Macros:"

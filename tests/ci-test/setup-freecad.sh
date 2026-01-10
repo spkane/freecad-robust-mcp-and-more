@@ -7,9 +7,9 @@ APPIMAGE_DIR="$HOME/freecad-appimage"
 
 echo "=== Setting up FreeCAD $FREECAD_TAG ==="
 
-# Skip if already set up
-if [ -d "$APPIMAGE_DIR/squashfs-root/usr/bin" ] && [ -f "/usr/local/bin/freecad" ]; then
-    echo "FreeCAD already set up, skipping download"
+# Skip if already set up (check for both wrapper scripts)
+if [ -d "$APPIMAGE_DIR/squashfs-root/usr/bin" ] && [ -f "/usr/local/bin/freecad" ] && [ -f "/usr/local/bin/freecadcmd" ]; then
+    echo "FreeCAD already set up (both wrapper scripts present), skipping download"
     exit 0
 fi
 
@@ -72,41 +72,39 @@ echo "Creating wrapper scripts..."
 APPDIR_PATH="$APPIMAGE_DIR/squashfs-root"
 
 # freecadcmd wrapper (use sudo for /usr/local/bin access)
+# Use the extracted binary directly - AppRun is for running the AppImage itself
 cat << WRAPPER_EOF | sudo tee /usr/local/bin/freecadcmd > /dev/null
 #!/bin/bash
 export APPDIR="$APPDIR_PATH"
-export APPIMAGE_EXTRACT_AND_RUN=1
-if [ -f "\$APPDIR/AppRun" ]; then
-    exec "\$APPDIR/AppRun" freecadcmd "\$@"
-else
-    export LD_LIBRARY_PATH="\$APPDIR/usr/lib:\$LD_LIBRARY_PATH"
-    exec "\$APPDIR/usr/bin/freecadcmd" "\$@"
-fi
+export LD_LIBRARY_PATH="\$APPDIR/usr/lib:\$LD_LIBRARY_PATH"
+exec "\$APPDIR/usr/bin/freecadcmd" "\$@"
 WRAPPER_EOF
 sudo chmod +x /usr/local/bin/freecadcmd
 
 # freecad (GUI) wrapper (use sudo for /usr/local/bin access)
+# Use the extracted binary directly - AppRun is for running the AppImage itself
 cat << WRAPPER_EOF | sudo tee /usr/local/bin/freecad > /dev/null
 #!/bin/bash
 export APPDIR="$APPDIR_PATH"
-export APPIMAGE_EXTRACT_AND_RUN=1
-if [ -f "\$APPDIR/AppRun" ]; then
-    exec "\$APPDIR/AppRun" freecad "\$@"
-else
-    export LD_LIBRARY_PATH="\$APPDIR/usr/lib:\$LD_LIBRARY_PATH"
-    exec "\$APPDIR/usr/bin/freecad" "\$@"
-fi
+export LD_LIBRARY_PATH="\$APPDIR/usr/lib:\$LD_LIBRARY_PATH"
+exec "\$APPDIR/usr/bin/freecad" "\$@"
 WRAPPER_EOF
 sudo chmod +x /usr/local/bin/freecad
 
 echo "Wrapper scripts created at /usr/local/bin/freecad{,cmd}"
 
-# Verify installation
+# Verify installation - fail the script if verification fails
 echo "=== Verifying FreeCAD installation ==="
 echo "--- freecadcmd --version ---"
-freecadcmd --version || echo "freecadcmd version check failed"
+if ! freecadcmd --version; then
+    echo "ERROR: freecadcmd version check failed"
+    exit 1
+fi
 
 echo "--- freecadcmd Python test ---"
-freecadcmd -c "import sys; print(f'FreeCAD Python: {sys.version}')" || echo "Python test failed"
+if ! freecadcmd -c "import sys; print(f'FreeCAD Python: {sys.version}')"; then
+    echo "ERROR: FreeCAD Python test failed"
+    exit 1
+fi
 
 echo "=== FreeCAD setup complete ==="

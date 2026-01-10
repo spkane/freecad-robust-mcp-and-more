@@ -621,6 +621,8 @@ class FreecadMCPPlugin:
             self._socket_loop.run_until_complete(self._start_socket_server())
             self._socket_loop.run_forever()
         except OSError as e:
+            # Server failed to start - mark as not running
+            self._running = False
             if e.errno == errno.EADDRINUSE:
                 if FREECAD_AVAILABLE:
                     FreeCAD.Console.PrintWarning(

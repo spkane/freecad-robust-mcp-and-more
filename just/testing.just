@@ -9,8 +9,12 @@ unit:
     uv run pytest {{project_root}}/tests/unit
 
 # Run tests with coverage (excludes integration tests)
+# Note: Uses bash script to ensure .coverage file is created in project root
 cov:
-    cd {{project_root}} && uv run pytest tests/unit --cov=freecad_mcp --cov-report=term-missing --cov-report=html:{{project_root}}/htmlcov
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd "{{project_root}}"
+    uv run pytest tests/unit --cov=freecad_mcp --cov-report=term-missing --cov-report=html:htmlcov
 
 # Run tests without slow markers (excludes integration tests)
 fast:
@@ -164,6 +168,30 @@ integration-freecad-auto:
 
     # Cleanup is handled by trap
     exit $TEST_EXIT_CODE
+
+# =============================================================================
+# Just Command Tests
+# =============================================================================
+
+# Run just command syntax tests (fast, validates all commands parse correctly)
+just-syntax:
+    uv run pytest {{project_root}}/tests/just_commands -m "just_syntax" -v
+
+# Run just command runtime tests (slower, actually executes commands)
+just-runtime:
+    uv run pytest {{project_root}}/tests/just_commands -m "just_runtime and not slow" -v
+
+# Run all just command tests
+just-all:
+    uv run pytest {{project_root}}/tests/just_commands -v
+
+# Run just command release tests (tests release commands with cleanup)
+just-release:
+    uv run pytest {{project_root}}/tests/just_commands -m "just_release" -v
+
+# =============================================================================
+# Bridge Management
+# =============================================================================
 
 # Kill any zombie FreeCAD MCP bridge processes on the default ports
 kill-bridge:

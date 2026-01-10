@@ -319,6 +319,32 @@ Pre-commit runs these checks:
 - Maximum line length: 88 characters (ruff/black default)
 - Use modern Python syntax (3.10+ features encouraged)
 
+### Accessible Language
+
+> This isn't about politics—it's about clarity. Literal terms translate better, search better, and are understood by more people regardless of cultural background. Good communication is good engineering.
+
+Use clear, literal language in code, comments, documentation, and commit messages. Avoid idioms, metaphors, and jargon that may be unclear, exclusionary, or carry unintended connotations:
+
+| Avoid                                      | Prefer                                           |
+| ------------------------------------------ | ------------------------------------------------ |
+| sanity check, sanity test                  | validation, verification, smoke test, quick test |
+| sane defaults, insane behavior             | sensible defaults, unexpected behavior           |
+| whitelist, blacklist                       | allowlist, blocklist                             |
+| master, slave                              | main, primary, replica, secondary                |
+| kill, abort, nuke (as metaphors)           | stop, terminate, cancel, remove                  |
+| war room, battle-tested                    | operations center, production-tested             |
+| cripple, blind to                          | disable, unaware of, ignore                      |
+| dummy, handicapped                         | placeholder, stub, limited                       |
+
+**Note:** Actual command names (e.g., `kill -9`, `kill_port()`, `git rebase --abort`) are fine when discussing or documenting those specific commands. The guidance above applies to metaphorical usage in prose, comments, and naming.
+
+**Why this matters:**
+
+- Literal terms are clearer to non-native speakers and those unfamiliar with idioms
+- Avoids unintentionally alienating contributors
+- Makes code more accessible and professional
+- Many organizations and open-source projects have adopted similar guidelines
+
 ### Security Scanning
 
 - Bandit scans for common security issues
@@ -490,6 +516,10 @@ tests/
 ├── integration/         # Integration tests
 │   ├── __init__.py
 │   └── test_*.py
+├── just_commands/       # Just command tests
+│   ├── __init__.py
+│   ├── conftest.py      # Just test fixtures
+│   └── test_*.py        # Tests for each just module
 └── fixtures/            # Test data files
 ```
 
@@ -532,6 +562,69 @@ just testing::all               # Run all tests including integration
 uv run pytest tests/unit/       # Run specific test directory
 uv run pytest -k "test_name"    # Run specific test by name
 ```
+
+### Just Command Testing
+
+The project includes a comprehensive test suite for all `just` commands in `tests/just_commands/`. This ensures that justfile syntax errors, missing dependencies, and runtime failures are caught early.
+
+**Test Categories:**
+
+| Marker           | Description                                          | Command                           |
+| ---------------- | ---------------------------------------------------- | --------------------------------- |
+| `just_syntax`    | Validates just can parse commands (--dry-run)        | `just testing::just-syntax`       |
+| `just_runtime`   | Actually executes commands and verifies behavior     | `just testing::just-runtime`      |
+| `just_release`   | Release command tests with cleanup                   | `just testing::just-release`      |
+| (all)            | Run all just command tests                           | `just testing::just-all`          |
+
+**Running Just Command Tests:**
+
+```bash
+just testing::just-syntax    # Fast syntax validation (recommended before commits)
+just testing::just-runtime   # Runtime tests (slower, actually runs commands)
+just testing::just-release   # Release command tests with cleanup
+just testing::just-all       # All just command tests
+```
+
+#### Updating Tests When Changing Just Commands
+
+**MANDATORY**: When you add, modify, or remove a just command, you MUST update the corresponding test file:
+
+| Module         | Test File                                   |
+| -------------- | ------------------------------------------- |
+| Main justfile  | `tests/just_commands/test_main.py`          |
+| coderabbit     | `tests/just_commands/test_coderabbit.py`    |
+| dev            | `tests/just_commands/test_dev.py`           |
+| docker         | `tests/just_commands/test_docker.py`        |
+| documentation  | `tests/just_commands/test_documentation.py` |
+| freecad        | `tests/just_commands/test_freecad.py`       |
+| install        | `tests/just_commands/test_install.py`       |
+| mcp            | `tests/just_commands/test_mcp.py`           |
+| quality        | `tests/just_commands/test_quality.py`       |
+| release        | `tests/just_commands/test_release.py`       |
+| testing        | `tests/just_commands/test_testing.py`       |
+
+**What to Update:**
+
+1. **New command**: Add to `COMMANDS` list in syntax tests, add runtime test if applicable
+2. **Modified command**: Update any tests that depend on command behavior/output
+3. **Removed command**: Remove from `COMMANDS` list and delete related tests
+4. **Changed arguments**: Update parametrized tests with correct arguments
+
+**Release Command Testing Strategy:**
+
+Release commands are tested carefully to avoid accidental releases:
+
+- **Syntax tests**: Use `--dry-run` for all commands
+- **Read-only tests**: Safe commands like `status`, `list-tags`, `latest-versions`
+- **Version bump tests**: Test bump commands (modify local files, restored after test)
+- **Tag validation**: Test version format validation, dirty tree detection
+- **Skip push tests**: Commands that push to remote are only syntax-tested
+
+For actual release testing with cleanup, tests use:
+
+- Test versions like `99.99.99-test` that are clearly non-production
+- Backup and restore of modified files
+- Tag prefixes like `test-release-XXXXXX` with random suffixes
 
 ---
 
