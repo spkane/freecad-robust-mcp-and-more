@@ -46,15 +46,8 @@ except ImportError:
     print("  open -a FreeCAD.app --args /path/to/startup_bridge.py")
     sys.exit(1)
 
-# Global reference to timers to prevent garbage collection
-_startup_timer: Any | None = None
-_deferred_start_timer: Any | None = None
-
-# Counter for GUI wait retries
-_gui_wait_retries: int = 0
-# Increase timeout to 60 seconds (600 retries * 100ms) - FreeCAD GUI can take
-# 10-30 seconds to fully initialize on macOS, especially on first launch
-_GUI_WAIT_MAX_RETRIES: int = 600
+# Global reference to GuiWaiter to prevent garbage collection
+_gui_waiter: Any | None = None
 
 
 def _start_bridge() -> None:
@@ -121,78 +114,11 @@ def _start_bridge() -> None:
         FreeCAD.Console.PrintError(traceback.format_exc())
 
 
-def _wait_for_gui_and_start() -> None:
-    """Wait for FreeCAD GUI to be ready, then start the bridge.
-
-    This function is called repeatedly by a timer when Qt is available but
-    FreeCAD.GuiUp is not yet True. It waits for the GUI to initialize before
-    starting the bridge, ensuring the bridge uses Qt timer for queue processing
-    instead of a background thread.
-
-    This prevents crashes caused by executing Qt operations from background threads.
-    """
-    global _startup_timer, _deferred_start_timer, _gui_wait_retries
-
-    _gui_wait_retries += 1
-
-    # Log progress every 50 checks (5 seconds)
-    if _gui_wait_retries % 50 == 0:
-        elapsed = _gui_wait_retries * 0.1
-        FreeCAD.Console.PrintMessage(
-            f"Startup Bridge: Still waiting for GUI... ({elapsed:.1f}s elapsed)\n"
-        )
-
-    if FreeCAD.GuiUp:
-        # GUI is ready! Stop the repeating timer
-        if _startup_timer is not None:
-            _startup_timer.stop()
-            _startup_timer = None
-        elapsed = _gui_wait_retries * 0.1
-        FreeCAD.Console.PrintMessage(
-            f"Startup Bridge: GUI ready after {elapsed:.1f}s, "
-            "deferring bridge start...\n"
-        )
-        # IMPORTANT: Don't start the bridge immediately from this timer callback!
-        # Even though GuiUp is True, FreeCAD may still be initializing internally.
-        # Use a single-shot timer to defer the actual start to a later, more stable
-        # point in the event loop. This mimics the behavior of manual start via
-        # toolbar buttons, which works reliably.
-        try:
-            from PySide2 import QtCore as DeferQtCore  # type: ignore[import]
-        except ImportError:
-            from PySide6 import QtCore as DeferQtCore  # type: ignore[import]
-        _deferred_start_timer = DeferQtCore.QTimer()
-        _deferred_start_timer.setSingleShot(True)
-        _deferred_start_timer.timeout.connect(_start_bridge)
-        _deferred_start_timer.start(2000)  # 2 second delay for FreeCAD to stabilize
-    elif _gui_wait_retries >= _GUI_WAIT_MAX_RETRIES:
-        # Timeout - DO NOT start with background thread, it will crash!
-        if _startup_timer is not None:
-            _startup_timer.stop()
-            _startup_timer = None
-        FreeCAD.Console.PrintError(
-            "\n" + "=" * 60 + "\n"
-            "STARTUP BRIDGE ERROR: GUI did not become ready within 60s!\n"
-            "=" * 60 + "\n\n"
-            "The bridge was NOT started because starting with a background\n"
-            "thread would cause FreeCAD to crash when executing Qt operations.\n\n"
-            "Possible causes:\n"
-            "  - FreeCAD is running in headless mode (use freecadcmd instead)\n"
-            "  - FreeCAD GUI initialization is extremely slow\n"
-            "  - There's an issue with the FreeCAD installation\n\n"
-            "To start the bridge in headless mode, use:\n"
-            "  just freecad::run-headless\n"
-            "=" * 60 + "\n"
-        )
-        # Do NOT call _start_bridge() here - it would use background thread and crash
-    # Otherwise, timer will fire again and we'll check again
-
-
 # Schedule bridge start after FreeCAD finishes loading
 # Strategy:
 # - If FreeCAD.GuiUp is True: Qt event loop is running, start bridge directly
 # - If FreeCAD.GuiUp is False but Qt is available: FreeCAD GUI is initializing.
-#   Use a repeating timer to wait for GuiUp to become True before starting.
+#   Use GuiWaiter to wait for GuiUp to become True before starting.
 #   This ensures the bridge uses Qt timer (not background thread) for queue processing.
 # - If Qt is not available: Pure headless mode, start bridge directly
 #
@@ -215,14 +141,18 @@ try:
         _start_bridge()
     elif QtCore is not None:
         # GUI not ready yet, but Qt is available (FreeCAD starting in GUI mode)
-        # Use a repeating timer to wait for GuiUp to become True
-        # This prevents starting the bridge with a background thread that will
-        # later crash when executing Qt operations
-        _startup_timer = QtCore.QTimer()
-        _startup_timer.setSingleShot(False)  # Repeating timer
-        _startup_timer.timeout.connect(_wait_for_gui_and_start)
-        _startup_timer.start(100)  # Check every 100ms
-        FreeCAD.Console.PrintMessage("Startup Bridge: Waiting for GUI to be ready...\n")
+        # Use GuiWaiter to wait for GuiUp to become True before starting
+        from bridge_utils import GuiWaiter
+
+        _gui_waiter = GuiWaiter(
+            callback=_start_bridge,
+            log_prefix="Startup Bridge",
+            timeout_error_extra=(
+                "\nTo start the bridge in headless mode, use:\n"
+                "  just freecad::run-headless\n\n"
+            ),
+        )
+        _gui_waiter.start()
     else:
         # True headless mode - no Qt, no GUI
         FreeCAD.Console.PrintMessage(

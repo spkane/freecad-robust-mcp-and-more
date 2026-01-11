@@ -85,7 +85,11 @@ This project includes standalone FreeCAD macros:
 
 ## Links
 
-- [GitHub Repository](https://github.com/spkane/freecad-robust-mcp-and-more)
-- [PyPI Package](https://pypi.org/project/freecad-robust-mcp/)
-- [Docker Hub](https://hub.docker.com/r/spkane/freecad-robust-mcp)
-- [Issue Tracker](https://github.com/spkane/freecad-robust-mcp-and-more/issues)
+- [GitHub Repository](https://github.com/spkane/freecad-robust-mcp-and-more) - Source code and issue tracker
+- [PyPI Package](https://pypi.org/project/freecad-robust-mcp/) - Python package for pip installation
+- [Docker Hub](https://hub.docker.com/r/spkane/freecad-robust-mcp) - Pre-built Docker images
+
+---
+
+!!! tip "Share This Documentation"
+    Direct link: **[https://spkane.github.io/freecad-robust-mcp-and-more/](https://spkane.github.io/freecad-robust-mcp-and-more/)**

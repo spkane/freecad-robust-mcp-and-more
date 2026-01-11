@@ -106,6 +106,10 @@ plugins:
       j2_block_end_string: "@%}"
 
 extra:
+  # Version selector for mike-managed versioned docs
+  version:
+    provider: mike
+    default: latest
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/spkane/freecad-robust-mcp-and-more

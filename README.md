@@ -9,6 +9,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/freecad-robust-mcp)](https://pypi.org/project/freecad-robust-mcp/)
 
 [![Docker Image Version](https://img.shields.io/docker/v/spkane/freecad-robust-mcp?sort=semver&label=docker)](https://hub.docker.com/r/spkane/freecad-robust-mcp)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://spkane.github.io/freecad-robust-mcp-and-more/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that enables integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
@@ -106,6 +107,7 @@ This section covers installation and usage for end users who want to use the Rob
 
 | Resource                                                                          | Description                                                  |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [**Documentation**](https://spkane.github.io/freecad-robust-mcp-and-more/)        | Full documentation, guides, and API reference                |
 | [Docker Hub](https://hub.docker.com/r/spkane/freecad-robust-mcp)                  | Pre-built Docker images for easy deployment                  |
 | [PyPI](https://pypi.org/project/freecad-robust-mcp/)                              | Python package for pip installation                          |
 | [GitHub Releases](https://github.com/spkane/freecad-robust-mcp-and-more/releases) | Release archives, changelogs, and standalone macro downloads |

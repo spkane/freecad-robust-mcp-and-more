@@ -92,6 +92,8 @@ ToolBar Icon [[Image:Macro_Multi_Export.png]]
 ==Links== <!--T:16-->
 
 <!--T:17-->
+* [https://spkane.github.io/freecad-robust-mcp-and-more/ Full Documentation] - Complete guides and tutorials
+* [https://github.com/spkane/freecad-robust-mcp-and-more GitHub Repository] - Source code and issue tracker
 * [[Std_Export|Std Export]] - FreeCAD's built-in export function
 * [[Import_Export|Import Export]] - Overview of FreeCAD import/export formats
 

@@ -19,7 +19,17 @@ import pytest
 
 
 def _check_gui_available() -> bool:
-    """Check if FreeCAD GUI is available via the bridge."""
+    """Check if FreeCAD GUI is available via the bridge.
+
+    This function runs at test collection time to determine which tests to skip.
+    We intentionally swallow all exceptions because:
+    1. If the XML-RPC bridge isn't reachable, we assume headless mode (GUI unavailable)
+    2. Connection errors, timeouts, and XML-RPC faults all indicate "GUI not available"
+    3. This allows tests to be collected even when FreeCAD isn't running
+
+    The _check_headless_mode(), requires_gui, and requires_headless markers
+    all rely on this behavior to correctly skip or run GUI/headless-specific tests.
+    """
     try:
         proxy = xmlrpc.client.ServerProxy("http://localhost:9875", allow_none=True)
         result: dict[str, Any] = proxy.execute(  # type: ignore[assignment]
@@ -31,16 +41,23 @@ _result_ = {"gui_up": bool(FreeCAD.GuiUp)}
         if result.get("success") and result.get("result"):
             return result["result"].get("gui_up", False)
     except Exception:
+        # Swallow all exceptions intentionally - see docstring above
         pass
     return False
 
 
 def _check_headless_mode() -> bool:
-    """Check if FreeCAD is running in headless mode."""
+    """Check if FreeCAD is running in headless mode.
+
+    Returns True if GUI is not available (either headless mode or bridge unreachable).
+    See _check_gui_available() for details on exception handling.
+    """
     return not _check_gui_available()
 
 
 # Skip markers for mode-specific tests
+# These are evaluated at test collection time, so _check_gui_available() runs early.
+# If the bridge isn't reachable, GUI tests are skipped and headless tests run.
 requires_gui = pytest.mark.skipif(
     _check_headless_mode(),
     reason="Test requires FreeCAD GUI mode (running in headless mode)",

@@ -204,6 +204,8 @@ just testing::all          # Run all tests including integration
 # Documentation commands
 just documentation::build  # Build documentation
 just documentation::serve  # Serve documentation locally
+just documentation::serve-versioned  # Serve versioned docs (from gh-pages)
+just documentation::list-versions    # List deployed doc versions
 
 # Docker commands
 just docker::build         # Build Docker image for local architecture
@@ -251,7 +253,7 @@ just all-with-integration  # Run all checks and integration tests
 | `quality`       | Code quality and linting              | `check`, `lint`, `format`, `scan`                   |
 | `testing`       | Test execution                        | `unit`, `cov`, `integration-freecad-auto`, `watch`  |
 | `docker`        | Docker build and run commands         | `build`, `build-multi`, `run`, `clean-all`          |
-| `documentation` | Documentation building                | `build`, `serve`, `open`                            |
+| `documentation` | Documentation building and deployment | `build`, `serve`, `serve-versioned`, `list-versions`|
 | `dev`           | Development utilities                 | `install-deps`, `update-deps`, `clean`              |
 | `release`       | Release and tagging                   | `status`, `tag-mcp-server`, `delete-tag`            |
 | `coderabbit`    | AI code reviews (local)               | `install`, `login`, `review`, `review-fix`          |
@@ -490,6 +492,34 @@ socket_port: 9876
 ```
 
 **Reference**: See `docs/development/mkdocs-guide.md` for complete documentation on available extensions (admonitions, tabs, code annotations, mermaid diagrams, etc.).
+
+### Documentation Deployment (GitHub Pages)
+
+Documentation is deployed to GitHub Pages with versioning via **mike**:
+
+- **Automatic deployment**: The `docs.yaml` workflow deploys docs automatically
+- **Version selector**: Users can switch between versions in the docs UI
+- **"latest" version**: Always reflects the current `main` branch (default landing page)
+- **Versioned releases**: Created when MCP server tags (`robust-mcp-server-vX.Y.Z`) are pushed
+
+**Deployment triggers**:
+
+| Trigger                      | Version Deployed | Sets Default?  |
+| ---------------------------- | ---------------- | -------------- |
+| Push to `main`               | `latest`         | Yes            |
+| Tag `robust-mcp-server-v1.0` | `1.0.0`          | No             |
+| Manual workflow dispatch     | User-specified   | User choice    |
+
+**Local testing commands**:
+
+```bash
+just documentation::serve-versioned  # Serve versioned docs locally
+just documentation::list-versions    # List deployed versions
+just documentation::deploy-dev       # Deploy "dev" version locally
+just documentation::deploy-latest 1.0.0  # Deploy version and set as latest
+```
+
+**Note**: Local `deploy-*` commands modify the `gh-pages` branch locally. The GitHub Actions workflow handles actual deployment to GitHub Pages.
 
 ---
 
@@ -1290,13 +1320,14 @@ This project uses component-specific release workflows along with CI/CD pipeline
 
 ### CI Workflows
 
-| Workflow           | Trigger              | Purpose                                                    |
-| ------------------ | -------------------- | ---------------------------------------------------------- |
-| `test.yaml`        | Push, PR             | Runs unit tests and integration tests on Ubuntu and macOS  |
-| `pre-commit.yaml`  | Push, PR             | Runs all pre-commit hooks for code quality                 |
-| `docker.yaml`      | Push, PR             | Builds Docker image to verify Dockerfile works             |
-| `macro-test.yaml`  | Push, PR             | Tests FreeCAD macros in headless Docker environment        |
-| `codeql.yaml`      | Push, PR, scheduled  | GitHub CodeQL security analysis                            |
+| Workflow           | Trigger                        | Purpose                                                   |
+| ------------------ | ------------------------------ | --------------------------------------------------------- |
+| `test.yaml`        | Push, PR                       | Runs unit tests and integration tests on Ubuntu and macOS |
+| `pre-commit.yaml`  | Push, PR                       | Runs all pre-commit hooks for code quality                |
+| `docker.yaml`      | Push, PR                       | Builds Docker image to verify Dockerfile works            |
+| `macro-test.yaml`  | Push, PR                       | Tests FreeCAD macros in headless Docker environment       |
+| `codeql.yaml`      | Push, PR, scheduled            | GitHub CodeQL security analysis                           |
+| `docs.yaml`        | Push to main, MCP server tags  | Deploys versioned documentation to GitHub Pages           |
 
 ### Release Workflows
 

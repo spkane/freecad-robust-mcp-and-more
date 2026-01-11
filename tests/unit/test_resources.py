@@ -437,3 +437,32 @@ class TestFreecadResources:
 
         # Should have prompts section
         assert "prompts" in data
+
+    @pytest.mark.asyncio
+    async def test_resource_capabilities_includes_all_resources(
+        self, register_resources: dict[str, Callable[..., Any]], mock_bridge: AsyncMock
+    ) -> None:
+        """freecad://capabilities should include all registered resources.
+
+        This test ensures the capabilities resource stays in sync when new
+        resources are added. Per CLAUDE.md: "When adding new MCP tools or
+        resources, you MUST also update the freecad://capabilities resource."
+        """
+        resource_capabilities = register_resources["freecad://capabilities"]
+        result = await resource_capabilities()
+        data = json.loads(result)
+
+        # Get all registered resource URIs (excluding capabilities itself)
+        registered_uris = {
+            uri for uri in register_resources if uri != "freecad://capabilities"
+        }
+
+        # Get URIs listed in the capabilities response
+        capability_uris = {r.get("uri") for r in data.get("resources", [])}
+
+        # All registered resources should be listed in capabilities
+        missing_resources = registered_uris - capability_uris
+        assert not missing_resources, (
+            f"Resources registered but not in capabilities: {missing_resources}. "
+            f"Update resource_capabilities() in src/freecad_mcp/resources/freecad.py"
+        )

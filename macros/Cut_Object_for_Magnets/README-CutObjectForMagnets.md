@@ -6,6 +6,8 @@
 **FreeCAD Version:** 0.19 or later
 **License:** MIT
 
+> **Documentation:** [https://spkane.github.io/freecad-robust-mcp-and-more/](https://spkane.github.io/freecad-robust-mcp-and-more/)
+
 ## Overview
 
 This FreeCAD macro intelligently cuts 3D objects along a plane and automatically places magnet holes (for magnets, dowels, pins, etc.) with built-in surface penetration detection. Unlike simple cutting tools, this macro ensures magnet holes won't accidentally break through the outer surface of your object.
