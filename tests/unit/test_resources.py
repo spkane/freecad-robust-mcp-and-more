@@ -1,4 +1,4 @@
-"""Tests for MCP resources module."""
+"""Tests for FreeCAD Robust MCP resources."""
 
 import json
 from collections.abc import Callable
@@ -17,7 +17,7 @@ from freecad_mcp.bridge.base import (
 
 
 class TestFreecadResources:
-    """Tests for FreeCAD MCP resources."""
+    """Tests for FreeCAD Robust MCP resources."""
 
     @pytest.fixture
     def mock_mcp(self) -> MagicMock:

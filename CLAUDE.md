@@ -484,7 +484,7 @@ To avoid conflicts with Python dict literals in code blocks, this project uses c
 Variables are defined in `docs/variables.yaml`:
 
 ```yaml
-project_name: FreeCAD MCP Server
+project_name: FreeCAD Robust MCP Suite
 xmlrpc_port: 9875
 socket_port: 9876
 ```
@@ -717,7 +717,7 @@ project-root/
 │   │   └── test.yaml             # Unit/integration tests
 │   └── dependabot.yaml       # Dependency updates
 ├── addon/                    # FreeCAD addon (workbench)
-│   └── FreecadRobustMCP/     # Robust MCP Bridge workbench
+│   └── FreecadRobustMCPBridge/     # Robust MCP Bridge workbench
 │       ├── freecad_mcp_bridge/   # Bridge Python package
 │       ├── Init.py           # FreeCAD workbench init
 │       ├── InitGui.py        # FreeCAD GUI init
@@ -989,6 +989,60 @@ else:
     # Headless mode - no GUI features available
     pass
 ```
+
+### MCP Bridge Startup Race Condition (Critical Bug Pattern)
+
+**CRITICAL BUG PATTERN**: The MCP bridge must wait for `FreeCAD.GuiUp` to be `True` before starting in GUI mode. Starting the bridge while `FreeCAD.GuiUp` is `False` causes a race condition that leads to crashes.
+
+**The Problem:**
+
+When FreeCAD starts in GUI mode, there's a timing window where:
+
+1. `Init.py` runs when `FreeCAD.GuiUp = False` (GUI not yet initialized)
+2. Qt/PySide is available (can import successfully)
+3. The bridge starts, sees `GuiUp = False`, and starts a background thread for queue processing
+4. FreeCAD GUI finishes initializing (`GuiUp` becomes `True`)
+5. Code execution still happens on the background thread
+6. Qt operations from the background thread cause SIGABRT crashes
+
+**Symptoms:**
+
+- FreeCAD crashes with `SIGABRT` in `QCocoaWindow::createNSWindow` (macOS)
+- Integration tests pass initial connection, then crash on first document operation
+- Thread check shows `is_main_thread: False` with `thread_name: 'MCP-QueueProcessor'` even when `gui_up: True`
+
+**The Fix (in `Init.py`):**
+
+When Qt is available but `FreeCAD.GuiUp` is `False`, use a repeating timer to wait for `GuiUp` to become `True` before starting the bridge:
+
+```python
+# WRONG - starts bridge immediately, will use background thread
+elif QtCore is not None:
+    _auto_start_bridge()
+
+# CORRECT - wait for GUI to be ready
+elif QtCore is not None:
+    _auto_start_timer = QtCore.QTimer()
+    _auto_start_timer.setSingleShot(False)  # Repeating
+    _auto_start_timer.timeout.connect(_wait_for_gui_and_start)
+    _auto_start_timer.start(100)  # Check every 100ms
+```
+
+**Note:** This QTimer wait pattern is **only for GUI startup scenarios**. In headless mode (`freecadcmd`), the bridge starts directly without waiting because there is no Qt event loop to wait for. The three startup paths are:
+
+1. **GUI already up** (`FreeCAD.GuiUp = True`): Start bridge immediately
+2. **GUI starting** (Qt available, `GuiUp = False`): Use QTimer to wait for GUI
+3. **Headless** (no Qt): Start bridge immediately with background thread
+
+**Testing:**
+
+An integration test in `tests/integration/test_thread_safety.py` verifies that:
+
+- In GUI mode, code executes on the main thread (not `MCP-QueueProcessor`)
+- The queue processor mode matches `FreeCAD.GuiUp` state
+- Document creation works without crashing
+
+**Key Lesson:** Never assume Qt availability means GUI is ready. Always check `FreeCAD.GuiUp` before doing operations that depend on the Qt event loop running on the main thread.
 
 ### Why NOT to Check for PySide/Qt
 
@@ -1411,9 +1465,9 @@ Each component can have a different version, and the release workflows automatic
 
 ---
 
-## FreeCAD MCP Tools Reference
+## FreeCAD Robust MCP Tools Reference
 
-When Claude Code is connected to the FreeCAD MCP server, the following tools are available for interacting with FreeCAD. Use these tools to control FreeCAD, create/modify objects, and debug issues.
+When Claude Code is connected to the FreeCAD Robust MCP server, the following tools are available for interacting with FreeCAD. Use these tools to control FreeCAD, create/modify objects, and debug issues.
 
 ### Discovering Capabilities at Runtime
 
