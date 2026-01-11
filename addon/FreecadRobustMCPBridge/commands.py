@@ -344,6 +344,11 @@ class MCPBridgePreferencesCommand:
 
     def Activated(self) -> None:
         """Execute the command to show preferences dialog."""
+        if not FreeCAD.GuiUp:
+            FreeCAD.Console.PrintError(
+                "MCP Bridge Preferences requires FreeCAD GUI mode.\n"
+            )
+            return
         # Import here to avoid issues during module loading
         import FreeCADGui
         from preferences import (

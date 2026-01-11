@@ -37,10 +37,20 @@ except Exception as e:
 
 
 class FreecadRobustMCPBridgeWorkbench(FreeCADGui.Workbench):
-    """FreeCAD Robust MCP Workbench.
+    """Robust MCP Bridge workbench for FreeCAD.
 
-    Provides toolbar and menu commands to start, stop, and monitor
-    the MCP bridge server for AI assistant integration.
+    Provides toolbar and menu commands to start, stop, and monitor the MCP
+    bridge server for AI assistant integration.
+
+    Attributes:
+        MenuText: Workbench display name in FreeCAD.
+        ToolTip: Short description shown by FreeCAD.
+        Icon: Icon path used by FreeCAD.
+
+    Example:
+        The workbench is registered at import time by FreeCAD::
+
+            FreeCADGui.addWorkbench(FreecadRobustMCPBridgeWorkbench())
     """
 
     MenuText = "Robust MCP Bridge"

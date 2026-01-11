@@ -18,6 +18,9 @@ import os  # noqa: PTH
 
 import FreeCAD
 
+# Addon directory name - single source of truth for renames
+_ADDON_DIRNAME = "FreecadRobustMCPBridge"
+
 # Cache for addon path to avoid repeated filesystem lookups
 _addon_path_cache: str | None = None
 
@@ -48,7 +51,7 @@ def get_addon_path() -> str:
     # Method 2: Use FreeCAD's Mod path + our addon name
     try:
         mod_path = os.path.join(  # noqa: PTH118
-            FreeCAD.getUserAppDataDir(), "Mod", "FreecadRobustMCPBridge"
+            FreeCAD.getUserAppDataDir(), "Mod", _ADDON_DIRNAME
         )
         if os.path.exists(mod_path):  # noqa: PTH110
             _addon_path_cache = mod_path
@@ -62,7 +65,7 @@ def get_addon_path() -> str:
         for item in os.listdir(base_path):  # noqa: PTH208
             if item.startswith("v1-"):
                 versioned_mod = os.path.join(  # noqa: PTH118
-                    base_path, item, "Mod", "FreecadRobustMCPBridge"
+                    base_path, item, "Mod", _ADDON_DIRNAME
                 )
                 if os.path.exists(versioned_mod):  # noqa: PTH110
                     _addon_path_cache = versioned_mod
@@ -110,7 +113,7 @@ def get_workbench_icon() -> str:
     """
     addon_path = get_addon_path()
     if addon_path:
-        icon_path = os.path.join(addon_path, "FreecadRobustMCPBridge.svg")  # noqa: PTH118
+        icon_path = os.path.join(addon_path, f"{_ADDON_DIRNAME}.svg")  # noqa: PTH118
         if os.path.exists(icon_path):  # noqa: PTH110
             return icon_path
     return ""

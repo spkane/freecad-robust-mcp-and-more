@@ -184,7 +184,7 @@ class TestPackageXml:
     """Tests for package.xml workbench entry."""
 
     @pytest.fixture
-    def package_xml(self):
+    def package_xml(self) -> str:
         """Load package.xml content."""
         package_file = ADDON_DIR.parent.parent / "package.xml"
         return package_file.read_text()

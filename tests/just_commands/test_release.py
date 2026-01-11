@@ -185,13 +185,13 @@ class TestReleaseBumpCommands:
         backups: dict[Path, str] = {}
         for file_path in files_to_backup:
             if file_path.exists():
-                backups[file_path] = file_path.read_text()
+                backups[file_path] = file_path.read_text(encoding="utf-8")
 
         yield
 
         # Restore all files
         for file_path, content in backups.items():
-            file_path.write_text(content)
+            file_path.write_text(content, encoding="utf-8")
 
     @pytest.mark.just_runtime
     @pytest.mark.just_release
