@@ -58,7 +58,7 @@ See [MultiExport documentation](https://github.com/spkane/freecad-robust-mcp-and
 
 ### Via FreeCAD Addon Manager
 
-When you install the "FreeCAD MCP and More" addon, the macros are installed automatically.
+When you install the "FreeCAD Robust MCP and More" addon, the macros are installed automatically.
 
 ### Manual Installation
 

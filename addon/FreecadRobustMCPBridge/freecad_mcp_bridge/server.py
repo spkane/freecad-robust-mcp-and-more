@@ -1,4 +1,4 @@
-"""FreeCAD MCP Bridge Plugin - Socket Server with Queue-based Thread Safety.
+"""FreeCAD Robust MCP Bridge Plugin - Socket Server with Queue-based Thread Safety.
 
 This module provides a socket server that runs inside FreeCAD to handle
 MCP bridge requests. It must be executed within FreeCAD's Python environment.

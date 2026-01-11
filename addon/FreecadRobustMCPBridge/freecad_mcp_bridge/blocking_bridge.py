@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-r"""Blocking FreeCAD MCP Bridge Server.
+r"""Blocking FreeCAD Robust MCP Bridge Server.
 
 SPDX-License-Identifier: MIT
 Copyright (c) 2025 Sean P. Kane (GitHub: spkane)

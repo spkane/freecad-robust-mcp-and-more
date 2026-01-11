@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
 
-    <name>FreeCAD MCP and More</name>
+    <name>FreeCAD Robust MCP and More</name>
     <description>A collection of FreeCAD macros including an MCP (Model Context Protocol) bridge for AI assistant integration, multi-format export utilities, and a tool for cutting objects with aligned magnet holes for 3D printing.</description>
     <icon>addon/FreecadRobustMCPBridge/FreecadRobustMCPBridge.svg</icon>
 

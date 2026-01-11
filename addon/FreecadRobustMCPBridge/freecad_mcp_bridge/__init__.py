@@ -1,4 +1,4 @@
-"""FreeCAD MCP Bridge - Bundled server module for the workbench addon.
+"""FreeCAD Robust MCP Bridge - Bundled server module for the workbench addon.
 
 SPDX-License-Identifier: MIT
 Copyright (c) 2025 Sean P. Kane (GitHub: spkane)

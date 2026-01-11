@@ -318,7 +318,7 @@ Examples:
   FREECAD_SOCKET_HOST=192.168.1.100 freecad-mcp
 
 Prerequisites:
-  The FreeCAD MCP Bridge must be running before starting this server.
+  The FreeCAD Robust MCP Bridge must be running before starting this server.
   Start it via:
     - FreeCAD GUI: Install Robust MCP Bridge workbench, enable auto-start
     - Headless: just freecad::run-headless

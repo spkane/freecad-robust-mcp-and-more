@@ -1,4 +1,4 @@
-"""Shared utilities for the FreeCAD MCP Bridge.
+"""Shared utilities for the FreeCAD Robust MCP Bridge.
 
 SPDX-License-Identifier: MIT
 Copyright (c) 2025 Sean P. Kane (GitHub: spkane)

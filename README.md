@@ -840,7 +840,7 @@ See the [detailed architecture document](docs/development/architecture-detailed.
 
 ## Acknowledgements
 
-This project was developed after analyzing several existing FreeCAD MCP implementations. We are grateful to these projects for their pioneering work and the ideas they contributed to the FreeCAD + AI ecosystem:
+This project was developed after analyzing several existing FreeCAD Robust MCP implementations. We are grateful to these projects for their pioneering work and the ideas they contributed to the FreeCAD + AI ecosystem:
 
 ### Related Projects
 
