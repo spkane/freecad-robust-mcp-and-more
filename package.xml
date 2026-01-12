@@ -48,8 +48,8 @@
 
         <macro>
             <name>Multi Export</name>
-            <version>0.5.0-beta</version>
-            <date>2026-01-07</date>
+            <version>0.6.0</version>
+            <date>2026-01-12</date>
             <description>Export selected bodies to multiple file formats (STL, STEP, 3MF, OBJ, IGES, BREP, PLY, AMF) simultaneously with configurable mesh options.</description>
             <subdirectory>./macros/Multi_Export/</subdirectory>
             <file>MultiExport.FCMacro</file>
@@ -58,8 +58,8 @@
 
         <macro>
             <name>Cut Object for Magnets</name>
-            <version>0.5.0-beta</version>
-            <date>2026-01-07</date>
+            <version>0.6.0</version>
+            <date>2026-01-12</date>
             <description>Cut an object along a plane and add aligned magnet holes with surface collision detection. Perfect for creating 3D printed parts that snap together with embedded magnets.</description>
             <subdirectory>./macros/Cut_Object_for_Magnets/</subdirectory>
             <file>CutObjectForMagnets.FCMacro</file>
