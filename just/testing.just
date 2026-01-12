@@ -334,7 +334,13 @@ release-test:
     if [ "$TESTS_PASSED" = true ]; then
         echo "✓ ALL TESTS PASSED - Ready for release!"
         echo ""
+        echo "NOTE: There is no need to bump the MCP server version as it happens automatically from the release tag on git."
+        echo ""
         echo "You can now create a release with:"
+        echo "  just release::bump-workbench <version>"
+        echo "  just release::bump-macro-magnets <version>"
+        echo "  just release::bump-macro-export <version>"
+        echo ""
         echo "  just release::tag-mcp-server <version>"
         echo "  just release::tag-workbench <version>"
         echo "  just release::tag-macro-magnets <version>"
