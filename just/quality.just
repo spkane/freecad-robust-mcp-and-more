@@ -71,14 +71,11 @@ scan-gitleaks-history:
     mise exec -- gitleaks detect --source {{project_root}} --config {{project_root}}/.gitleaks.toml --verbose --log-opts="--all"
 
 # Check for new secrets against baseline (does NOT modify baseline file)
+# Uses pre-commit to run detect-secrets with proper file enumeration
 # Use scan-baseline-update to actually update the baseline
 scan-detect:
     @echo "Checking for new secrets against baseline..."
-    @uv run detect-secrets-hook --baseline {{project_root}}/.secrets.baseline \
-        --exclude-files '\.secrets\.baseline$$' \
-        --exclude-files '\.gitleaks\.toml$$' \
-        --exclude-files 'uv\.lock$$' \
-        && echo "✓ No new secrets detected"
+    @uv run pre-commit run detect-secrets --all-files && echo "✓ No new secrets detected"
 
 # Audit detect-secrets baseline (interactive)
 scan-audit:
