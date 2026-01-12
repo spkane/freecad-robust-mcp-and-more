@@ -457,8 +457,10 @@ class TestFreecadResources:
             uri for uri in register_resources if uri != "freecad://capabilities"
         }
 
-        # Get URIs listed in the capabilities response
-        capability_uris = {r.get("uri") for r in data.get("resources", [])}
+        # Get URIs listed in the capabilities response (filter out None values)
+        capability_uris = {
+            r.get("uri") for r in data.get("resources", []) if r.get("uri") is not None
+        }
 
         # All registered resources should be listed in capabilities
         missing_resources = registered_uris - capability_uris

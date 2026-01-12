@@ -85,18 +85,9 @@ def _start_bridge() -> None:
 
         # Register plugin with commands module so Init.py auto-start can see it
         # This prevents both scripts from trying to start separate bridges
-        try:
-            import commands
+        from bridge_utils import register_mcp_plugin
 
-            commands._mcp_plugin = plugin
-            commands._running_config = {
-                "xmlrpc_port": xmlrpc_port,
-                "socket_port": socket_port,
-            }
-        except ImportError:
-            # Commands module not available (workbench not loaded yet)
-            # The bridge will still work, but won't be visible to workbench
-            pass
+        register_mcp_plugin(plugin, xmlrpc_port, socket_port)
 
         FreeCAD.Console.PrintMessage("\n")
         FreeCAD.Console.PrintMessage("=" * 50 + "\n")

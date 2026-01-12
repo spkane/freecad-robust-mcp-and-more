@@ -51,19 +51,21 @@ def _auto_start_bridge() -> None:
         xmlrpc_port = get_xmlrpc_port()
         socket_port = get_socket_port()
 
-        commands._mcp_plugin = FreecadMCPPlugin(
+        plugin = FreecadMCPPlugin(
             host="localhost",
             port=socket_port,
             xmlrpc_port=xmlrpc_port,
             enable_xmlrpc=True,
         )
-        commands._mcp_plugin.start()
+        plugin.start()
 
-        # Track running configuration for restart detection
-        commands._running_config = {
-            "xmlrpc_port": xmlrpc_port,
-            "socket_port": socket_port,
-        }
+        # Register plugin with commands module for restart detection
+        from freecad_mcp_bridge.bridge_utils import register_mcp_plugin
+
+        register_mcp_plugin(plugin, xmlrpc_port, socket_port)
+
+        # Also set on commands directly for backward compatibility
+        commands._mcp_plugin = plugin
 
         FreeCAD.Console.PrintMessage("\n")
         FreeCAD.Console.PrintMessage("=" * 50 + "\n")

@@ -176,6 +176,40 @@ class GuiWaiter:
         # Do NOT call callback here - it would use background thread and crash
 
 
+def register_mcp_plugin(
+    plugin: FreecadMCPPlugin,
+    xmlrpc_port: int,
+    socket_port: int,
+) -> None:
+    """Register an MCP plugin with the workbench commands module.
+
+    This centralizes plugin registration so both Init.py auto-start and
+    startup_bridge.py use the same logic. Registration allows the workbench
+    to detect if a bridge is already running.
+
+    Args:
+        plugin: The FreecadMCPPlugin instance to register.
+        xmlrpc_port: The XML-RPC port the plugin is using.
+        socket_port: The JSON-RPC socket port the plugin is using.
+
+    Note:
+        If the commands module isn't available (workbench not loaded yet),
+        registration silently fails. The bridge will still work but won't
+        be visible to the workbench UI.
+    """
+    try:
+        import commands
+
+        commands._mcp_plugin = plugin
+        commands._running_config = {
+            "xmlrpc_port": xmlrpc_port,
+            "socket_port": socket_port,
+        }
+    except ImportError:
+        # Commands module not available (workbench not loaded yet)
+        pass
+
+
 def get_running_plugin() -> FreecadMCPPlugin | None:
     """Check if an MCP bridge plugin is already running.
 
@@ -198,15 +232,21 @@ def get_running_plugin() -> FreecadMCPPlugin | None:
 
     try:
         # Check if the workbench commands module has a running plugin
-        from commands import _mcp_plugin
+        import commands
 
-        if _mcp_plugin is not None and _mcp_plugin.is_running:
+        plugin = getattr(commands, "_mcp_plugin", None)
+        if plugin is not None and plugin.is_running:
+            # Get actual ports from running config, with sensible defaults
+            config = getattr(commands, "_running_config", {})
+            xmlrpc_port = config.get("xmlrpc_port", 9875)
+            socket_port = config.get("socket_port", 9876)
+
             FreeCAD.Console.PrintMessage(
                 "\nMCP Bridge already running (from auto-start).\n"
             )
-            FreeCAD.Console.PrintMessage("  - XML-RPC: localhost:9875\n")
-            FreeCAD.Console.PrintMessage("  - Socket: localhost:9876\n\n")
-            return _mcp_plugin
+            FreeCAD.Console.PrintMessage(f"  - XML-RPC: localhost:{xmlrpc_port}\n")
+            FreeCAD.Console.PrintMessage(f"  - Socket: localhost:{socket_port}\n\n")
+            return plugin
     except ImportError:
         # Workbench commands module not available
         pass

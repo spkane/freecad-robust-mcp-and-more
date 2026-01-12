@@ -7,28 +7,35 @@ CRITICAL: In GUI mode, code MUST execute on the main Qt thread.
 Executing Qt operations from background threads causes crashes.
 This was discovered when Init.py started the bridge before FreeCAD.GuiUp
 was True, causing the bridge to use a background thread even in GUI mode.
+
+The tests in this module cover:
+    - Thread context verification (main thread vs background thread)
+    - Queue processor mode detection and validation
+    - Safe execution of GUI operations (document creation, view operations)
+
+See Also:
+    addon/FreecadRobustMCPBridge/Init.py: The fix for the GUI startup race condition
+    addon/FreecadRobustMCPBridge/freecad_mcp_bridge/bridge_utils.py: GuiWaiter helper
 """
 
 from __future__ import annotations
 
+import logging
 import uuid
 import xmlrpc.client
 from typing import Any
 
 import pytest
 
+logger = logging.getLogger(__name__)
+
 
 def _check_gui_available() -> bool:
     """Check if FreeCAD GUI is available via the bridge.
 
     This function runs at test collection time to determine which tests to skip.
-    We intentionally swallow all exceptions because:
-    1. If the XML-RPC bridge isn't reachable, we assume headless mode (GUI unavailable)
-    2. Connection errors, timeouts, and XML-RPC faults all indicate "GUI not available"
-    3. This allows tests to be collected even when FreeCAD isn't running
-
-    The _check_headless_mode(), requires_gui, and requires_headless markers
-    all rely on this behavior to correctly skip or run GUI/headless-specific tests.
+    Connection errors and timeouts are expected when FreeCAD isn't running
+    and indicate GUI unavailability.
     """
     try:
         proxy = xmlrpc.client.ServerProxy("http://localhost:9875", allow_none=True)
@@ -40,9 +47,12 @@ _result_ = {"gui_up": bool(FreeCAD.GuiUp)}
         )
         if result.get("success") and result.get("result"):
             return result["result"].get("gui_up", False)
-    except Exception:
-        # Swallow all exceptions intentionally - see docstring above
-        pass
+    except (OSError, xmlrpc.client.Fault, TimeoutError) as e:
+        # Expected when bridge isn't running - log at debug level
+        logger.debug("Bridge GUI check failed (expected if not running): %s", e)
+    except Exception as e:
+        # Unexpected exceptions - log as warning for debugging
+        logger.warning("Unexpected error checking GUI availability: %s", e)
     return False
 
 
@@ -70,9 +80,25 @@ requires_headless = pytest.mark.skipif(
 
 
 class TestThreadSafety:
-    """Tests to verify thread-safe code execution."""
+    """Tests to verify thread-safe code execution in FreeCAD MCP Bridge.
 
-    def test_execution_thread_info(self, xmlrpc_proxy: Any) -> None:
+    These tests ensure that Python code executed via the MCP bridge runs on
+    the appropriate thread depending on FreeCAD's mode:
+
+    - GUI mode: Code must execute on the main Qt thread to safely perform
+      Qt operations (document creation, view manipulation, etc.)
+    - Headless mode: Code runs on a background thread since there's no
+      Qt event loop
+
+    The bridge uses a queue processor that chooses its execution strategy
+    based on FreeCAD.GuiUp at startup time. If the bridge starts before
+    GuiUp is True, it incorrectly uses a background thread even in GUI mode,
+    causing crashes when Qt operations are attempted.
+    """
+
+    def test_execution_thread_info(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """Test that we can get thread information from executed code.
 
         This test verifies the thread context regardless of mode.
@@ -87,7 +113,7 @@ _result_ = {
     "thread_name": threading.current_thread().name,
 }
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
         assert result["result"] is not None
@@ -98,7 +124,9 @@ _result_ = {
         assert "thread_name" in thread_info
 
     @requires_gui
-    def test_gui_mode_executes_on_main_thread(self, xmlrpc_proxy: Any) -> None:
+    def test_gui_mode_executes_on_main_thread(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """CRITICAL: In GUI mode, code MUST execute on the main thread.
 
         If this test fails, it indicates the bridge started before
@@ -120,7 +148,7 @@ _result_ = {
     "thread_name": threading.current_thread().name,
 }
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
         assert result["result"] is not None
@@ -141,7 +169,9 @@ _result_ = {
         )
 
     @requires_gui
-    def test_gui_mode_can_create_document_safely(self, xmlrpc_proxy: Any) -> None:
+    def test_gui_mode_can_create_document_safely(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """Test that document creation works in GUI mode.
 
         Document creation involves Qt operations internally. If the bridge
@@ -169,7 +199,7 @@ finally:
 
 _result_ = {{"success": created, "doc_name": doc_name}}
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         # If we get here without crash, the test passed
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
@@ -177,7 +207,9 @@ _result_ = {{"success": created, "doc_name": doc_name}}
         assert result["result"]["success"], "Failed to create document"
 
     @requires_headless
-    def test_headless_mode_uses_background_thread(self, xmlrpc_proxy: Any) -> None:
+    def test_headless_mode_uses_background_thread(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """In headless mode, the bridge uses a background thread for queue processing.
 
         This is expected behavior in headless mode since there's no Qt event loop.
@@ -192,7 +224,7 @@ _result_ = {
     "thread_name": threading.current_thread().name,
 }
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
         assert result["result"] is not None
@@ -210,7 +242,9 @@ _result_ = {
         )
 
     @requires_gui
-    def test_gui_mode_view_operations_safe(self, xmlrpc_proxy: Any) -> None:
+    def test_gui_mode_view_operations_safe(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """Test that view operations work safely in GUI mode.
 
         View operations require the GUI and must be on the main thread.
@@ -249,7 +283,7 @@ _result_ = {{
     "visibility": visible,
 }}
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
         assert result["result"] is not None
@@ -260,9 +294,22 @@ _result_ = {{
 
 
 class TestBridgeQueueProcessor:
-    """Tests for the bridge's queue processor mode detection."""
+    """Tests for the bridge's queue processor mode detection.
 
-    def test_queue_processor_mode_matches_gui_state(self, xmlrpc_proxy: Any) -> None:
+    The queue processor is responsible for executing Python code in FreeCAD.
+    Its mode (Qt timer vs background thread) must match FreeCAD's GUI state:
+
+    - FreeCAD.GuiUp = True → Queue processor uses Qt timer (main thread)
+    - FreeCAD.GuiUp = False → Queue processor uses background thread
+
+    A mismatch between these indicates a race condition bug where the bridge
+    started before FreeCAD.GuiUp was properly set, which was the root cause
+    of SIGABRT crashes in GUI mode.
+    """
+
+    def test_queue_processor_mode_matches_gui_state(
+        self, xmlrpc_proxy: xmlrpc.client.ServerProxy
+    ) -> None:
         """Verify the queue processor mode matches FreeCAD's GUI state.
 
         The bridge should use:
@@ -293,7 +340,7 @@ _result_ = {
     "mode_correct": mode_correct,
 }
 """
-        result: dict[str, Any] = xmlrpc_proxy.execute(code)
+        result: dict[str, Any] = xmlrpc_proxy.execute(code)  # type: ignore[assignment]
 
         assert result["success"], f"Execution failed: {result.get('stderr', '')}"
         assert result["result"] is not None
