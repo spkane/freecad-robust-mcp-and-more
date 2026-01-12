@@ -70,17 +70,29 @@ scan-gitleaks:
 scan-gitleaks-history:
     mise exec -- gitleaks detect --source {{project_root}} --config {{project_root}}/.gitleaks.toml --verbose --log-opts="--all"
 
-# Run detect-secrets scanner (installed via uv)
+# Check for new secrets against baseline (does NOT modify baseline file)
+# Uses pre-commit to run detect-secrets with proper file enumeration
+# Use scan-baseline-update to actually update the baseline
 scan-detect:
-    uv run detect-secrets scan --baseline {{project_root}}/.secrets.baseline
+    @echo "Checking for new secrets against baseline..."
+    @uv run pre-commit run detect-secrets --all-files && echo "✓ No new secrets detected"
 
 # Audit detect-secrets baseline (interactive)
 scan-audit:
     uv run detect-secrets audit {{project_root}}/.secrets.baseline
 
-# Update detect-secrets baseline with new findings (preserves audit metadata)
+# Update detect-secrets baseline with current scan (updates generated_at timestamp)
+# Run this when you want to add new files or refresh the baseline
+# This WILL update the timestamp - only run when you intend to commit changes
 scan-baseline-update:
-    uv run detect-secrets scan --baseline {{project_root}}/.secrets.baseline --update {{project_root}}
+    cd {{project_root}} && uv run detect-secrets scan \
+        --exclude-files '\.secrets\.baseline$$' \
+        --exclude-files '\.gitleaks\.toml$$' \
+        --exclude-files 'uv\.lock$$' \
+        --exclude-files 'poetry\.lock$$' \
+        --exclude-files 'package-lock\.json$$' \
+        --update .secrets.baseline
+    @echo "✓ Baseline updated (run 'just quality::scan-audit' to review any findings)"
 
 # Run trufflehog for verified secrets (via pre-commit - not installed standalone)
 scan-trufflehog:

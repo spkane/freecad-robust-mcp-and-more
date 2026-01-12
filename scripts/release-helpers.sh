@@ -78,13 +78,16 @@ require_clean_tree() {
 
 # Run all pre-release checks
 # Usage: pre_release_checks "1.0.0" || exit 1
+# Order: Fast local checks first, then network checks
 pre_release_checks() {
     local version="$1"
 
+    # Fast local checks first
     validate_semver "$version" || return 1
-    require_main_branch || return 1
-    require_up_to_date || return 1
     require_clean_tree || return 1
+    require_main_branch || return 1
+    # Network check last (git fetch can be slow)
+    require_up_to_date || return 1
 
     return 0
 }
