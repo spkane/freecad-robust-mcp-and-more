@@ -454,7 +454,7 @@ latest-versions:
     MAGNETS_TAG=$(git tag -l 'macro-cut-object-for-magnets-v*' --sort=-v:refname | head -n1)
     EXPORT_TAG=$(git tag -l 'macro-multi-export-v*' --sort=-v:refname | head -n1)
     echo "  Robust MCP Server:      ${SERVER_TAG:-none}"
-    echo "  Robust MCP Workbench:   ${WORKBENCH_TAG:-none}"
+    echo "  MCP Bridge Workbench:   ${WORKBENCH_TAG:-none}"
     echo "  Macro Magnets:   ${MAGNETS_TAG:-none}"
     echo "  Macro Export:    ${EXPORT_TAG:-none}"
 
