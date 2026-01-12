@@ -68,36 +68,11 @@ integration-freecad-auto:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Source shared bridge helper functions
+    . "{{project_root}}/scripts/bridge-helpers.sh"
+
     # Track whether we started FreeCAD (so cleanup knows to stop it)
     STARTED_FREECAD=false
-
-    # Helper function to kill process on a port (with fallback for systems without lsof)
-    # Usage: kill_port PORT [SIGNAL]
-    # Examples: kill_port 9875      (sends SIGTERM)
-    #           kill_port 9875 -9   (sends SIGKILL)
-    kill_port() {
-        local port=$1
-        local signal=${2:--TERM}  # Default to SIGTERM if no signal specified
-        local pids=""
-
-        if command -v lsof &>/dev/null; then
-            # Collect PIDs first, then kill only if non-empty
-            pids=$(lsof -ti:"$port" 2>/dev/null || true)
-            if [[ -n "$pids" ]]; then
-                echo "$pids" | xargs kill "$signal" 2>/dev/null || true
-            fi
-        elif command -v fuser &>/dev/null; then
-            # fuser -k sends SIGKILL by default; use --signal for others
-            # Check if port is in use first
-            if fuser "$port/tcp" 2>/dev/null; then
-                if [ "$signal" = "-9" ] || [ "$signal" = "-KILL" ]; then
-                    fuser -k "$port/tcp" 2>/dev/null || true
-                else
-                    fuser -k --signal "${signal#-}" "$port/tcp" 2>/dev/null || true
-                fi
-            fi
-        fi
-    }
 
     # Cleanup function to ensure FreeCAD is stopped
     # We kill by port since the subshell approach makes PID tracking unreliable
@@ -105,14 +80,7 @@ integration-freecad-auto:
         if [ "$STARTED_FREECAD" = true ]; then
             echo ""
             echo "Stopping FreeCAD..."
-            # Kill processes on our ports - these are the ones we started
-            kill_port 9875
-            kill_port 9876
-            # Wait briefly for graceful shutdown
-            sleep 1
-            # Force kill if still running
-            kill_port 9875 -9
-            kill_port 9876 -9
+            graceful_kill_bridge_ports
         fi
     }
 
@@ -230,7 +198,7 @@ release-test:
     # Helper function to record test failure
     record_failure() {
         TESTS_PASSED=false
-        FAILED_TESTS="${FAILED_TESTS}\n  - $1"
+        FAILED_TESTS="${FAILED_TESTS}"$'\n'"  - $1"
     }
 
     # -------------------------------------------------------------------------
@@ -341,6 +309,8 @@ release-test:
         echo "  just release::bump-macro-magnets <version>"
         echo "  just release::bump-macro-export <version>"
         echo ""
+        echo "NOTE: Merge all code/PRs into 'main' that are in flight for the release, like the version bumps above!"
+        echo ""
         echo "  just release::tag-mcp-server <version>"
         echo "  just release::tag-workbench <version>"
         echo "  just release::tag-macro-magnets <version>"
@@ -348,7 +318,7 @@ release-test:
     else
         echo "✗ SOME TESTS FAILED - Cannot proceed with release"
         echo ""
-        echo "Failed tests:$FAILED_TESTS"
+        printf "Failed tests:%s\n" "$FAILED_TESTS"
         echo ""
         echo "Please fix the failing tests before creating a release."
         exit 1
@@ -359,47 +329,18 @@ integration-headless-release:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Source shared bridge helper functions
+    . "{{project_root}}/scripts/bridge-helpers.sh"
+
     # Track whether we started FreeCAD (so cleanup knows to stop it)
     STARTED_FREECAD=false
-
-    # Helper function to kill process on a port
-    kill_port() {
-        local port=$1
-        local signal=${2:--TERM}
-        local pids=""
-
-        if command -v lsof &>/dev/null; then
-            pids=$(lsof -ti:"$port" 2>/dev/null || true)
-            if [[ -n "$pids" ]]; then
-                echo "$pids" | xargs kill "$signal" 2>/dev/null || true
-            fi
-        elif command -v fuser &>/dev/null; then
-            if fuser "$port/tcp" 2>/dev/null; then
-                if [ "$signal" = "-9" ] || [ "$signal" = "-KILL" ]; then
-                    fuser -k "$port/tcp" 2>/dev/null || true
-                else
-                    fuser -k --signal "${signal#-}" "$port/tcp" 2>/dev/null || true
-                fi
-            fi
-        fi
-    }
-
-    # Check if bridge is running
-    is_bridge_running() {
-        curl -s --connect-timeout 1 --max-time 1 http://localhost:9875 > /dev/null 2>&1 && \
-        uv run python -c "import socket; socket.setdefaulttimeout(2); import xmlrpc.client; print(xmlrpc.client.ServerProxy('http://localhost:9875').ping())" 2>/dev/null | grep -q "pong"
-    }
 
     # Cleanup function
     cleanup() {
         if [ "$STARTED_FREECAD" = true ]; then
             echo ""
             echo "Stopping FreeCAD headless..."
-            kill_port 9875
-            kill_port 9876
-            sleep 1
-            kill_port 9875 -9
-            kill_port 9876 -9
+            graceful_kill_bridge_ports
         fi
     }
 
@@ -471,47 +412,18 @@ integration-gui-release:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Source shared bridge helper functions
+    . "{{project_root}}/scripts/bridge-helpers.sh"
+
     # Track whether we started FreeCAD (so cleanup knows to stop it)
     STARTED_FREECAD=false
-
-    # Helper function to kill process on a port
-    kill_port() {
-        local port=$1
-        local signal=${2:--TERM}
-        local pids=""
-
-        if command -v lsof &>/dev/null; then
-            pids=$(lsof -ti:"$port" 2>/dev/null || true)
-            if [[ -n "$pids" ]]; then
-                echo "$pids" | xargs kill "$signal" 2>/dev/null || true
-            fi
-        elif command -v fuser &>/dev/null; then
-            if fuser "$port/tcp" 2>/dev/null; then
-                if [ "$signal" = "-9" ] || [ "$signal" = "-KILL" ]; then
-                    fuser -k "$port/tcp" 2>/dev/null || true
-                else
-                    fuser -k --signal "${signal#-}" "$port/tcp" 2>/dev/null || true
-                fi
-            fi
-        fi
-    }
-
-    # Check if bridge is running
-    is_bridge_running() {
-        curl -s --connect-timeout 1 --max-time 1 http://localhost:9875 > /dev/null 2>&1 && \
-        uv run python -c "import socket; socket.setdefaulttimeout(2); import xmlrpc.client; print(xmlrpc.client.ServerProxy('http://localhost:9875').ping())" 2>/dev/null | grep -q "pong"
-    }
 
     # Cleanup function
     cleanup() {
         if [ "$STARTED_FREECAD" = true ]; then
             echo ""
             echo "Stopping FreeCAD GUI..."
-            kill_port 9875
-            kill_port 9876
-            sleep 1
-            kill_port 9875 -9
-            kill_port 9876 -9
+            graceful_kill_bridge_ports
 
             # On macOS, also try to quit FreeCAD gracefully
             if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -594,31 +506,9 @@ kill-bridge:
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Source shared bridge helper functions
+    . "{{project_root}}/scripts/bridge-helpers.sh"
+
     echo "Killing any processes on MCP bridge ports (9875, 9876)..."
-
-    # Helper function to kill process on a port (with fallback for systems without lsof)
-    # Collects PIDs first to avoid calling kill with no arguments
-    kill_port() {
-        local port=$1
-        local pids=""
-
-        if command -v lsof &>/dev/null; then
-            # Collect PIDs first, then kill only if non-empty
-            pids=$(lsof -ti:"$port" 2>/dev/null || true)
-            if [[ -n "$pids" ]]; then
-                echo "$pids" | xargs kill -9 2>/dev/null || true
-            fi
-        elif command -v fuser &>/dev/null; then
-            # Check if port is in use first
-            if fuser "$port/tcp" 2>/dev/null; then
-                fuser -k -9 "$port/tcp" 2>/dev/null || true
-            fi
-        else
-            echo "Warning: Neither lsof nor fuser available, cannot kill port $port"
-        fi
-    }
-
-    kill_port 9875
-    kill_port 9876
-
+    force_kill_bridge_ports
     echo "Done."
