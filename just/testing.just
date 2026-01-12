@@ -193,12 +193,15 @@ release-test:
 
     # Track overall test results
     TESTS_PASSED=true
-    FAILED_TESTS=""
+    # Arrays to track failures (name and command)
+    declare -a FAILED_NAMES=()
+    declare -a FAILED_COMMANDS=()
 
     # Helper function to record test failure
     record_failure() {
         TESTS_PASSED=false
-        FAILED_TESTS="${FAILED_TESTS}"$'\n'"  - $1"
+        FAILED_NAMES+=("$1")
+        FAILED_COMMANDS+=("$2")
     }
 
     # -------------------------------------------------------------------------
@@ -215,7 +218,7 @@ release-test:
     else
         echo ""
         echo "✗ Unit tests FAILED"
-        record_failure "Unit tests with coverage"
+        record_failure "Unit tests with coverage" "just testing::cov"
     fi
     echo ""
 
@@ -233,7 +236,7 @@ release-test:
     else
         echo ""
         echo "✗ Headless integration tests FAILED"
-        record_failure "Headless integration tests"
+        record_failure "Headless integration tests" "just testing::integration-headless-release"
     fi
     echo ""
 
@@ -251,7 +254,7 @@ release-test:
     else
         echo ""
         echo "✗ GUI integration tests FAILED"
-        record_failure "GUI integration tests"
+        record_failure "GUI integration tests" "just testing::integration-gui-release"
     fi
     echo ""
 
@@ -269,7 +272,7 @@ release-test:
     else
         echo ""
         echo "✗ Docker integration test FAILED"
-        record_failure "Docker integration test"
+        record_failure "Docker integration test" "just docker::test"
     fi
     echo ""
 
@@ -287,7 +290,7 @@ release-test:
     else
         echo ""
         echo "✗ Just command tests FAILED"
-        record_failure "Just command tests"
+        record_failure "Just command tests" "just testing::just-all"
     fi
     echo ""
 
@@ -318,7 +321,23 @@ release-test:
     else
         echo "✗ SOME TESTS FAILED - Cannot proceed with release"
         echo ""
-        printf "Failed tests:%s\n" "$FAILED_TESTS"
+        echo "============================================================"
+        echo "  FAILED TESTS"
+        echo "============================================================"
+        echo ""
+        for i in "${!FAILED_NAMES[@]}"; do
+            echo "  ✗ ${FAILED_NAMES[$i]}"
+        done
+        echo ""
+        echo "============================================================"
+        echo "  TO RECREATE FAILURES"
+        echo "============================================================"
+        echo ""
+        echo "Run these commands to reproduce the failing tests:"
+        echo ""
+        for i in "${!FAILED_COMMANDS[@]}"; do
+            echo "  ${FAILED_COMMANDS[$i]}"
+        done
         echo ""
         echo "Please fix the failing tests before creating a release."
         exit 1
