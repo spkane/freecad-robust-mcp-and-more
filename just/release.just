@@ -435,7 +435,7 @@ list-tags:
     echo "=== Robust MCP Server Releases ==="
     git tag -l 'robust-mcp-server-v*' --sort=-v:refname | head -10
     echo ""
-    echo "=== MCP Workbench Releases ==="
+    echo "=== Robust MCP Bridge Workbench Releases ==="
     git tag -l 'robust-mcp-workbench-v*' --sort=-v:refname | head -10
     echo ""
     echo "=== Cut Object for Magnets Macro Releases ==="
