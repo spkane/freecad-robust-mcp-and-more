@@ -11,6 +11,7 @@ on:
       - ".dockerignore"
       - "src/**/*.py"
       - "pyproject.toml"
+      - "uv.lock"
       - ".github/workflows/docker.yaml"
   pull_request:
     branches: [main, master]
@@ -19,6 +20,7 @@ on:
       - ".dockerignore"
       - "src/**/*.py"
       - "pyproject.toml"
+      - "uv.lock"
       - ".github/workflows/docker.yaml"
   workflow_dispatch:
   workflow_call:

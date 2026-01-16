@@ -36,7 +36,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir --no-compile uv
 
 # Copy only dependency files first for better layer caching
-COPY pyproject.toml README.md ./
+# Include uv.lock for reproducible builds with locked dependency versions
+COPY pyproject.toml uv.lock README.md ./
 COPY src/ ./src/
 
 # Version for setuptools-scm when building without git (e.g., in Docker)
@@ -44,12 +45,12 @@ COPY src/ ./src/
 ARG VERSION=0.0.0.dev0
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION}
 
-# Create virtual environment and install dependencies
+# Create virtual environment and install dependencies using locked versions
 # Using uv cache mount for faster rebuilds
+# --frozen ensures uv.lock is used exactly without updates
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv venv /opt/venv && \
-    . /opt/venv/bin/activate && \
-    uv pip install --no-compile .
+    UV_PROJECT_ENVIRONMENT=/opt/venv uv sync --frozen --no-dev --no-editable
 
 # =============================================================================
 # Stage 2: Runtime - Minimal image for running the server
