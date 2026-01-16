@@ -170,11 +170,14 @@ jobs:
 
           # Extract section for this version from RELEASE_NOTES.md
           # Format: ## Version X.Y.Z (date)
+          # Use exact version match to avoid substring issues (e.g., 1.0.0 matching 1.0.0-alpha)
           CHANGELOG_CONTENT=$(awk -v version="$VERSION" '
               BEGIN { found=0 }
               /^## Version / {
                   if (found) exit
-                  if (index($0, version) > 0) { found=1; next }
+                  # Extract version field (3rd word) and compare exactly
+                  split($0, parts, " ")
+                  if (parts[3] == version) { found=1; next }
               }
               found { print }
           ' "$RELEASE_NOTES" 2>/dev/null || echo "")

@@ -39,8 +39,8 @@ pip install freecad-robust-mcp
 # Or with uv
 uv tool install freecad-robust-mcp
 
-# Docker
-docker pull spkane/freecad-robust-mcp:0.6.1
+# Docker (use 'latest' or a specific version tag)
+docker pull spkane/freecad-robust-mcp:latest
 ```
 
 ### Upgrade Notes

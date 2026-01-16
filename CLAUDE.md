@@ -1543,12 +1543,12 @@ Each component has its own `RELEASE_NOTES.md` file that is updated before releas
 
 **Release notes files:**
 
-| Component  | File                                             |
-| ---------- | ------------------------------------------------ |
-| MCP Server | `src/freecad_mcp/RELEASE_NOTES.md`               |
-| Workbench  | `addon/FreecadRobustMCPBridge/RELEASE_NOTES.md`  |
-| Cut Macro  | `macros/Cut_Object_for_Magnets/RELEASE_NOTES.md` |
-| Export     | `macros/Multi_Export/RELEASE_NOTES.md`           |
+| Component                    | File                                             |
+| ---------------------------- | ------------------------------------------------ |
+| MCP Server                   | `src/freecad_mcp/RELEASE_NOTES.md`               |
+| Robust MCP Bridge Workbench  | `addon/FreecadRobustMCPBridge/RELEASE_NOTES.md`  |
+| Cut Object for Magnets Macro | `macros/Cut_Object_for_Magnets/RELEASE_NOTES.md` |
+| Multi Export Macro           | `macros/Multi_Export/RELEASE_NOTES.md`           |
 
 ---
 

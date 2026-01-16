@@ -476,7 +476,7 @@ just release::status
 # View changes for a component
 just release::changes-since mcp-server
 
-# Draft changelog entries from commits
+# Draft release notes from commits
 just release::draft-notes mcp-server
 just release::draft-notes workbench
 just release::draft-notes macro-magnets
