@@ -69,6 +69,12 @@ reviews:
         This code runs inside FreeCAD's Python environment as a workbench addon.
         It cannot import packages from the project's virtualenv (mcp, pydantic).
         Watch for accidental imports of project dependencies.
+    - path: ".github/actions/**/*.yaml"
+      instructions: >
+        Custom GitHub Actions (composite actions). Check for:
+        - Proper input/output definitions
+        - Shell script correctness
+        - Cross-platform compatibility (x86_64/aarch64)
     - path: "tests/**/*.py"
       instructions: >
         Test files. Ensure good test coverage and clear assertions.
@@ -101,14 +107,12 @@ reviews:
         - The combination of '>=' in pyproject.toml + uv.lock is the modern standard
     - path: "README.md"
       instructions: >
-        INTENTIONAL NAMING: The repo is "freecad-robust-mcp-and-more" but Docker
-        image and PyPI package are "freecad-robust-mcp". This is documented and
-        intentional - do NOT flag as a naming mismatch or inconsistency.
+        Main documentation for the FreeCAD Robust MCP Server addon.
+        The PyPI package name is "freecad-robust-mcp".
     - path: "Dockerfile"
       instructions: >
-        INTENTIONAL NAMING: Image name "freecad-robust-mcp" differs from repo name
-        "freecad-robust-mcp-and-more". This is intentional and documented in README.
-        Do NOT flag as a naming mismatch.
+        Docker image for running FreeCAD MCP Server in containers.
+        Image name is "freecad-robust-mcp".
     - path: ".mise.toml"
       instructions: >
         Tool version management via mise. All versions use fuzzy matching:
