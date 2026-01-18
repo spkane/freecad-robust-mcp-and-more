@@ -2,7 +2,7 @@
 
 Welcome to the FreeCAD Robust MCP Suite documentation.
 
-This project provides an [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server, FreeCAD workbench, and standalone macros that enable integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
+This project provides an [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server and FreeCAD workbench that enable integration between AI assistants (Claude, GPT, and other MCP-compatible tools) and [FreeCAD](https://www.freecadweb.org/), allowing AI-assisted development and debugging of 3D models, macros, and workbenches.
 
 ---
 
@@ -12,7 +12,6 @@ This project provides an [MCP (Model Context Protocol)](https://modelcontextprot
 - **Multiple Connection Modes** - XML-RPC (recommended), JSON-RPC socket, or embedded (Linux only)
 - **GUI & Headless Support** - Full modeling in headless mode, plus screenshots/colors in GUI mode
 - **Macro Development** - Create, edit, run, and template FreeCAD macros via MCP
-- **Standalone Macros** - Useful FreeCAD macros that work independently of the Robust MCP Server
 
 ---
 
@@ -64,10 +63,13 @@ The Robust MCP Server works with FreeCAD in both GUI and headless mode:
 
 ## FreeCAD Macros
 
-This project includes standalone FreeCAD macros:
+The MCP server provides tools for working with FreeCAD macros:
 
-- **[CutObjectForMagnets](guide/macros.md#cutobjectformagnets)** - Cuts objects along planes with automatic magnet hole placement
-- **[MultiExport](guide/macros.md#multiexport)** - Export objects to multiple formats simultaneously
+- **List macros** - Discover available macros in your FreeCAD installation
+- **Run macros** - Execute macros with parameter passing
+- **Create macros** - Generate new macros from templates or custom code
+
+See [Macros Guide](guide/macros.md) for details on using macros with the MCP server.
 
 ---
 
