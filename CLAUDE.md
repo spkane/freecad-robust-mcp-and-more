@@ -240,18 +240,18 @@ just all-with-integration  # Run all checks and integration tests
 
 #### Just Module Structure
 
-| Module          | Description                           | Key Commands                                        |
-| --------------- | ------------------------------------- | --------------------------------------------------- |
-| `mcp`           | MCP server commands                   | `run`, `run-debug`, `run-http`                      |
-| `freecad`       | FreeCAD running commands              | `run-gui`, `run-headless`, `run-gui-custom`         |
-| `install`       | User installation commands            | `mcp-server`, `mcp-bridge-workbench`, `status`      |
-| `quality`       | Code quality and linting              | `check`, `lint`, `format`, `scan`                   |
-| `testing`       | Test execution                        | `unit`, `cov`, `integration-freecad-auto`, `watch`  |
-| `docker`        | Docker build and run commands         | `build`, `build-multi`, `run`, `clean-all`          |
-| `documentation` | Documentation building and deployment | `build`, `serve`, `serve-versioned`, `list-versions`|
-| `dev`           | Development utilities                 | `install-deps`, `update-deps`, `clean`              |
-| `release`       | Release and tagging                   | `status`, `tag-mcp-server`, `delete-tag`            |
-| `coderabbit`    | AI code reviews (local)               | `install`, `login`, `review`, `review-fix`          |
+| Module          | Description                           | Key Commands                                         |
+| --------------- | ------------------------------------- | ---------------------------------------------------- |
+| `mcp`           | MCP server commands                   | `run`, `run-debug`, `run-http`                       |
+| `freecad`       | FreeCAD running commands              | `run-gui`, `run-headless`, `run-gui-custom`          |
+| `install`       | User installation commands            | `mcp-server`, `mcp-bridge-workbench`, `status`       |
+| `quality`       | Code quality and linting              | `check`, `lint`, `format`, `scan`                    |
+| `testing`       | Test execution                        | `unit`, `cov`, `integration-freecad-auto`, `watch`   |
+| `docker`        | Docker build and run commands         | `build`, `build-multi`, `run`, `clean-all`           |
+| `documentation` | Documentation building and deployment | `build`, `serve`, `serve-versioned`, `list-versions` |
+| `dev`           | Development utilities                 | `install-deps`, `update-deps`, `clean`               |
+| `release`       | Release and tagging                   | `status`, `tag-mcp-server`, `delete-tag`             |
+| `coderabbit`    | AI code reviews (local)               | `install`, `login`, `review`, `review-fix`           |
 
 Module files are located in the `just/` directory.
 
